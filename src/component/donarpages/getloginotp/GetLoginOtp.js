@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import backgroundImg from "../assets/page-bg.png";
+import backgroundImg from "../../../assets/page-bg.png";
 import { useNavigate,useLocation} from "react-router-dom";
-import { useVerifyLoginOtpMutation } from "../services/signUpApi";
+import { useVerifyDonarLoginOtpMutation } from "../../../services/signUpApi";
 
 const GetOtpLogin = () => {
   const location = useLocation();
@@ -9,29 +9,21 @@ const GetOtpLogin = () => {
 
   const navigate=useNavigate();
   console.log(mobileNumber)
-  // const [mobileNumber,setMobileNumber]=useState('');
   const [otp,setOtp]=useState('');
 
   const [otpError, setOtpError] = useState("");
-  const [mobileNumberError, setMobileNumberError] = useState("");
+ 
 
-  const [verifyLoginOtp] =useVerifyLoginOtpMutation();
+  const [verifyDonarLoginOtp] =useVerifyDonarLoginOtpMutation();
 
   const clearTextInput = () => {
-    // setMobileNumber("");
     setOtp('');
   };
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // if (!mobileNumber) {
-    //   setMobileNumberError("Please enter your mobile number");
-    // } else if (mobileNumber.length !== 10) {
-    //   setMobileNumberError("Mobile number should have 10 digits");
-    // } else {
-    //   setMobileNumberError("");
-    // }
+  
     if (!otp) {
       setOtpError("Otp is required");
     } else if (otp.length !== 6) {
@@ -42,13 +34,13 @@ const GetOtpLogin = () => {
     if (mobileNumber && mobileNumber.length === 10 && otp && otp.length === 6) {
       const formData = { mobileNumber,mobileOTP:otp };
       console.log(formData);
-      const res = await verifyLoginOtp(formData);
+      const res = await verifyDonarLoginOtp(formData);
       console.log(res);
       if (res.data) {
         localStorage.setItem('authToken', res.data.authToken);
           console.log(localStorage)
         clearTextInput();
-        navigate('/student/home'); // Navigate to home page
+        navigate('/donar/home'); // Navigate to home page
       }
     }
   };
@@ -69,32 +61,9 @@ const GetOtpLogin = () => {
           {/* <!-- BEGIN: Login Form --> */}
           <form
             className="space-y-4"
-            // action="https://dashcode-html.codeshaper.tech/index.html"
+           
           >
-            {/* <div className="fromGroup">
-              <label className="block capitalize form-label">mobile number</label>
-              <div className="relative ">
-                <input
-                  type="number"
-                  name="mobilenumber"
-                  className="  form-control py-2"
-                  placeholder="Enter Same Mobile Number"
-                  value={mobileNumber}
-                  onChange={(e)=>setMobileNumber(e.target.value)}
-                />
-                     {mobileNumberError ? (
-                      <span
-                        style={{
-                          color: "red",
-                          marginLeft: 8,
-                          fontSize: "14px",
-                        }}
-                      >
-                        {mobileNumberError}
-                      </span>
-                    ) : null}
-              </div>
-            </div> */}
+           
             <div className="fromGroup">
               <label className="block capitalize form-label">mobile number OTP</label>
               <div className="relative ">

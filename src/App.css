@@ -9874,7 +9874,7 @@ ul.custom-list ul li{
   font-weight: 600;
   text-transform: uppercase;
   --tw-text-opacity: 1;
-  color: rgb(71 85 105 / var(--tw-text-opacity));
+  color: #fff;
 }
 
 [dir="ltr"] .table-th{

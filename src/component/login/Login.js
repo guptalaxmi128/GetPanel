@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import backgroundImg from "../../assets/page-bg.png";
-import { useLoginStudentMutation } from "../../services/signUpApi";
+import { useDispatch } from 'react-redux';
+import { useLoginDonarMutation, useLoginStudentMutation } from "../../services/signUpApi";
 import { Link ,useNavigate} from "react-router-dom";
+import { setCurrentUserType } from '../../features/userSlice';
 
 const Login = () => {
   const navigate=useNavigate();
+  const dispatch = useDispatch();
   const [mobileNumber, setMobileNumber] = useState("");
   const [selectedOption, setSelectedOption] = useState("default");
 
   const [mobileNumberError, setMobileNumberError] = useState("");
 
   const [loginStudent] = useLoginStudentMutation();
+  const [loginDonar] = useLoginDonarMutation();
 
   const clearTextInput = () => {
     setMobileNumber("");
@@ -22,14 +26,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // if (selectedOption === 'donar') {
-    //   // Redirect to donor API
-    //   window.location.href = "https://global-education-t.onrender.com/api/donar/";
-    // } else if (selectedOption === 'student') {
-    //   // Redirect to student API
-    //   window.location.href = "http://localhost:5000/api/student/verifySignInOtp";
-    // }
     if (!mobileNumber) {
       setMobileNumberError("Please enter your mobile number");
     } else if (mobileNumber.length !== 10) {
@@ -41,11 +37,22 @@ const Login = () => {
     if (mobileNumber && mobileNumber.length === 10) {
       const formData = { mobileNumber };
       console.log(formData);
-      const res = await loginStudent(formData);
-      console.log(res);
+      dispatch(setCurrentUserType(selectedOption));
+      if (selectedOption === 'student') {
+        // Make API call for student login
+        const res = await loginStudent(formData);
+        console.log(res);
         clearTextInput();
-        navigate('/getotplogin',{ state: { mobileNumber } }); // Navigate to getOtp login page
-    }
+        navigate('/student/getotplogin',{ state: { mobileNumber } });   // Navigate to getOtp student login page
+      } else if (selectedOption === 'donar') {
+        // Make API call for donor login
+        const res = await loginDonar(formData);
+        console.log(res);
+        clearTextInput();
+        navigate('/donar/getotplogin',{ state: { mobileNumber } }); 
+        
+        }
+      }
   };
 
   return (

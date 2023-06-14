@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import backgroundImg from "../../assets/page-bg.png";
-import {  useResendRegisterOtpMutation } from "../../services/signUpApi";
+import backgroundImg from "../../../assets/page-bg.png";
 import { Link, useNavigate } from "react-router-dom";
+import { useResendDonarRegisterOtpMutation } from "../../../services/signUpApi";
 
 const ResendOtp = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const ResendOtp = () => {
 
  
 
- const [resendOtp]=useResendRegisterOtpMutation();
+ const [resendDonarRegisterOtp]=useResendDonarRegisterOtpMutation();
 
   const clearTextInput = () => {
     setMobileNumber("");
@@ -46,12 +46,12 @@ const ResendOtp = () => {
     ) {
       const formData = {  mobileNumber, email };
       console.log(formData)
-      const res = await resendOtp(formData);
+      const res = await resendDonarRegisterOtp(formData);
       console.log(res);
       if (res.data.success) {
         // localStorage.setItem('authToken', res.data.authToken);
         clearTextInput();
-        navigate('/student/getotp',{ state: { mobileNumber, email } }); // Navigate to OTP page
+        navigate('/donar/getotp',{ state: { mobileNumber, email } }); // Navigate to OTP page
       }
     }
   };

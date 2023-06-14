@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink,Link } from 'react-router-dom';
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import GroupSharpIcon from "@mui/icons-material/GroupSharp";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
-import LogoutIcon from "@mui/icons-material/Logout";
-import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
-import logo from "../../assets/images/logo.png";
+import LogoutIcon from '@mui/icons-material/Logout';
+import logo from "../../../assets/images/logo.png";
 
 const Sidebar = () => {
   const [activeItem, setActiveItem] = useState(0);
@@ -36,7 +35,7 @@ const Sidebar = () => {
             height={50}
           />
           <span className="ltr:ml-3 rtl:mr-3 text-xl font-Inter font-bold text-slate-900 dark:text-white">
-            GET
+          GET
           </span>
         </NavLink>
         {/* <!-- Sidebar Type Button --> */}
@@ -71,13 +70,10 @@ const Sidebar = () => {
       >
         <ul className="sidebar-menu">
           <li
-          className={activeItem === 0 ? "active" : ""}
-          onClick={() => handleItemClick(0)}
+            className={activeItem === 0 ? "active" : ""}
+            onClick={() => handleItemClick(0)}
           >
-            <NavLink
-              to="/student/home"
-            className="navItem"
-            >
+            <NavLink to="/donar/home" className="navItem">
               <span className="flex items-center">
                 <HomeRoundedIcon /> &nbsp; &nbsp;
                 <span>Dashboard</span>
@@ -86,17 +82,14 @@ const Sidebar = () => {
           </li>
 
           <li
-          className={activeItem === 1 ? "active" : ""}
-          onClick={() => handleItemClick(1)}
+            className={activeItem === 1 ? "active" : ""}
+            onClick={() => handleItemClick(1)}
           >
-           
-            <NavLink
-             to="/student/course" className="navItem"
-            >
+            <NavLink to="/donar/donation-request" className="navItem">
               <span className="flex items-center">
                 <ListAltOutlinedIcon />
                 &nbsp; &nbsp;
-                <span>Current Course</span>
+                <span>Donation Request</span>
               </span>
             </NavLink>
           </li>
@@ -104,10 +97,10 @@ const Sidebar = () => {
             className={activeItem === 2 ? "active" : ""}
             onClick={() => handleItemClick(2)}
           >
-            <NavLink to="/student/account" className="navItem">
+            <NavLink to="/donar/donated" className="navItem">
               <span className="flex items-center">
                 <GroupSharpIcon /> &nbsp; &nbsp;
-                <span>Account Details</span>
+                <span>Donated</span>
               </span>
             </NavLink>
           </li>
@@ -115,39 +108,17 @@ const Sidebar = () => {
             className={activeItem === 3 ? "active" : ""}
             onClick={() => handleItemClick(3)}
           >
-            <NavLink to="/student/wallet" className="navItem">
-              <span className="flex items-center">
-                <AccountBalanceWalletOutlinedIcon /> &nbsp; &nbsp;
-                <span>Wallet</span>
-              </span>
-            </NavLink>
-          </li>
-          <li
-            className={activeItem === 4 ? "active" : ""}
-            onClick={() => handleItemClick(4)}
-          >
-            <NavLink to="/student/profile" className="navItem">
+            <NavLink to="/donar/profile" className="navItem">
               <span className="flex items-center">
                 <DescriptionOutlinedIcon /> &nbsp;&nbsp;&nbsp;
                 <span>Profile</span>
               </span>
             </NavLink>
           </li>
+        
           <li
-            className={activeItem === 5 ? "active" : ""}
-            onClick={() => handleItemClick(5)}
-          >
-            <NavLink to="/student/courses" className="navItem">
-              <span className="flex items-center">
-                <ListAltOutlinedIcon />
-                &nbsp;&nbsp;&nbsp;
-                <span>Course Offered</span>
-              </span>
-            </NavLink>
-          </li>
-          <li
-            className={activeItem === 6 ? "active" : ""}
-            onClick={() => handleItemClick(6)}
+            className={activeItem === 4 ? "active" : ""}
+            onClick={() => handleItemClick(4)}
           >
             <NavLink to="/login" className="navItem" onClick={handleLogout}>
               <span className="flex items-center">

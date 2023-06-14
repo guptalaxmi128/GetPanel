@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import backgroundImg from "../../assets/page-bg.png";
-import { useRegisterUserMutation } from "../../services/signUpApi";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import {
+  useRegisterDonarMutation,
+  useRegisterUserMutation,
+} from "../../services/signUpApi";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCurrentUserType } from "../../features/userSlice";
 
 const SignUp = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,12 +21,14 @@ const SignUp = () => {
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [mobileNumberError, setMobileNumberError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
   };
 
   const [registerUser] = useRegisterUserMutation();
+  const [registerDonar] = useRegisterDonarMutation();
 
   const clearTextInput = () => {
     setName("");
@@ -61,14 +71,29 @@ const SignUp = () => {
       mobileNumber.length === 10
     ) {
       const formData = { name, mobileNumber, email };
-      console.log(formData)
-      const res = await registerUser(formData);
-      console.log(res);
-      if (res.data.success) {
-        // localStorage.setItem('authToken', res.data.authToken);
-        clearTextInput();
-        navigate('/getotp',{ state: { mobileNumber, email } }); // Navigate to OTP page
+      console.log(formData);
+
+      dispatch(setCurrentUserType(selectedOption));
+      setIsLoading(true);
+
+      if (selectedOption === "student") {
+        // Make API call for student registration
+        const res = await registerUser(formData);
+        console.log(res);
+        if (res.data.success) {
+          clearTextInput();
+          navigate("/student/getotp", { state: { mobileNumber, email } }); // Navigate to OTP page
+        }
+      } else if (selectedOption === "donar") {
+        // Make API call for donor registration
+        const res = await registerDonar(formData);
+        console.log(res);
+        if (res.data.success) {
+          clearTextInput();
+          navigate("/donar/getotp", { state: { mobileNumber, email } }); // Navigate to donor page
+        }
       }
+      setIsLoading(false);
     }
   };
 
@@ -115,7 +140,7 @@ const SignUp = () => {
                 className="space-y-4"
                 // action="https://dashcode-html.codeshaper.tech/index.html"
               >
-               <div className="fromGroup">
+                <div className="fromGroup">
                   <div className="relative ">
                     <label
                       htmlFor="select"
@@ -215,7 +240,7 @@ const SignUp = () => {
                     ) : null}
                   </div>
                 </div>
-               
+
                 <div className="flex justify-between">
                   <div className="checkbox-area">
                     <label className="inline-flex items-center cursor-pointer">
@@ -238,10 +263,27 @@ const SignUp = () => {
                     </label>
                   </div>
                 </div>
+                {isLoading && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      backgroundColor: "rgba(255, 255, 255, 0.8)",
+                      zIndex: 9999,
+                    }}
+                  >
+                    <CircularProgress />
+                  </Box>
+                )}
                 <button
                   className="btn btn-dark block w-full text-center"
                   type="button"
-                  onClick={(e)=>handleSubmit(e)}
+                  onClick={(e) => handleSubmit(e)}
                 >
                   Create An Account
                 </button>

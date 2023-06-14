@@ -58,7 +58,7 @@ const GetOtp = () => {
         localStorage.setItem("authToken", res.data.authToken);
         console.log(localStorage);
         clearTextInput();
-        navigate("/home"); // Navigate to home page
+        navigate("/student/home"); // Navigate to home page
       }
     }
   };
@@ -154,7 +154,7 @@ const GetOtp = () => {
                     ) : null}
                   </div>
                 </div>
-                <Link to={"/resend-register-otp"}>
+                <Link to={"/student/resend-register-otp"}>
                   <span className="text-slate-500" style={{fontSize:'12px'}}>
                     Resend Otp
                   </span>

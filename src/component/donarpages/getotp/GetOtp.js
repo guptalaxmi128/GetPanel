@@ -1,57 +1,65 @@
 import React, { useState } from "react";
-import backgroundImg from "../../assets/page-bg.png";
-import {  useResendRegisterOtpMutation } from "../../services/signUpApi";
-import { Link, useNavigate } from "react-router-dom";
+import backgroundImg from "../../../assets/page-bg.png";
+import { useLocation, useNavigate ,Link } from "react-router-dom";
+import { useVerifyDonarRegisterOtpMutation } from "../../../services/signUpApi";
 
-const ResendOtp = () => {
+
+const GetOtp = () => {
+  const location = useLocation();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
- 
+  const { mobileNumber, email } = location.state || {};
+  console.log("Get Otp Page", email);
+  console.log("Get Otp mobileNumber", mobileNumber);
+  const [emailOtp, setEmailOtp] = useState("");
+  const [mobileNumberOtp, setMobileNumberOtp] = useState("");
 
+  const [otpError, setOtpError] = useState("");
+  const [emailOtpError, setEmailOtpError] = useState("");
 
-  const [emailError, setEmailError] = useState("");
-  const [mobileNumberError, setMobileNumberError] = useState("");
-
- 
-
- const [resendOtp]=useResendRegisterOtpMutation();
+const [verifyDonarRegisterOtp]=useVerifyDonarRegisterOtpMutation();
 
   const clearTextInput = () => {
-    setMobileNumber("");
-    setEmail("");
+    setEmailOtp("");
+    setMobileNumberOtp("");
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
- 
 
-    if (!mobileNumber) {
-      setMobileNumberError("Please enter your mobile number");
-    } else if (mobileNumber.length !== 10) {
-      setMobileNumberError("Mobile number should have 10 digits");
+    if (!mobileNumberOtp) {
+      setOtpError("Please enter mobile number otp");
+    } else if (mobileNumberOtp.length !== 6) {
+      setOtpError("Mobile number otp should have 6 digits");
     } else {
-      setMobileNumberError("");
+      setOtpError("");
     }
-    if (!email) {
-      setEmailError("Email is required");
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError("Invalid email address");
+    if (!emailOtp) {
+      setEmailOtpError("Email otp is required");
+    } else if (emailOtp.length !== 6) {
+      setEmailOtpError("Email otp should have 6 digits");
     } else {
-      setEmailError("");
+      setEmailOtpError("");
     }
     if (
-     
-      mobileNumber &&
-      mobileNumber.length === 10
+      mobileNumberOtp &&
+      mobileNumberOtp.length === 6 &&
+      emailOtp &&
+      emailOtp.length === 6
     ) {
-      const formData = {  mobileNumber, email };
-      console.log(formData)
-      const res = await resendOtp(formData);
+      const formData = {
+        email,
+        mobileNumber,
+        emailOTP: emailOtp,
+        mobileOTP: mobileNumberOtp,
+      };
+      console.log(formData);
+      const res = await verifyDonarRegisterOtp(formData);
       console.log(res);
       if (res.data.success) {
-        // localStorage.setItem('authToken', res.data.authToken);
+        localStorage.setItem("authToken", res.data.authToken);
+        console.log(localStorage);
         clearTextInput();
-        navigate('/student/getotp',{ state: { mobileNumber, email } }); // Navigate to OTP page
+        navigate("/donar/home"); // Navigate to home page
       }
     }
   };
@@ -80,14 +88,10 @@ const ResendOtp = () => {
         >
           {/* <div className="lg-inner-column"> */}
           <div className="lg:w-1/2 w-full flex flex-col items-center justify-center">
-            <div className="auth-box-3">
-              {/* <div className="mobile-logo text-center mb-6 lg:hidden block">
-            <a heref="#">
-          
-              <img src={logo} alt="" className="mb-10 white_logo" />
-            </a>
-          </div> */}
-
+            <div
+              className="auth-box-3"
+              style={{ paddingTop: "2.5rem", paddingBottom: "2.5rem" }}
+            >
               <div className="text-center 2xl:mb-10 mb-5">
                 <h4 className="font-medium">Sign Up</h4>
                 <div className="text-slate-500 dark:text-slate-400 text-base">
@@ -100,17 +104,19 @@ const ResendOtp = () => {
                 // action="https://dashcode-html.codeshaper.tech/index.html"
               >
                 <div className="fromGroup">
-                  <label className="block capitalize form-label">email</label>
+                  <label className="block capitalize form-label">
+                    email OTP
+                  </label>
                   <div className="relative ">
                     <input
-                      type="email"
-                      name="email"
+                      type="number"
+                      name="emailotp"
                       className="form-control py-2"
-                      placeholder="Email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter Email OTP"
+                      value={emailOtp}
+                      onChange={(e) => setEmailOtp(e.target.value)}
                     />
-                    {emailError ? (
+                    {emailOtpError ? (
                       <span
                         style={{
                           color: "red",
@@ -118,25 +124,25 @@ const ResendOtp = () => {
                           fontSize: "14px",
                         }}
                       >
-                        {emailError}
+                        {emailOtpError}
                       </span>
                     ) : null}
                   </div>
                 </div>
                 <div className="fromGroup">
                   <label className="block capitalize form-label">
-                    mobile number
+                    mobile number OTP
                   </label>
                   <div className="relative ">
                     <input
                       type="number"
-                      name="mobilenumber"
+                      name="mobilenumberotp"
                       className="  form-control py-2"
-                      placeholder="Mobile Number"
-                      value={mobileNumber}
-                      onChange={(e) => setMobileNumber(e.target.value)}
+                      placeholder="Mobile Number OTP"
+                      value={mobileNumberOtp}
+                      onChange={(e) => setMobileNumberOtp(e.target.value)}
                     />
-                    {mobileNumberError ? (
+                    {otpError ? (
                       <span
                         style={{
                           color: "red",
@@ -144,30 +150,24 @@ const ResendOtp = () => {
                           fontSize: "14px",
                         }}
                       >
-                        {mobileNumberError}
+                        {otpError}
                       </span>
                     ) : null}
                   </div>
                 </div>
+                <Link to={"/donar/resend-register-otp"}>
+                  <span style={{fontSize:'12px'}}>
+                    Resend Otp
+                  </span>
+                </Link>
                 <button
                   className="btn btn-dark block w-full text-center"
-                  type="button"
-                  onClick={(e)=>handleSubmit(e)}
+                  onClick={(e) => handleSubmit(e)}
                 >
-                  Create An Account
+                  Submit
                 </button>
               </form>
               {/* <!-- END: Login Form --> */}
-              <div className="max-w-[242px] mx-auto mt-8 w-full"></div>
-              <div className="mx-auto font-normal text-slate-500 dark:text-slate-400 2xl:mt-12 mt-6 uppercase text-sm text-center">
-                Already registered? &nbsp;
-                <Link
-                  to={"/login"}
-                  className="text-slate-900 dark:text-white font-medium hover:underline"
-                >
-                  Sign In
-                </Link>
-              </div>
             </div>
           </div>
           {/* </div> */}
@@ -177,4 +177,4 @@ const ResendOtp = () => {
   );
 };
 
-export default ResendOtp;
+export default GetOtp;

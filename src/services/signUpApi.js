@@ -3,8 +3,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const signUpApi = createApi({
   reducerPath: "signUpApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/student/", 
-    // baseUrl: "https://global-education-t.onrender.com/api/student/", 
+    // baseUrl: "http://localhost:5000/api/", 
+    baseUrl: "https://global-education-t.onrender.com/api/", 
     prepareHeaders: (headers) => {
       const authToken = localStorage.getItem("authToken");
       if (authToken) {
@@ -18,7 +18,7 @@ export const signUpApi = createApi({
     registerUser: builder.mutation({
       query: (user) => {
         return {
-          url: "register",
+          url: "student/register",
           method: "POST",
           body: user,
           headers: {
@@ -30,7 +30,7 @@ export const signUpApi = createApi({
     verifyRegisterOtp: builder.mutation({
       query: (user) => {
         return {
-          url: "verifyRegisterOtp",
+          url: "student/verifyRegisterOtp",
           method: "POST",
           body: user,
           headers: {
@@ -42,7 +42,7 @@ export const signUpApi = createApi({
     resendRegisterOtp: builder.mutation({
       query: (user) => {
         return {
-          url: "resendOTPForRegister",
+          url: "student/resendOTPForRegister",
           method: "POST",
           body: user,
           headers: {
@@ -54,7 +54,7 @@ export const signUpApi = createApi({
     loginStudent: builder.mutation({
       query: (user) => {
         return {
-          url: "login",
+          url: "student/login",
           method: "POST",
           body: user,
           headers: {
@@ -66,7 +66,7 @@ export const signUpApi = createApi({
     verifyLoginOtp: builder.mutation({
       query: (user) => {
         return {
-          url: "verifySignInOtp",
+          url: "student/verifySignInOtp",
           method: "POST",
           body: user,
           headers: {
@@ -78,7 +78,7 @@ export const signUpApi = createApi({
     getProfile: builder.query({
       query: () => {
         return {
-          url: "profile",
+          url: "student/profile",
           method: "GET",
           headers: {
             "Content-type": "application/json",
@@ -89,7 +89,7 @@ export const signUpApi = createApi({
     updateProfile: builder.mutation({
       query: (user) => {
         return {
-          url: `updateprofile`,
+          url: `student/updateprofile`,
           method: "PUT",
           body: user,
           headers: {
@@ -101,7 +101,7 @@ export const signUpApi = createApi({
     getQRCode: builder.query({
       query: () => {
         return {
-          url: "qRCode",
+          url: "student/qRCode",
           method: "GET",
           headers: {
             "Content-type": "application/json",
@@ -112,7 +112,7 @@ export const signUpApi = createApi({
     addAccount: builder.mutation({
       query: (user) => {
         return {
-          url: "addAccount",
+          url: "student/addAccount",
           method: "POST",
           body: user,
           // headers: {
@@ -124,7 +124,7 @@ export const signUpApi = createApi({
     getAccount: builder.query({
       query: () => {
         return {
-          url: "account",
+          url: "student/account",
           method: "GET",
           headers: {
             "Content-type": "application/json",
@@ -151,7 +151,7 @@ export const signUpApi = createApi({
       query: (user) => {
         console.log(user)
         return {
-          url: "addCourse",
+          url: "student/addCourse",
           method: "POST",
           body: user,
           // headers: {
@@ -163,7 +163,7 @@ export const signUpApi = createApi({
     getCourse: builder.query({
       query: () => {
         return {
-          url: "courses",
+          url: "student/courses",
           method: "GET",
           headers: {
             "Content-type": "application/json",
@@ -174,7 +174,7 @@ export const signUpApi = createApi({
     getGapYear: builder.query({
       query: () => {
         return {
-          url: "authFillGapCourse",
+          url: "student/authFillGapCourse",
           method: "GET",
           headers: {
             "Content-type": "application/json",
@@ -186,7 +186,7 @@ export const signUpApi = createApi({
       query: (user) => {
         console.log(user)
         return {
-          url: "addRaiseFundCourse",
+          url: "student/addRaiseFundCourse",
           method: "POST",
           body: user,
           // headers: {
@@ -199,7 +199,7 @@ export const signUpApi = createApi({
       query: (user) => {
         console.log(user)
         return {
-          url: "addProfileImage",
+          url: "student/addProfileImage",
           method: "POST",
           body: user,
           // headers: {
@@ -211,7 +211,7 @@ export const signUpApi = createApi({
     getProfileImage: builder.query({
       query: () => {
         return {
-          url: "profileImage",
+          url: "student/profileImage",
           method: "GET",
           headers: {
             "Content-type": "application/json",
@@ -222,7 +222,7 @@ export const signUpApi = createApi({
     getNotification: builder.query({
       query: () => {
         return {
-          url: "notifications",
+          url: "student/notifications",
           method: "GET",
           headers: {
             "Content-type": "application/json",
@@ -242,6 +242,137 @@ export const signUpApi = createApi({
     //     };
     //   },
     // }),
+    registerDonar: builder.mutation({
+      query: (user) => {
+        return {
+          url: "donar/registerDonar",
+          method: "POST",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    verifyDonarRegisterOtp: builder.mutation({
+      query: (user) => {
+        return {
+          url: "donar/verifyRegisterOtp",
+          method: "POST",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    loginDonar: builder.mutation({
+      query: (user) => {
+        return {
+          url: "donar/loginDonar",
+          method: "POST",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    verifyDonarLoginOtp: builder.mutation({
+      query: (user) => {
+        return {
+          url: "donar/verifyLoginOtp",
+          method: "POST",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    resendDonarRegisterOtp: builder.mutation({
+      query: (user) => {
+        return {
+          url: "donar/resendOTPForRegister",
+          method: "POST",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    getDonar: builder.query({
+      query: (user) => {
+        return {
+          url: "donar/donars",
+          method: "GET",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    getDonarNotification: builder.query({
+      query: () => {
+        return {
+          url: "donar/notifications",
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    getAcceptRaiseFund: builder.query({
+      query: () => {
+        return {
+          url: "donar/acceptedRaiseFund",
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    updateDonarProfile: builder.mutation({
+      query: (user) => {
+        return {
+          url: `donar/updateDonar`,
+          method: "PUT",
+          body: user,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
+    }),
+    addDonarProfileImage: builder.mutation({
+      query: (user) => {
+        console.log(user)
+        return {
+          url: "donar/addProfileImage",
+          method: "POST",
+          body: user,
+          // headers: {
+          //   "Content-type": "multipart/form-data",
+          // },
+        };
+      },
+    }),
+    getDonarProfileImage: builder.query({
+      query: () => {
+        return {
+          url: "donar/profileImage",
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+
   }),
 });
 
@@ -264,6 +395,17 @@ export const {
   useAddRaiseFundCourseMutation,
   useAddProfileImageMutation,
   useGetProfileImageQuery,
-  useGetNotificationQuery
+  useGetNotificationQuery,
+  useRegisterDonarMutation,
+  useVerifyDonarRegisterOtpMutation,
+  useLoginDonarMutation,
+  useVerifyDonarLoginOtpMutation,
+  useResendDonarRegisterOtpMutation,
+  useGetDonarQuery,
+  useGetDonarNotificationQuery,
+  useGetAcceptRaiseFundQuery,
+  useUpdateDonarProfileMutation,
+  useAddDonarProfileImageMutation,
+  useGetDonarProfileImageQuery
 
 } = signUpApi;
