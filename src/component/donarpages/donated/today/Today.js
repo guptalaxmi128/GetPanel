@@ -107,11 +107,12 @@ const Today = () => {
                       </th>
 
                       <th scope="col" className=" table-th ">
-                        Profile
+                        View Details 
+                        {/* Profile */}
                       </th>
 
                       <th scope="col" className=" table-th ">
-                        Status
+                        Receipt
                       </th>
                     </tr>
                   </thead>
@@ -183,10 +184,11 @@ const Today = () => {
                       </td>
                       <td className="table-td ">
                         <div
-                          className="inline-block px-3 min-w-[120px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500
-        bg-success-500"
+        //                   className="inline-block px-3 min-w-[120px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500
+        // bg-success-500"
+        style={{color:'#000',fontWeight:500}}
                         >
-                          Approved
+                          Download
                         </div>
                       </td>
                     </tr>
@@ -258,10 +260,11 @@ const Today = () => {
                       </td>
                       <td className="table-td ">
                         <div
-                          className="inline-block px-3 min-w-[120px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500
-        bg-warning-500"
+        //                   className="inline-block px-3 min-w-[120px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500
+        // bg-warning-500" 
+         style={{color:'#000',fontWeight:500}}
                         >
-                          Pending
+                          Download
                         </div>
                       </td>
                     </tr>
@@ -332,10 +335,11 @@ const Today = () => {
                       </td>
                       <td className="table-td ">
                         <div
-                          className="inline-block px-3 min-w-[120px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500
-        bg-warning-500"
+        //                   className="inline-block px-3 min-w-[120px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500
+        // bg-warning-500"
+        style={{color:'#000',fontWeight:500}} //icon remaining download icon
                         >
-                          Pending
+                          Download
                         </div>
                       </td>
                     </tr>

@@ -230,6 +230,42 @@ export const signUpApi = createApi({
         };
       },
     }),
+    getUpdationResponse: builder.query({
+      query: () => {
+        return {
+          url: "student/updationResponse",
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    getOTPForUpdateAccount: builder.query({
+      query: (accountDetailId) => {
+        return {
+          url: `student/getOTPForUpdateAccount/${accountDetailId}`,
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    addverifyOTPForUpdateAccount: builder.mutation({
+      query: (user) => {
+        console.log(user)
+        const {accountDetailId,...data}=user;
+        return {
+          url: `student/verifyOTPForUpdateAccount/${accountDetailId}`,
+          method: "POST",
+          body: data,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
     // updateCourse: builder.mutation({
     //   query: (user) => {
     //     // console.log("UpdateData", user);
@@ -372,6 +408,18 @@ export const signUpApi = createApi({
         };
       },
     }),
+    getDonarStudentProfile: builder.query({
+      query: (id) => {
+            // console.log("ActualUpdateData", id);
+        return {
+          url: `donar/studentProfile/${id}`,
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
 
   }),
 });
@@ -396,6 +444,9 @@ export const {
   useAddProfileImageMutation,
   useGetProfileImageQuery,
   useGetNotificationQuery,
+  useGetUpdationResponseQuery,
+  useGetOTPForUpdateAccountQuery,
+  useAddverifyOTPForUpdateAccountMutation,
   useRegisterDonarMutation,
   useVerifyDonarRegisterOtpMutation,
   useLoginDonarMutation,
@@ -406,6 +457,7 @@ export const {
   useGetAcceptRaiseFundQuery,
   useUpdateDonarProfileMutation,
   useAddDonarProfileImageMutation,
-  useGetDonarProfileImageQuery
+  useGetDonarProfileImageQuery,
+  useGetDonarStudentProfileQuery
 
 } = signUpApi;

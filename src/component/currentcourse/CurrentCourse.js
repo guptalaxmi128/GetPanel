@@ -1,37 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-import LogoutIcon from "@mui/icons-material/Logout";
 import SearchIcon from "@mui/icons-material/Search";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import Sidebar from "../sidebar/Sidebar";
-import user from "../../assets/user.png";
 import edit from "../../assets/edit.png";
 import {
   useAddCourseMutation,
   useGetCourseQuery,
-  useGetProfileQuery,
-  useGetNotificationQuery,
 } from "../../services/signUpApi";
+import StudentNotification from "../studentNotification/StudentNotification";
 
 const CurrentCourse = () => {
-  const [currentData,setCurrentData]=useState('');
-  const [highSchoolData,setHighSchoolData]=useState('');
-  const [interData,setInterData]=useState('');
-  const [graduationData,setGraduationData]=useState('');
-  const [postGraduationData,setPostGraduationData]=useState('');
-  const [notification, setNotification] = useState("");
-  const [isNotification, setIsNotification] = useState(false);
+  const [currentData, setCurrentData] = useState("");
+  const [highSchoolData, setHighSchoolData] = useState("");
+  const [interData, setInterData] = useState("");
+  const [graduationData, setGraduationData] = useState("");
+  const [postGraduationData, setPostGraduationData] = useState("");
+
   const [showHighSchoolForm, setShowHighSchoolForm] = useState(false);
   const [showIntermediateForm, setShowIntermediateForm] = useState(false);
   const [showGraduationForm, setShowGraduationForm] = useState(false);
   const [showPostGraduationForm, setShowPostGraduationForm] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [name, setName] = useState("");
 
- 
   const [selectedCurrentFile, setSelectedCurrentFile] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [completeDate, setCompleteDate] = useState(null);
@@ -40,29 +30,12 @@ const CurrentCourse = () => {
   const [boardOrUniversityName, setBoardOrUniversityName] = useState("");
   const [schoolOrCollageName, setSchoolOrCollageName] = useState("");
   const [highestEducation, setHighestEducation] = useState("default");
-  const [studentUID,setStudentUID]=useState('');
+  const [studentUID, setStudentUID] = useState("");
   // const handleCurrentFileChange = (event) => {
   //   const file = event.target.files[0];
   //   setSelectedCurrentFile(file);
   // };
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    alert("Student logout successfully!");
-  };
-
-  const { data: notificationData, isSuccess: notificationIsSuccess } =
-  useGetNotificationQuery();
-
-console.log(notificationData);
-console.log("data", notification);
-
-useEffect(() => {
-  if (notificationData && notificationIsSuccess && notificationData.data) {
-    setNotification(notificationData.data);
-  }
-}, [notificationData, notificationIsSuccess]);
- 
   //for select multiple images
   const handleCurrentFileChange = (event) => {
     const files = event.target.files;
@@ -102,54 +75,60 @@ useEffect(() => {
     setSelectedHighFile(fileList);
   };
 
-
   //for graduation state
-  const [graduationFullName,setGraduationFullName]=useState('');
-  const [selectedGraduationFile,setSelectedGraduationFile]=useState([]);
-  const [startGraduationDate,setStartGraduationDate]=useState(null);
-  const [completeGraduationDate,setCompleteGraduationDate]=useState(null);
-  const [graduationCourseName,setGraduationCourseName]=useState('');
+  const [graduationFullName, setGraduationFullName] = useState("");
+  const [selectedGraduationFile, setSelectedGraduationFile] = useState([]);
+  const [startGraduationDate, setStartGraduationDate] = useState(null);
+  const [completeGraduationDate, setCompleteGraduationDate] = useState(null);
+  const [graduationCourseName, setGraduationCourseName] = useState("");
   const [graduationBoardOrUniversityName, setGraduationBoardOrUniversityName] =
-  useState("");
-  const [graduationSchoolOrCollageName, setGraduationSchoolOrCollageName] = useState("");
+    useState("");
+  const [graduationSchoolOrCollageName, setGraduationSchoolOrCollageName] =
+    useState("");
 
-    // for multiple images and pdf
-    const handleGraduationFileChange = (event) => {
-      const files = event.target.files;
-      const fileList = [];
-  
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        fileList.push(file);
-      }
-  
-      setSelectedGraduationFile(fileList);
-    };
+  // for multiple images and pdf
+  const handleGraduationFileChange = (event) => {
+    const files = event.target.files;
+    const fileList = [];
 
-      //for postgraduation state
-  const [postGraduationFullName,setPostGraduationFullName]=useState('');
-  const [selectedPostGraduationFile,setSelectedPostGraduationFile]=useState([]);
-  const [startPostGraduationDate,setStartPostGraduationDate]=useState(null);
-  const [completePostGraduationDate,setCompletePostGraduationDate]=useState(null);
-  const [postGraduationCourseName,setPostGraduationCourseName]=useState('');
-  const [postGraduationBoardOrUniversityName, setPostGraduationBoardOrUniversityName] =
-  useState("");
-  const [postGraduationSchoolOrCollageName, setPostGraduationSchoolOrCollageName] = useState("");
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      fileList.push(file);
+    }
 
-    // for multiple images and pdf
-    const handlePostGraduationFileChange = (event) => {
-      const files = event.target.files;
-      const fileList = [];
-  
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        fileList.push(file);
-      }
-  
-      setSelectedPostGraduationFile(fileList);
-    };
+    setSelectedGraduationFile(fileList);
+  };
 
-    
+  //for postgraduation state
+  const [postGraduationFullName, setPostGraduationFullName] = useState("");
+  const [selectedPostGraduationFile, setSelectedPostGraduationFile] = useState(
+    []
+  );
+  const [startPostGraduationDate, setStartPostGraduationDate] = useState(null);
+  const [completePostGraduationDate, setCompletePostGraduationDate] =
+    useState(null);
+  const [postGraduationCourseName, setPostGraduationCourseName] = useState("");
+  const [
+    postGraduationBoardOrUniversityName,
+    setPostGraduationBoardOrUniversityName,
+  ] = useState("");
+  const [
+    postGraduationSchoolOrCollageName,
+    setPostGraduationSchoolOrCollageName,
+  ] = useState("");
+
+  // for multiple images and pdf
+  const handlePostGraduationFileChange = (event) => {
+    const files = event.target.files;
+    const fileList = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      fileList.push(file);
+    }
+
+    setSelectedPostGraduationFile(fileList);
+  };
 
   const [selectedInterFile, setSelectedInterFile] = useState([]);
   const [startInterDate, setStartInterDate] = useState(null);
@@ -164,8 +143,8 @@ useEffect(() => {
   //   setSelectedInterFile(file);
   // };
 
-   // for multiple images and pdf
-   const handleInterFileChange = (event) => {
+  // for multiple images and pdf
+  const handleInterFileChange = (event) => {
     const files = event.target.files;
     const fileList = [];
 
@@ -184,28 +163,26 @@ useEffect(() => {
     setSelectedMonths(months);
   };
 
-
   const calculateYearsAndMonths = (totalMonths) => {
     const months = parseInt(totalMonths, 10);
     const years = Math.floor(months / 12);
     const remainingMonths = months % 12;
-  
+
     let duration = "";
-  
+
     if (years > 0) {
       duration += years + " year";
       if (years > 1) duration += "s";
     }
-  
+
     if (remainingMonths > 0) {
       if (duration !== "") duration += " ";
       duration += remainingMonths + " month";
       if (remainingMonths > 1) duration += "s";
     }
-  
+
     return duration;
   };
-
 
   //for current course duration
   const [currentCourseMonths, setCurrentCourseMonths] = useState("default");
@@ -224,20 +201,20 @@ useEffect(() => {
   };
 
   const [graduationCourseMonths, setGraduationCourseMonths] =
-  useState("default");
+    useState("default");
 
-const handleGraduationChange = (event) => {
-  const months = event.target.value;
-  setGraduationCourseMonths(months);
-};
+  const handleGraduationChange = (event) => {
+    const months = event.target.value;
+    setGraduationCourseMonths(months);
+  };
 
-const [postGraduationCourseMonths, setPostGraduationCourseMonths] =
-useState("default");
+  const [postGraduationCourseMonths, setPostGraduationCourseMonths] =
+    useState("default");
 
-const handlePostGraduationChange = (event) => {
-const months = event.target.value;
-setPostGraduationCourseMonths(months);
-};
+  const handlePostGraduationChange = (event) => {
+    const months = event.target.value;
+    setPostGraduationCourseMonths(months);
+  };
 
   // For Current duration Type
   const [currentDurationType, setCurrentDurationType] = useState("default");
@@ -260,19 +237,21 @@ setPostGraduationCourseMonths(months);
     setInterDurationType(event.target.value);
   };
 
-    //  For graduation duration Type
-    const [graduationDurationType, setGraduationDurationType] = useState("default");
+  //  For graduation duration Type
+  const [graduationDurationType, setGraduationDurationType] =
+    useState("default");
 
-    const handleGraduationDurationType = (event) => {
-      setGraduationDurationType(event.target.value);
-    };
+  const handleGraduationDurationType = (event) => {
+    setGraduationDurationType(event.target.value);
+  };
 
-     //  For postgraduation duration Type
-     const [postGraduationDurationType, setPostGraduationDurationType] = useState("default");
+  //  For postgraduation duration Type
+  const [postGraduationDurationType, setPostGraduationDurationType] =
+    useState("default");
 
-     const handlePostGraduationDurationType = (event) => {
-       setPostGraduationDurationType(event.target.value);
-     };
+  const handlePostGraduationDurationType = (event) => {
+    setPostGraduationDurationType(event.target.value);
+  };
 
   // For Current Course Type
   const [currentCourseType, setCurrentCourseType] = useState("default");
@@ -295,21 +274,20 @@ setPostGraduationCourseMonths(months);
     setInterCourseType(event.target.value);
   };
 
-    //  For graduration Course Type
-    const [graduationCourseType, setGraduationCourseType] = useState("default");
+  //  For graduration Course Type
+  const [graduationCourseType, setGraduationCourseType] = useState("default");
 
-    const handleGraduationCourseType = (event) => {
-      setGraduationCourseType(event.target.value);
-    };
-  
-     //  For postgraduration Course Type
-     const [postGraduationCourseType, setPostGraduationCourseType] = useState("default");
+  const handleGraduationCourseType = (event) => {
+    setGraduationCourseType(event.target.value);
+  };
 
-     const handlePostGraduationCourseType = (event) => {
-       setPostGraduationCourseType(event.target.value);
-     };
+  //  For postgraduration Course Type
+  const [postGraduationCourseType, setPostGraduationCourseType] =
+    useState("default");
 
-  
+  const handlePostGraduationCourseType = (event) => {
+    setPostGraduationCourseType(event.target.value);
+  };
 
   const [courseLevel, setCourseLevel] = useState("default");
   const [showOthersFields, setShowOthersFields] = useState(false);
@@ -325,9 +303,7 @@ setPostGraduationCourseMonths(months);
     setShowIntermediateForm(
       selectedValue === "Graduation" || selectedValue === "Post Graduation"
     );
-    setShowGraduationForm(
-       selectedValue === "Post Graduation"
-    );
+    setShowGraduationForm(selectedValue === "Post Graduation");
     setShowOthersFields(selectedValue === "Certification");
   }
 
@@ -335,25 +311,24 @@ setPostGraduationCourseMonths(months);
     const selectedValue = event.target.value;
     setHighestEducation(selectedValue);
     setShowHighSchoolForm(
-      selectedValue === 'High School' ||
-      selectedValue === "Intermediate" ||
+      selectedValue === "High School" ||
+        selectedValue === "Intermediate" ||
         selectedValue === "Graduation" ||
         selectedValue === "Post Graduation"
     );
     setShowIntermediateForm(
-      selectedValue === "Graduation" || selectedValue === "Post Graduation" || selectedValue === "Intermediate"
+      selectedValue === "Graduation" ||
+        selectedValue === "Post Graduation" ||
+        selectedValue === "Intermediate"
     );
     setShowGraduationForm(
       selectedValue === "Graduation" || selectedValue === "Post Graduation"
     );
-    setShowPostGraduationForm(
-    selectedValue === "Post Graduation"
-    );
+    setShowPostGraduationForm(selectedValue === "Post Graduation");
   }
   // For highSchool
 
   const [highCourseLevel, setHighCourseLevel] = useState("default");
- 
 
   function handleHighCourseLevel(event) {
     const selectedValue = event.target.value;
@@ -366,183 +341,167 @@ setPostGraduationCourseMonths(months);
 
   function handleInterCourseLevel(event) {
     const selectedValue = event.target.value;
-    setInterCourseLevel(selectedValue); 
+    setInterCourseLevel(selectedValue);
   }
 
-   // for  graduation
+  // for  graduation
 
-   const [graduationCourseLevel, setGraduationCourseLevel] = useState("default");
+  const [graduationCourseLevel, setGraduationCourseLevel] = useState("default");
 
-   function handleGraduationCourseLevel(event) {
-     const selectedValue = event.target.value;
-     setGraduationCourseLevel(selectedValue); 
-   }
+  function handleGraduationCourseLevel(event) {
+    const selectedValue = event.target.value;
+    setGraduationCourseLevel(selectedValue);
+  }
 
-    // for  postgraduation
+  // for  postgraduation
 
-    const [postGraduationCourseLevel, setPostGraduationCourseLevel] = useState("default");
+  const [postGraduationCourseLevel, setPostGraduationCourseLevel] =
+    useState("default");
 
-    function handlePostGraduationCourseLevel(event) {
-      const selectedValue = event.target.value;
-      setPostGraduationCourseLevel(selectedValue); 
-    }
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-
+  function handlePostGraduationCourseLevel(event) {
+    const selectedValue = event.target.value;
+    setPostGraduationCourseLevel(selectedValue);
+  }
 
   const handleStartDateChange = (selectedDates) => {
     const selectedDate = selectedDates[0]; // Assuming you only allow selecting one date
     const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Adding leading zero if needed
-    const day = String(selectedDate.getDate()).padStart(2, '0'); // Adding leading zero if needed
-  
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0"); // Adding leading zero if needed
+    const day = String(selectedDate.getDate()).padStart(2, "0"); // Adding leading zero if needed
+
     const formattedDate = `${year}-${month}-${day}`;
-  
+
     setStartDate(formattedDate);
   };
 
   const handleCompleteDateChange = (selectedDates) => {
     const selectedDate = selectedDates[0]; // Assuming you only allow selecting one date
     const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Adding leading zero if needed
-    const day = String(selectedDate.getDate()).padStart(2, '0'); // Adding leading zero if needed
-  
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0"); // Adding leading zero if needed
+    const day = String(selectedDate.getDate()).padStart(2, "0"); // Adding leading zero if needed
+
     const formattedDate = `${year}-${month}-${day}`;
-  
+
     setCompleteDate(formattedDate);
   };
-
- 
 
   const handleStartInterDateChange = (selectedDates) => {
     const selectedDate = selectedDates[0]; // Assuming you only allow selecting one date
     const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Adding leading zero if needed
-    const day = String(selectedDate.getDate()).padStart(2, '0'); // Adding leading zero if needed
-  
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0"); // Adding leading zero if needed
+    const day = String(selectedDate.getDate()).padStart(2, "0"); // Adding leading zero if needed
+
     const formattedDate = `${year}-${month}-${day}`;
-  
+
     setStartInterDate(formattedDate);
   };
 
   const handleStartGraduationDateChange = (selectedDates) => {
     const selectedDate = selectedDates[0]; // Assuming you only allow selecting one date
     const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Adding leading zero if needed
-    const day = String(selectedDate.getDate()).padStart(2, '0'); // Adding leading zero if needed
-  
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0"); // Adding leading zero if needed
+    const day = String(selectedDate.getDate()).padStart(2, "0"); // Adding leading zero if needed
+
     const formattedDate = `${year}-${month}-${day}`;
-  
+
     setStartGraduationDate(formattedDate);
   };
 
   const handleCompleteGraduationDateChange = (selectedDates) => {
     const selectedDate = selectedDates[0]; // Assuming you only allow selecting one date
     const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Adding leading zero if needed
-    const day = String(selectedDate.getDate()).padStart(2, '0'); // Adding leading zero if needed
-  
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0"); // Adding leading zero if needed
+    const day = String(selectedDate.getDate()).padStart(2, "0"); // Adding leading zero if needed
+
     const formattedDate = `${year}-${month}-${day}`;
-  
+
     setCompleteGraduationDate(formattedDate);
   };
 
   const handleStartPostGraduationDateChange = (selectedDates) => {
     const selectedDate = selectedDates[0]; // Assuming you only allow selecting one date
     const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Adding leading zero if needed
-    const day = String(selectedDate.getDate()).padStart(2, '0'); // Adding leading zero if needed
-  
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0"); // Adding leading zero if needed
+    const day = String(selectedDate.getDate()).padStart(2, "0"); // Adding leading zero if needed
+
     const formattedDate = `${year}-${month}-${day}`;
-  
+
     setStartPostGraduationDate(formattedDate);
   };
 
   const handleCompletePostGraduationDateChange = (selectedDates) => {
     const selectedDate = selectedDates[0]; // Assuming you only allow selecting one date
     const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Adding leading zero if needed
-    const day = String(selectedDate.getDate()).padStart(2, '0'); // Adding leading zero if needed
-  
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0"); // Adding leading zero if needed
+    const day = String(selectedDate.getDate()).padStart(2, "0"); // Adding leading zero if needed
+
     const formattedDate = `${year}-${month}-${day}`;
-  
+
     setCompletePostGraduationDate(formattedDate);
   };
 
   const handleCompleteInterDateChange = (selectedDates) => {
     const selectedDate = selectedDates[0]; // Assuming you only allow selecting one date
     const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Adding leading zero if needed
-    const day = String(selectedDate.getDate()).padStart(2, '0'); // Adding leading zero if needed
-  
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0"); // Adding leading zero if needed
+    const day = String(selectedDate.getDate()).padStart(2, "0"); // Adding leading zero if needed
+
     const formattedDate = `${year}-${month}-${day}`;
-  
+
     setCompleteInterDate(formattedDate);
   };
 
   const handleStartHighDateChange = (selectedDates) => {
     const selectedDate = selectedDates[0]; // Assuming you only allow selecting one date
     const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Adding leading zero if needed
-    const day = String(selectedDate.getDate()).padStart(2, '0'); // Adding leading zero if needed
-  
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0"); // Adding leading zero if needed
+    const day = String(selectedDate.getDate()).padStart(2, "0"); // Adding leading zero if needed
+
     const formattedDate = `${year}-${month}-${day}`;
-  
+
     setStartHighDate(formattedDate);
   };
-
 
   const handleCompleteHighDateChange = (selectedDates) => {
     const selectedDate = selectedDates[0]; // Assuming you only allow selecting one date
     const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Adding leading zero if needed
-    const day = String(selectedDate.getDate()).padStart(2, '0'); // Adding leading zero if needed
-  
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0"); // Adding leading zero if needed
+    const day = String(selectedDate.getDate()).padStart(2, "0"); // Adding leading zero if needed
+
     const formattedDate = `${year}-${month}-${day}`;
-  
+
     setCompleteHighDate(formattedDate);
   };
 
   const [addCourse] = useAddCourseMutation();
   const { data, isSuccess } = useGetCourseQuery();
 
-    console.log("course", data);
-   useEffect(() => {
-    if (data && isSuccess && data.length > 0 ) {
-      const currentCourse = data.find(item => item.onGoing === true);
-      const highSchoolCourse = data.find(item => item.courseLevel === 'High School' && item.onGoing === false);
-      const interCourse = data.find(item => item.courseLevel === 'Intermediate' && item.onGoing === false);
-      const graduationCourse = data.find(item => item.courseLevel === 'Graduation' && item.onGoing === false);
-      const postGraduationCourse = data.find(item => item.courseLevel === 'Post Graduation' && item.onGoing === false);
-     setCurrentData(currentCourse);
-     setHighSchoolData(highSchoolCourse)
-     setInterData(interCourse);
-     setGraduationData(graduationCourse);
-     setPostGraduationData(postGraduationCourse);
-
+  // console.log("course", data);
+  useEffect(() => {
+    if (data && data.success && data.data.length > 0) {
+      const currentCourse = data.data.find((item) => item.onGoing === true);
+      const highSchoolCourse = data.data.find(
+        (item) => item.courseLevel === "High School" && item.onGoing === false
+      );
+      const interCourse = data.data.find(
+        (item) => item.courseLevel === "Intermediate" && item.onGoing === false
+      );
+      const graduationCourse = data.data.find(
+        (item) => item.courseLevel === "Graduation" && item.onGoing === false
+      );
+      const postGraduationCourse = data.data.find(
+        (item) =>
+          item.courseLevel === "Post Graduation" && item.onGoing === false
+      );
+      setCurrentData(currentCourse);
+      setHighSchoolData(highSchoolCourse);
+      setInterData(interCourse);
+      setGraduationData(graduationCourse);
+      setPostGraduationData(postGraduationCourse);
     }
   }, [data, isSuccess]);
 
-  // console.log(highSchoolData);
- 
-
- // To get name in the navigation
- const {data:studentData,isSuccess:studentIsSuccess}=useGetProfileQuery();
-//  console.log(studentData)
-
- 
- useEffect(() => {
-  if (studentData && studentIsSuccess) {
-    setName(studentData.name)
-  }
-}, [studentData, studentIsSuccess]);
-
- 
-
-
+  console.log(currentData);
 
   const clearTextInput = () => {
     setFullName("");
@@ -556,12 +515,12 @@ setPostGraduationCourseMonths(months);
     setSelectedCurrentFile(null);
     setCurrentCourseType("default");
     setCurrentDurationType("default");
-    setHighestEducation('default');
+    setHighestEducation("default");
     setSelectedCurrentFile(null);
   };
 
   const handleSubmit = async (e) => {
-     e.preventDefault();
+    e.preventDefault();
     try {
       const formData = new FormData();
       formData.append("fullName", fullName);
@@ -576,7 +535,7 @@ setPostGraduationCourseMonths(months);
       formData.append("courseType", currentCourseType);
       formData.append("highestEducation", highestEducation);
       selectedCurrentFile.forEach((file) => {
-        formData.append('courseDocument', file);
+        formData.append("courseDocument", file);
       });
       const res = await addCourse(formData);
       alert("Course details added successfully !");
@@ -586,8 +545,6 @@ setPostGraduationCourseMonths(months);
       console.log(error);
     }
   };
-
- 
 
   const clearHighTextInput = () => {
     setHighFullName("");
@@ -619,7 +576,7 @@ setPostGraduationCourseMonths(months);
       formData.append("courseType", highCourseType);
       // formData.append("document", selectedHighFile);
       selectedHighFile.forEach((file) => {
-        formData.append('courseDocument', file);
+        formData.append("courseDocument", file);
       });
       const res = await addCourse(formData);
       alert("HighSchool details added successfully !");
@@ -646,7 +603,7 @@ setPostGraduationCourseMonths(months);
       formData.append("courseType", interCourseType);
       // formData.append("document", selectedInterFile);
       selectedInterFile.forEach((file) => {
-        formData.append('courseDocument', file);
+        formData.append("courseDocument", file);
       });
       const res = await addCourse(formData);
       alert("Intermediate details added successfully !");
@@ -685,9 +642,9 @@ setPostGraduationCourseMonths(months);
       formData.append("endDate", completeGraduationDate);
       formData.append("durationType", graduationDurationType);
       formData.append("courseType", graduationCourseType);
-    
+
       selectedGraduationFile.forEach((file) => {
-        formData.append('courseDocument', file);
+        formData.append("courseDocument", file);
       });
       const res = await addCourse(formData);
       alert("Graduation details added successfully !");
@@ -721,14 +678,17 @@ setPostGraduationCourseMonths(months);
       formData.append("courseName", postGraduationCourseName);
       formData.append("schoolOrCollageName", postGraduationSchoolOrCollageName);
       formData.append("courseDuration", postGraduationCourseMonths);
-      formData.append("boardOrUniversityName", postGraduationBoardOrUniversityName);
+      formData.append(
+        "boardOrUniversityName",
+        postGraduationBoardOrUniversityName
+      );
       formData.append("startDate", startPostGraduationDate);
       formData.append("endDate", completePostGraduationDate);
       formData.append("durationType", postGraduationDurationType);
       formData.append("courseType", postGraduationCourseType);
-    
+
       selectedPostGraduationFile.forEach((file) => {
-        formData.append('courseDocument', file);
+        formData.append("courseDocument", file);
       });
       const res = await addCourse(formData);
       alert(" Post Graduation details added successfully !");
@@ -770,9 +730,7 @@ setPostGraduationCourseMonths(months);
                   <a
                     href="index.html"
                     className="mobile-logo xl:hidden inline-block"
-                  >
-                   
-                  </a>
+                  ></a>
                   <button className="smallDeviceMenuController open-sdiebar-controller hidden xl:hidden md:inline-block">
                     {/* <iconify-icon
                       className="leading-none bg-transparent relative text-xl top-[2px] text-slate-900 dark:text-white"
@@ -839,1002 +797,9 @@ setPostGraduationCourseMonths(months);
                 </div>
                 {/* <!-- end horizental --> */}
 
-                <div className="main-menu">
-                  <ul>
-                    <li
-                      className="
-             menu-item-has-children 
-              "
-                    >
-                      {/* <!--  Single menu --> */}
-
-                      {/* <!-- has dropdown --> */}
-
-                      <a href="javascript:void()">
-                        <div className="flex flex-1 items-center space-x-[6px] rtl:space-x-reverse">
-                          <span className="icon-box">
-                            <iconify-icon icon="heroicons-outline:home">
-                              {" "}
-                            </iconify-icon>
-                          </span>
-                          <div className="text-box">Dashboard</div>
-                        </div>
-                        <div className="flex-none text-sm ltr:ml-3 rtl:mr-3 leading-[1] relative top-1">
-                          <iconify-icon icon="heroicons-outline:chevron-down">
-                            {" "}
-                          </iconify-icon>
-                        </div>
-                      </a>
-
-                      {/* <!-- Dropdown menu --> */}
-
-                      <ul className="sub-menu">
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons:presentation-chart-line"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">
-                                Analytics Dashboard
-                              </span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons:shopping-cart"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">
-                                Ecommerce Dashboard
-                              </span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons:briefcase"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">
-                                Project Dashboard
-                              </span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="ri:customer-service-2-fill"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">CRM Dashboard</span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons:wrench-screwdriver"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">
-                                Banking Dashboard
-                              </span>
-                            </div>
-                          </a>
-                        </li>
-                      </ul>
-
-                      {/* <!-- Megamenu --> */}
-                    </li>
-
-                    <li
-                      className="
-             menu-item-has-children 
-              "
-                    >
-                      {/* <!--  Single menu --> */}
-
-                      {/* <!-- has dropdown --> */}
-
-                      <a href="javascript:void()">
-                        <div className="flex flex-1 items-center space-x-[6px] rtl:space-x-reverse">
-                          <span className="icon-box">
-                            <iconify-icon icon="heroicons-outline:chip">
-                              {" "}
-                            </iconify-icon>
-                          </span>
-                          <div className="text-box">App</div>
-                        </div>
-                        <div className="flex-none text-sm ltr:ml-3 rtl:mr-3 leading-[1] relative top-1">
-                          <iconify-icon icon="heroicons-outline:chevron-down">
-                            {" "}
-                          </iconify-icon>
-                        </div>
-                      </a>
-
-                      {/* <!-- Dropdown menu --> */}
-
-                      <ul className="sub-menu">
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:chat"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">Chat</span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:mail"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">Email</span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:calendar"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">Calendar</span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:view-boards"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">Kanban</span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:clipboard-check"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">Todo</span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:document"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">Projects</span>
-                            </div>
-                          </a>
-                        </li>
-                      </ul>
-
-                      {/* <!-- Megamenu --> */}
-                    </li>
-
-                    <li
-                      className="
-              menu-item-has-children has-megamenu
-            "
-                    >
-                      {/* <!--  Single menu --> */}
-
-                      {/* <!-- has dropdown --> */}
-
-                      <a href="javascript:void()">
-                        <div className="flex flex-1 items-center space-x-[6px] rtl:space-x-reverse">
-                          <span className="icon-box">
-                            <iconify-icon icon="heroicons-outline:view-boards">
-                              {" "}
-                            </iconify-icon>
-                          </span>
-                          <div className="text-box">Pages</div>
-                        </div>
-                        <div className="flex-none text-sm ltr:ml-3 rtl:mr-3 leading-[1] relative top-1">
-                          <iconify-icon icon="heroicons-outline:chevron-down">
-                            {" "}
-                          </iconify-icon>
-                        </div>
-                      </a>
-
-                      {/* <!-- Dropdown menu --> */}
-
-                      {/* <!-- Megamenu --> */}
-
-                      <div className="rt-mega-menu">
-                        <div className="flex flex-wrap space-x-8 justify-between rtl:space-x-reverse">
-                          <div>
-                            {/* <!-- mega menu title --> */}
-                            <div className="text-sm font-medium text-slate-900 dark:text-white mb-2 flex space-x-1 items-center">
-                              <span> Authentication</span>
-                            </div>
-                            {/* <!-- single menu item* --> */}
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Signin One
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Signin Two
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Signin Three
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Signup One
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Signup Two
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Signup Three
-                                </span>
-                              </div>
-                            </a>
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Forget Password One
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Forget Password Two
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Forget Password Three
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Lock Screen One
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Lock Screen Two
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Lock Screen Three
-                                </span>
-                              </div>
-                            </a>
-                          </div>
-
-                          <div>
-                            {/* <!-- mega menu title --> */}
-                            <div className="text-sm font-medium text-slate-900 dark:text-white mb-2 flex space-x-1 items-center">
-                              <span> Components</span>
-                            </div>
-                            {/* <!-- single menu item* --> */}
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  typography
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  colors
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  alert
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  button
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  card
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  carousel
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  dropdown
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  image
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  modal
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Progress bar
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Placeholder
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Tab &amp; Accordion
-                                </span>
-                              </div>
-                            </a>
-                          </div>
-
-                          <div>
-                            {/* <!-- mega menu title --> */}
-                            <div className="text-sm font-medium text-slate-900 dark:text-white mb-2 flex space-x-1 items-center">
-                              <span> Forms</span>
-                            </div>
-                            {/* <!-- single menu item* --> */}
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Input
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Input group
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Input layout
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Form validation
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="#">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Wizard
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="input-mask.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Input mask
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="file-input-2.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  File input
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="form-repeater.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Form repeater
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="textarea.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Textarea
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="checkbox.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Checkbox
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="radio-button.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Radio button
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="switch.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Switch
-                                </span>
-                              </div>
-                            </a>
-                          </div>
-
-                          <div>
-                            {/* <!-- mega menu title --> */}
-                            <div className="text-sm font-medium text-slate-900 dark:text-white mb-2 flex space-x-1 items-center">
-                              <span> Utility</span>
-                            </div>
-                            {/* <!-- single menu item* --> */}
-
-                            <a href="invoice.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Invoice
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="pricing.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Pricing
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="faq.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  FAQ
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="blank-page.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Blank page
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="blog.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Blog
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="404.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  404 page
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="comming-soon.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Coming Soon
-                                </span>
-                              </div>
-                            </a>
-
-                            <a href="under-maintanance.html">
-                              <div className="flex items-center space-x-2 text-[15px] leading-6 rtl:space-x-reverse">
-                                <span className="h-[6px] w-[6px] rounded-full border border-slate-600 dark:border-white inline-block flex-none"></span>
-                                <span className="capitalize text-slate-600 dark:text-slate-300">
-                                  Under Maintanance page
-                                </span>
-                              </div>
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-
-                    <li
-                      className="
-             menu-item-has-children 
-              "
-                    >
-                      {/* <!--  Single menu --> */}
-
-                      {/* <!-- has dropdown --> */}
-
-                      <a href="javascript:void()">
-                        <div className="flex flex-1 items-center space-x-[6px] rtl:space-x-reverse">
-                          <span className="icon-box">
-                            <iconify-icon icon="heroicons-outline:view-grid-add">
-                              {" "}
-                            </iconify-icon>
-                          </span>
-                          <div className="text-box">Widgets</div>
-                        </div>
-                        <div className="flex-none text-sm ltr:ml-3 rtl:mr-3 leading-[1] relative top-1">
-                          <iconify-icon icon="heroicons-outline:chevron-down">
-                            {" "}
-                          </iconify-icon>
-                        </div>
-                      </a>
-
-                      {/* <!-- Dropdown menu --> */}
-
-                      <ul className="sub-menu">
-                        <li>
-                          <a href="basic-widgets.html">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:document-text"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">Basic</span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="statistics-widgets.html">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:document-text"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">Statistic</span>
-                            </div>
-                          </a>
-                        </li>
-                      </ul>
-
-                      {/* <!-- Megamenu --> */}
-                    </li>
-
-                    <li
-                      className="
-             menu-item-has-children 
-              "
-                    >
-                      {/* <!--  Single menu --> */}
-
-                      {/* <!-- has dropdown --> */}
-
-                      <a href="javascript:void()">
-                        <div className="flex flex-1 items-center space-x-[6px] rtl:space-x-reverse">
-                          <span className="icon-box">
-                            <iconify-icon icon="heroicons-outline:template">
-                              {" "}
-                            </iconify-icon>
-                          </span>
-                          <div className="text-box">Extra</div>
-                        </div>
-                        <div className="flex-none text-sm ltr:ml-3 rtl:mr-3 leading-[1] relative top-1">
-                          <iconify-icon icon="heroicons-outline:chevron-down">
-                            {" "}
-                          </iconify-icon>
-                        </div>
-                      </a>
-
-                      {/* <!-- Dropdown menu --> */}
-
-                      <ul className="sub-menu">
-                        <li>
-                          <a href="basic-table.html">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:table"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">Basic Table</span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="advance-table.html">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:table"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">
-                                Advanced table
-                              </span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="apex-chart.html">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:chart-bar"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">Apex chart</span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:chart-bar"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">Chart js</span>
-                            </div>
-                          </a>
-                        </li>
-
-                        <li>
-                          <a href="#">
-                            <div className="flex space-x-2 items-start rtl:space-x-reverse">
-                              <iconify-icon
-                                icon="heroicons-outline:map"
-                                className="leading-[1] text-base"
-                              >
-                                {" "}
-                              </iconify-icon>
-                              <span className="leading-[1]">Map</span>
-                            </div>
-                          </a>
-                        </li>
-                      </ul>
-
-                      {/* <!-- Megamenu --> */}
-                    </li>
-                  </ul>
-                </div>
                 {/* <!-- end top menu --> */}
-                <div className="nav-tools flex items-center lg:space-x-5 space-x-3 rtl:space-x-reverse leading-0">
-                  {/* <!-- BEGIN: Notification Dropdown --> */}
-                  {/* <!-- Notifications Dropdown area --> */}
-                  <div className="relative md:block hidden">
-                    <button
-                      className="lg:h-[32px] lg:w-[32px] lg:bg-slate-50 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer
-      rounded-full text-[20px] flex flex-col items-center justify-center"
-                    >
-                      <NotificationsIcon
-                        onClick={() => setIsNotification(!isNotification)}
-                      />
-                      <span
-                        className="absolute -right-1 lg:top-0 -top-[6px] h-4 w-4 bg-red-500 text-[8px] font-semibold flex flex-col items-center
-        justify-center rounded-full text-white z-[99]"
-                      >
-                        4
-                      </span>
-                    </button>
-                    {/* <!-- Notifications Dropdown --> */}
-                    {isNotification && (
-                      <div
-                        className="dropdown-menu z-10  bg-white divide-y divide-slate-100 dark:divide-slate-900 shadow w-[335px]
-      dark:bg-slate-800 border dark:border-slate-900 !top-[23px] rounded-md absolute"
-                        style={{ right: "0" }}
-                      >
-                        <div className="flex items-center justify-between py-3 px-3">
-                          <h3 className="text-sm font-Inter font-medium text-slate-700 dark:text-white">
-                            Notifications
-                          </h3>
-                          <a
-                            className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white"
-                            href="#"
-                          >
-                            See All
-                          </a>
-                        </div>
-                        {notification.map((notification) => (
-                          <div
-                            className="divide-y divide-slate-100 dark:divide-slate-900"
-                            role="none"
-                            key={notification.id}
-                          >
-                            <div className="bg-slate-100 dark:bg-slate-700 dark:text-white text-slate-800 block w-full px-4 py-2 text-sm relative">
-                              <div className="flex ltr:text-left rtl:text-right">
-                              <div className="flex-none ltr:mr-3 rtl:ml-3">
-                              <div className="h-8 w-8 bg-white rounded-full">
-                                <img
-                                  src={user}
-                                  alt="user"
-                                  className="border-transparent block w-full h-full object-cover rounded-full border"
-                                />
-                              </div> 
-                            </div>&nbsp;&nbsp;
-                              <div className="flex-1">
-                                  <div className="text-slate-600 text-xs leading-4">
-                                    {notification.message}
-                                  </div>
-                                  <div  className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
-                                    {notification.link}
-                                  </div>
-                                  <div className="text-slate-400 dark:text-slate-400 text-xs mt-1">
-                                    {notification.postingTime}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  {/* <!-- END: Notification Dropdown --> */}
-
-                  {/* <!-- BEGIN: Profile Dropdown --> */}
-                  {/* <!-- Profile DropDown Area --> */}
-                  <div className="md:block hidden w-full">
-                    <button
-                      className="text-slate-800 dark:text-white focus:ring-0 focus:outline-none font-medium rounded-lg text-sm text-center
-      inline-flex items-center"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <div
-                        className="lg:h-8 lg:w-8 h-7 w-7 rounded-full flex-1 ltr:mr-[10px] rtl:ml-[10px]"
-                        style={{ marginRight: 10 }}
-                      >
-                        <img
-                          src={user}
-                          alt="user"
-                          className="block w-full h-full object-cover rounded-full"
-                        />
-                      </div>
-                      <span className="flex-none text-slate-600 dark:text-white text-sm font-normal items-center lg:flex hidden overflow-hidden text-ellipsis whitespace-nowrap">
-                        {name}
-                      </span>
-                      {/* <svg className="w-[16px] h-[16px] dark:text-white  lg:inline-block text-base inline-block ml-[10px] rtl:mr-[10px]" aria-hidden="true" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg> */}
-
-                      <KeyboardArrowDownIcon onClick={toggleDropdown} />
-                    </button>
-                    {/* <!-- Dropdown menu --> */}
-                    {isDropdownOpen && (
-                      <div
-                        className="dropdown-menu z-10  bg-white divide-slate-100 shadow w-44 dark:bg-slate-800 border dark:border-slate-700 top-[23px] rounded-md
-      overflow-hidden absolute "
-                      >
-                        <ul className="py-1 text-sm text-slate-800 dark:text-slate-200">
-                          <li>
-                            <Link
-                              to={"/login"}
-                              className="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-600 dark:hover:text-white font-inter text-sm text-slate-600
-            dark:text-white font-normal"
-                              onClick={handleLogout}
-                            >
-                              {/* <iconify-icon
-                              icon="heroicons-outline:login"
-                              className="relative top-[2px] text-lg ltr:mr-1 rtl:ml-1"
-                            ></iconify-icon> */}
-                              <LogoutIcon
-                                style={{ fontSize: "medium" }}
-                              />{" "}
-                              &nbsp;
-                              <span className="font-Inter">Logout</span>
-                            </Link>
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                  {/* <!-- END: Header --> */}
-                  <button className="smallDeviceMenuController md:hidden block leading-0">
-                    <iconify-icon
-                      className="cursor-pointer text-slate-900 dark:text-white text-2xl"
-                      icon="heroicons-outline:menu-alt-3"
-                    ></iconify-icon>
-                  </button>
-                  {/* <!-- end mobile menu --> */}
-                </div>
-                  {/* <!-- END: Notification Dropdown --> */}
+                <StudentNotification />
+                {/* <!-- END: Notification Dropdown --> */}
                 {/* <!-- end nav tools --> */}
               </div>
             </div>
@@ -1878,505 +843,36 @@ setPostGraduationCourseMonths(months);
             <div class="page-content">
               <div id="content_layout">
                 {/* current course detail begin*/}
-                
-                {data && currentData.onGoing === true ? (
+
+                {data && currentData && currentData.onGoing === true ? (
                   <div className="card xl:col-span-2">
-                  <div className="card-body flex flex-col p-6">
-                    <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
-                      <div className="flex-1 flex justify-between">
-                        <div className="card-title text-slate-900 dark:text-white">
-                          Current Course Details
-                        </div>
-                        <div className="flex">
-                          <img src={edit} alt="edit" style={{width:'17px',height:'17px'}} /> &nbsp;
-                        <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
-                            Edit
-                          </div>
-                          </div>
-                      </div>
-                    </header>
-                    <div className="card-text h-full ">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Full Name
-                            </label>
-                            <div className="relative form-control">
-                             {currentData.fullName}
-                            </div>
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Course Name
-                            </label>
-                            <div className="relative form-control">
-                             {currentData.courseName}
-                            </div>
-                          </div>
-
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentcourseLevel"
-                              className="form-label"
-                            >
-                              Current Course Level
-                            </label>
-                            <div className="relative form-control">
-                            {currentData.courseLevel}
-                            </div>
-                            
-                          </div>
-
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Board Name
-                            </label>
-                            <div className="relative form-control">
-                             {currentData.boardOrUniversityName}
-                            </div>
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              School / College Name
-                            </label>
-                            <div className="relative form-control">
-                           {currentData.schoolOrCollageName}
-                            </div>
-                          </div>
-                          {/* <div className="input-area relative">
-                            <label for="fileInput" className="form-label">
-                              Document Upload
-                            </label>
-                            <div className="relative form-control">
-                            
-                            </div>
-                          </div> */}
-                          <div className="input-area">
-                            <label
-                              for="selectcurrentcourse"
-                              className="form-label"
-                            >
-                              Course Duration
-                            </label>
-                            <div className="relative form-control">
-                            {currentData.courseDuration}
-                            </div>
-                          </div>
-
-                          <div>
-                            <label for="default-picker" class="form-label">
-                              Start Date
-                            </label>
-                            <div className="relative form-control">
-                             {currentData.startDate}
-                            </div>
-                          </div>
-                          <div>
-                            <label for="default-picker" class="form-label">
-                              Expected Complete Date
-                            </label>
-                            <div className="relative form-control">
-                             {currentData.endDate}
-                            </div>
-                          </div>
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentdurationtype"
-                              className="form-label"
-                            >
-                              Duration Type
-                            </label>
-                            <div className="relative form-control">
-                             {currentData.durationType}
-                            </div>
-                            
-                          </div>
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentcoursetype"
-                              className="form-label"
-                            >
-                              Course Type
-                            </label>
-                            <div className="relative form-control">
-                             {currentData.courseType}
-                            </div>
-                          </div>
-                         
-                        </div>
-
-                        
-                    </div>
-                  </div>
-                </div>
-                ) : ( <div className="card xl:col-span-2">
-                  <div className="card-body flex flex-col p-6">
-                    <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
-                      <div className="flex-1">
-                        <div className="card-title text-slate-900 dark:text-white">
-                          Current Course Details
-                        </div>
-                      </div>
-                    </header>
-                    <div className="card-text h-full ">
-                      <form className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Full Name
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Full Name"
-                              value={fullName}
-                              onChange={(e) => setFullName(e.target.value)}
-                            />
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Course Name
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Enter Your Course"
-                              value={courseName}
-                              onChange={(e) => setCourseName(e.target.value)}
-                            />
-                          </div>
-
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentcourseLevel"
-                              className="form-label"
-                            >
-                              Current Course Level
-                            </label>
-                            <select
-                              id="currentcourseLevel"
-                              className="form-control"
-                              value={courseLevel}
-                              onChange={handleCourseLevelChange}
-                            >
-                              <option
-                                value="default"
-                                className="dark:bg-slate-700"
-                                disabled
-
-                              >
-                                Select Course Level
-                              </option>
-                              <option value="High School">High School</option>
-                              <option value="Intermediate">Intermediate</option>
-                              {/* <option value="diploma">diploma</option> */}
-                              <option value="Graduation">Graduation</option>
-                              <option value="Post Graduation">
-                                Post Graduation
-                              </option>
-                              <option value="Certification">
-                                Certification Course(3 months,6 months,6 week
-                                and other)
-                              </option>
-                            </select>
-                          </div>
-
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Board Name
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Board / University Name"
-                              value={boardOrUniversityName}
-                              onChange={(e) =>
-                                setBoardOrUniversityName(e.target.value)
-                              }
-                            />
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              School / College Name
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="School / College Name"
-                              value={schoolOrCollageName}
-                              onChange={(e) =>
-                                setSchoolOrCollageName(e.target.value)
-                              }
-                            />
-                          </div>
-                          <div className="input-area relative">
-                            <label for="fileInput" className="form-label">
-                              Document Upload
-                            </label>
-                            <input
-                              type="file"
-                              id="fileInput"
-                              className="form-control"
-                              multiple
-                              // accept=".pdf,.doc,.docx"
-                              accept="image/*,.pdf"
-                              onChange={handleCurrentFileChange}
-                            />
-                          </div>
-                          <div className="input-area">
-                            <label
-                              for="selectcurrentcourse"
-                              className="form-label"
-                            >
-                              Course Duration
-                            </label>
-                            <select
-                              id="selectcurrentcourse"
-                              className="form-control"
-                              value={currentCourseMonths}
-                              onChange={handleCurrentCourseChange}
-                            >
-                              <option
-                                value="default"
-                                className="dark:bg-slate-700"
-                                disabled
-                            
-                              >
-                                Select Course Duration
-                              </option>
-                              <option value="3 months" className="dark:bg-slate-700">
-                                3 months
-                              </option>
-                              <option value="6 months" className="dark:bg-slate-700">
-                                6 months
-                              </option>
-                              <option value="9 months" className="dark:bg-slate-700">
-                                9 months
-                              </option>
-                              <option value="12 months" className="dark:bg-slate-700">
-                                12 months
-                              </option>
-                              <option value="18 months" className="dark:bg-slate-700">
-                                18 months
-                              </option>
-                              <option value="24 months" className="dark:bg-slate-700">
-                                24 months
-                              </option>
-                              <option value="30 months" className="dark:bg-slate-700">
-                                30 months
-                              </option>
-                              <option value="36 months" className="dark:bg-slate-700">
-                                36 months
-                              </option>
-                              <option value="42 months" className="dark:bg-slate-700">
-                                42 months
-                              </option>
-                              <option value="48 months" className="dark:bg-slate-700">
-                                48 months
-                              </option>
-                            </select>
-                            {currentCourseMonths !== "default" && (
-                              <p className="duration-text">
-                                duration :
-                                {calculateYearsAndMonths(currentCourseMonths)}
-                              </p>
-                            )}
-                          </div>
-
-                          <div>
-                            <label for="default-picker" class="form-label">
-                              Start Date
-                            </label>
-                            <Flatpickr
-                              className="form-control"
-                              id="default-picker"
-                              value={startDate}
-                              onChange={handleStartDateChange}
-                              options={{
-                                dateFormat: "Y-m-d",
-                                enableTime: false,
-                                // time_24hr: true, // Use 24-hour time format
-                                // utc: false, // Set to false if you want to display local time
-                                //timeZone: "UTC", // Set the desired time zone
-                              }}
-                            />
-                          </div>
-                          <div>
-                            <label for="default-picker" class="form-label">
-                              Expected Complete Date
-                            </label>
-                            <Flatpickr
-                              className="form-control"
-                              id="default-picker"
-                              value={completeDate}
-                              onChange={handleCompleteDateChange}
-                              options={{
-                                dateFormat: "Y-m-d",
-                                enableTime: false,
-                                //  time_24hr: true, // Use 24-hour time format
-                                // utc: false, // Set to false if you want to display local time
-                                // timeZone: "UTC", // Set the desired time zone
-                              }}
-                            />
-                          </div>
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentdurationtype"
-                              className="form-label"
-                            >
-                              Duration Type
-                            </label>
-                            <select
-                              id="currentdurationtype"
-                              className="form-control"
-                              value={currentDurationType}
-                              onChange={handleCurrentDurationType}
-                            >
-                              <option
-                                value="default"
-                                className="dark:bg-slate-700"
-                                selected
-                                disabled
-                              >
-                                Select Duration Type
-                              </option>
-                              <option
-                                value="semester"
-                                className="dark:bg-slate-700"
-                              >
-                                Semester
-                              </option>
-                              <option
-                                value="yearly"
-                                className="dark:bg-slate-700"
-                              >
-                                Yearly
-                              </option>
-                              <option
-                                value="monthly"
-                                className="dark:bg-slate-700"
-                              >
-                                Monthly
-                              </option>
-                            </select>
-                          </div>
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentcoursetype"
-                              className="form-label"
-                            >
-                              Course Type
-                            </label>
-                            <select
-                              id="currentcoursetype"
-                              className="form-control"
-                              value={currentCourseType}
-                              onChange={handleCurrentCourseType}
-                            >
-                              <option
-                                value="default"
-                                className="dark:bg-slate-700"
-                                selected
-                              >
-                                Select Course Type
-                              </option>
-                              <option
-                                value="Certification"
-                                className="dark:bg-slate-700"
-                              >
-                                Certification
-                              </option>
-                              <option
-                                value="Diploma"
-                                className="dark:bg-slate-700"
-                              >
-                                Diploma
-                              </option>
-                              <option
-                                value="Degree"
-                                className="dark:bg-slate-700"
-                              >
-                                Degree
-                              </option>
-                              {/* <option
-                                value="others"
-                                className="dark:bg-slate-700"
-                              >
-                                Others
-                              </option> */}
-                            </select>
-                          </div>
-                          {showOthersFields && (
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Your Highest Education
-                              </label>
-                             
-                                <select
-                              id="currentcourseLevel"
-                              className="form-control"
-                              value={highestEducation}
-                                onChange={handleHighestEducation}
-                            >
-                              <option
-                                value="default"
-                                className="dark:bg-slate-700"
-                                disabled
-
-                              >
-                                Select Highest Education
-                              </option>
-                              <option value="High School">High School</option>
-                              <option value="Intermediate">Intermediate</option>
-                              {/* <option value="diploma">diploma</option> */}
-                              <option value="Graduation">Graduation</option>
-                              <option value="Post Graduation">
-                                Post Graduation
-                              </option>
-                            </select>
-                            </div>
-                          )}
-                        </div>
-
-                        <button
-                          className="btn inline-flex justify-center btn-dark"
-                          type="button"
-                          onClick={(e) => handleSubmit(e)}
-                        >
-                          Submit
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-                </div>)}
-              
-                {/* Current course detail  end*/}
-                {/* Highschool section Begin */}
-                {data && highSchoolData.onGoing === false  ? (
-                  <div className="card xl:col-span-2 mt-5">
                     <div className="card-body flex flex-col p-6">
                       <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
                         <div className="flex-1 flex justify-between">
                           <div className="card-title text-slate-900 dark:text-white">
-                            HighSchool
+                            Current Course Details
                           </div>
                           <div className="flex">
-                          <img src={edit} alt="edit" style={{width:'17px',height:'17px'}} /> &nbsp;
-                          <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
-                            Edit
-                          </div>
+                            <img
+                              src={edit}
+                              alt="edit"
+                              style={{ width: "17px", height: "17px" }}
+                            />{" "}
+                            &nbsp;
+                            <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
+                              Edit
+                            </div>
                           </div>
                         </div>
                       </header>
                       <div className="card-text h-full ">
-                        <form className="space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                            <div className="input-area relative">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                          <div className="input-area relative">
                             <label for="largeInput" className="form-label">
                               Full Name
                             </label>
                             <div className="relative form-control">
-                             {highSchoolData.fullName}
+                              {currentData.fullName}
                             </div>
                           </div>
                           <div className="input-area relative">
@@ -2384,7 +880,7 @@ setPostGraduationCourseMonths(months);
                               Course Name
                             </label>
                             <div className="relative form-control">
-                             {highSchoolData.courseName}
+                              {currentData.courseName}
                             </div>
                           </div>
 
@@ -2396,9 +892,8 @@ setPostGraduationCourseMonths(months);
                               Current Course Level
                             </label>
                             <div className="relative form-control">
-                            {highSchoolData.courseLevel}
+                              {currentData.courseLevel}
                             </div>
-                            
                           </div>
 
                           <div className="input-area relative">
@@ -2406,7 +901,7 @@ setPostGraduationCourseMonths(months);
                               Board Name
                             </label>
                             <div className="relative form-control">
-                             {highSchoolData.boardOrUniversityName}
+                              {currentData.boardOrUniversityName}
                             </div>
                           </div>
                           <div className="input-area relative">
@@ -2414,7 +909,7 @@ setPostGraduationCourseMonths(months);
                               School / College Name
                             </label>
                             <div className="relative form-control">
-                           {highSchoolData.schoolOrCollageName}
+                              {currentData.schoolOrCollageName}
                             </div>
                           </div>
                           {/* <div className="input-area relative">
@@ -2433,7 +928,7 @@ setPostGraduationCourseMonths(months);
                               Course Duration
                             </label>
                             <div className="relative form-control">
-                            {highSchoolData.courseDuration}
+                              {currentData.courseDuration}
                             </div>
                           </div>
 
@@ -2442,15 +937,15 @@ setPostGraduationCourseMonths(months);
                               Start Date
                             </label>
                             <div className="relative form-control">
-                             {highSchoolData.startDate}
+                              {currentData.startDate}
                             </div>
                           </div>
                           <div>
                             <label for="default-picker" class="form-label">
-                               Complete Date
+                              Expected Complete Date
                             </label>
                             <div className="relative form-control">
-                             {highSchoolData.endDate}
+                              {currentData.endDate}
                             </div>
                           </div>
                           <div className="input-area">
@@ -2461,9 +956,8 @@ setPostGraduationCourseMonths(months);
                               Duration Type
                             </label>
                             <div className="relative form-control">
-                             {highSchoolData.durationType}
+                              {currentData.durationType}
                             </div>
-                            
                           </div>
                           <div className="input-area">
                             <label
@@ -2473,23 +967,20 @@ setPostGraduationCourseMonths(months);
                               Course Type
                             </label>
                             <div className="relative form-control">
-                             {highSchoolData.courseType}
+                              {currentData.courseType}
                             </div>
                           </div>
-                         
                         </div>
-                       </form>
-                        
+                      </div>
                     </div>
                   </div>
-                </div>
-                ):( showHighSchoolForm && (
-                  <div className="card xl:col-span-2 mt-5">
+                ) : (
+                  <div className="card xl:col-span-2">
                     <div className="card-body flex flex-col p-6">
                       <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
                         <div className="flex-1">
                           <div className="card-title text-slate-900 dark:text-white">
-                            HighSchool
+                            Current Course Details
                           </div>
                         </div>
                       </header>
@@ -2501,13 +992,12 @@ setPostGraduationCourseMonths(months);
                                 Full Name
                               </label>
                               <input
+                                style={{ fontSize: "12px" }}
                                 type="text"
                                 className="form-control"
                                 placeholder="Full Name"
-                                value={highFullName}
-                                onChange={(e) =>
-                                  setHighFullName(e.target.value)
-                                }
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
                               />
                             </div>
                             <div className="input-area relative">
@@ -2515,28 +1005,28 @@ setPostGraduationCourseMonths(months);
                                 Course Name
                               </label>
                               <input
+                                style={{ fontSize: "12px" }}
                                 type="text"
                                 className="form-control"
                                 placeholder="Enter Your Course"
-                                value={highCourseName}
-                                onChange={(e) =>
-                                  setHighCourseName(e.target.value)
-                                }
+                                value={courseName}
+                                onChange={(e) => setCourseName(e.target.value)}
                               />
                             </div>
 
                             <div className="input-area">
                               <label
-                                htmlFor="highschoolcourseLevel"
+                                htmlFor="currentcourseLevel"
                                 className="form-label"
                               >
-                               Course Level
+                                Current Course Level
                               </label>
                               <select
-                                id="highschoolcourseLevel"
+                                id="currentcourseLevel"
                                 className="form-control"
-                                value={highCourseLevel}
-                                onChange={handleHighCourseLevel}
+                                value={courseLevel}
+                                onChange={handleCourseLevelChange}
+                                style={{ fontSize: "12px" }}
                               >
                                 <option
                                   value="default"
@@ -2545,58 +1035,49 @@ setPostGraduationCourseMonths(months);
                                 >
                                   Select Course Level
                                 </option>
-                                <option
-                                  value="High School"
-                                  className="dark:bg-slate-700"
-                                >
-                                  High School
-                                </option>
-                                <option
-                                  value="Intermediate"
-                                  className="dark:bg-slate-700"
-                                >
+                                <option value="High School">High School</option>
+                                <option value="Intermediate">
                                   Intermediate
                                 </option>
-                                {/* <option
-                                  value="graduation"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Graduation
-                                </option>
-                                <option
-                                  value="postgraduation"
-                                  className="dark:bg-slate-700"
-                                >
+                                {/* <option value="diploma">diploma</option> */}
+                                <option value="Graduation">Graduation</option>
+                                <option value="Post Graduation">
                                   Post Graduation
-                                </option> */}
+                                </option>
+                                <option value="Certification">
+                                  Certification Course(3 months,6 months,6 week
+                                  and other)
+                                </option>
                               </select>
-
                             </div>
+
                             <div className="input-area relative">
                               <label for="largeInput" className="form-label">
                                 Board Name
                               </label>
                               <input
+                                style={{ fontSize: "12px" }}
                                 type="text"
                                 className="form-control"
-                                placeholder="Board Name"
-                                value={highBoardOrUniversityName}
+                                placeholder="Board / University Name"
+                                value={boardOrUniversityName}
                                 onChange={(e) =>
-                                  setHighBoardOrUniversityName(e.target.value)
+                                  setBoardOrUniversityName(e.target.value)
                                 }
                               />
                             </div>
                             <div className="input-area relative">
                               <label for="largeInput" className="form-label">
-                                School Name
+                                School / College Name
                               </label>
                               <input
+                                style={{ fontSize: "12px" }}
                                 type="text"
                                 className="form-control"
-                                placeholder="School Name"
-                                value={highSchoolOrCollageName}
+                                placeholder="School / College Name"
+                                value={schoolOrCollageName}
                                 onChange={(e) =>
-                                  setHighSchoolOrCollageName(e.target.value)
+                                  setSchoolOrCollageName(e.target.value)
                                 }
                               />
                             </div>
@@ -2605,18 +1086,19 @@ setPostGraduationCourseMonths(months);
                                 Document Upload
                               </label>
                               <input
+                                style={{ fontSize: "12px" }}
                                 type="file"
                                 id="fileInput"
                                 className="form-control"
                                 multiple
-                                accept="image/*,.pdf,.doc,.docx"
-                                onChange={handleHighFileChange}
                                 // accept=".pdf,.doc,.docx"
+                                accept="image/*,.pdf"
+                                onChange={handleCurrentFileChange}
                               />
                             </div>
                             <div className="input-area">
                               <label
-                                for="selecthighschool"
+                                for="selectcurrentcourse"
                                 className="form-label"
                               >
                                 Course Duration
@@ -2624,8 +1106,9 @@ setPostGraduationCourseMonths(months);
                               <select
                                 id="selectcurrentcourse"
                                 className="form-control"
-                                value={selectedMonths}
-                                onChange={handleSelectChange}
+                                value={currentCourseMonths}
+                                onChange={handleCurrentCourseChange}
+                                style={{ fontSize: "12px" }}
                               >
                                 <option
                                   value="default"
@@ -2634,28 +1117,37 @@ setPostGraduationCourseMonths(months);
                                 >
                                   Select Course Duration
                                 </option>
-                                {/* <option value="3 months" className="dark:bg-slate-700">
+                                <option
+                                  value="3 months"
+                                  className="dark:bg-slate-700"
+                                >
                                   3 months
                                 </option>
-                                <option value="6 months" className="dark:bg-slate-700">
+                                <option
+                                  value="6 months"
+                                  className="dark:bg-slate-700"
+                                >
                                   6 months
                                 </option>
-                                <option value="9 months" className="dark:bg-slate-700">
+                                <option
+                                  value="9 months"
+                                  className="dark:bg-slate-700"
+                                >
                                   9 months
-                                </option> */}
+                                </option>
                                 <option
                                   value="12 months"
                                   className="dark:bg-slate-700"
                                 >
                                   12 months
                                 </option>
-                                {/* <option
+                                <option
                                   value="18 months"
                                   className="dark:bg-slate-700"
                                 >
                                   18 months
-                                </option> */}
-                                {/* <option
+                                </option>
+                                <option
                                   value="24 months"
                                   className="dark:bg-slate-700"
                                 >
@@ -2666,848 +1158,6 @@ setPostGraduationCourseMonths(months);
                                   className="dark:bg-slate-700"
                                 >
                                   30 months
-                                </option> */}
-                              </select>
-                              {selectedMonths !== "default" && (
-                                <p className="duration-text">
-                                  duration :
-                                  {calculateYearsAndMonths(selectedMonths)}
-                                </p>
-                              )}
-                            </div>
-
-                            <div>
-                              <label for="default-picker" class="form-label">
-                                Start Date
-                              </label>
-                              <Flatpickr
-                                className="form-control"
-                                id="default-picker"
-                                value={startHighDate}
-                                onChange={handleStartHighDateChange}
-                                options={{
-                                  dateFormat: "Y-m-d",
-                                enableTime: false,
-                                }}
-                              />
-                            </div>
-                            <div>
-                              <label for="default-picker" class="form-label">
-                                 Complete Date
-                              </label>
-                              <Flatpickr
-                                className="form-control"
-                                id="default-picker"
-                                value={completeHighDate}
-                                onChange={handleCompleteHighDateChange}
-                                options={{
-                                  dateFormat: "Y-m-d",
-                                enableTime: false,
-                                }}
-                              />
-                            </div>
-                            <div className="input-area">
-                              <label
-                                htmlFor="highschooldurationtype"
-                                className="form-label"
-                              >
-                                Duration Type
-                              </label>
-                              <select
-                                id="highschooldurationtype"
-                                className="form-control"
-                                value={highDurationType}
-                                onChange={handleHighDurationType}
-                              >
-                                <option
-                                  value="default"
-                                  className="dark:bg-slate-700"
-                                  disabled
-                                >
-                                  Select Duration Type
-                                </option>
-                                <option
-                                  value="semester"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Semester
-                                </option>
-                                <option
-                                  value="yearly"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Yearly
-                                </option>
-                                <option
-                                  value="monthly"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Monthly
-                                </option>
-                              </select>
-                            </div>
-                            <div className="input-area">
-                              <label
-                                htmlFor="highcoursetype"
-                                className="form-label"
-                              >
-                                Course Type
-                              </label>
-                              <select
-                                id="highcoursetype"
-                                className="form-control"
-                                value={highCourseType}
-                                onChange={handleHighCourseType}
-                              >
-                                <option
-                                  value="default"
-                                  className="dark:bg-slate-700"
-                                  disabled
-                                >
-                                  Select Course Type
-                                </option>
-                                <option
-                                  value="certification"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Certification
-                                </option>
-                                <option
-                                  value="diploma"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Diploma
-                                </option>
-                                <option
-                                  value="degree"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Degree
-                                </option>
-                              </select>
-                            </div>
-                          </div>
-
-                          <button
-                            className="btn inline-flex justify-center btn-dark"
-                            type="submit"
-                            onClick={(e) => handleHighSubmit(e)}
-                          >
-                            Submit
-                          </button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-               
-                {/* Highschool section end */}
-
-                {/* Intermediate Begin */}
-
-                {data && interData.onGoing === false  ? (
-                  <div className="card xl:col-span-2 mt-5">
-                    <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
-                        <div className="flex-1 flex justify-between">
-                          <div className="card-title text-slate-900 dark:text-white">
-                            Intermediate
-                          </div>
-                          <div className="flex">
-                          <img src={edit} alt="edit" style={{width:'17px',height:'17px'}} /> &nbsp;
-                          <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
-                            Edit
-                          </div>
-                          </div>
-                        </div>
-                      </header>
-                      <div className="card-text h-full ">
-                        <form className="space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                            <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Full Name
-                            </label>
-                            <div className="relative form-control">
-                             {interData.fullName}
-                            </div>
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Course Name
-                            </label>
-                            <div className="relative form-control">
-                             {interData.courseName}
-                            </div>
-                          </div>
-
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentcourseLevel"
-                              className="form-label"
-                            >
-                              Current Course Level
-                            </label>
-                            <div className="relative form-control">
-                            {interData.courseLevel}
-                            </div>
-                            
-                          </div>
-
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Board Name
-                            </label>
-                            <div className="relative form-control">
-                             {interData.boardOrUniversityName}
-                            </div>
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              School / College Name
-                            </label>
-                            <div className="relative form-control">
-                           {interData.schoolOrCollageName}
-                            </div>
-                          </div>
-                          {/* <div className="input-area relative">
-                            <label for="fileInput" className="form-label">
-                              Document Upload
-                            </label>
-                            <div className="relative form-control">
-                            
-                            </div>
-                          </div> */}
-                          <div className="input-area">
-                            <label
-                              for="selectcurrentcourse"
-                              className="form-label"
-                            >
-                              Course Duration
-                            </label>
-                            <div className="relative form-control">
-                            {interData.courseDuration}
-                            </div>
-                          </div>
-
-                          <div>
-                            <label for="default-picker" class="form-label">
-                              Start Date
-                            </label>
-                            <div className="relative form-control">
-                             {interData.startDate}
-                            </div>
-                          </div>
-                          <div>
-                            <label for="default-picker" class="form-label">
-                              Complete Date
-                            </label>
-                            <div className="relative form-control">
-                             {interData.endDate}
-                            </div>
-                          </div>
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentdurationtype"
-                              className="form-label"
-                            >
-                              Duration Type
-                            </label>
-                            <div className="relative form-control">
-                             {interData.durationType}
-                            </div>
-                            
-                          </div>
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentcoursetype"
-                              className="form-label"
-                            >
-                              Course Type
-                            </label>
-                            <div className="relative form-control">
-                             {interData.courseType}
-                            </div>
-                          </div>
-                         
-                        </div>
-                       </form>
-                        
-                    </div>
-                  </div>
-                </div>):(
-                showIntermediateForm && (
-                  <div className="card xl:col-span-2 mt-5">
-                    <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
-                        <div className="flex-1">
-                          <div className="card-title text-slate-900 dark:text-white">
-                            Intermediate
-                          </div>
-                        </div>
-                      </header>
-                      <div className="card-text h-full ">
-                        <form className="space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Full Name
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Full Name"
-                                value={interFullName}
-                                onChange={(e) =>
-                                  setInterFullName(e.target.value)
-                                }
-                              />
-                            </div>
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Course Name
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter Your Course"
-                                value={interCourseName}
-                                onChange={(e) =>
-                                  setInterCourseName(e.target.value)
-                                }
-                              />
-                            </div>
-
-                            <div className="input-area">
-                              <label
-                                htmlFor="intermediatecourseLevel"
-                                className="form-label"
-                              >
-                                Current Course Level
-                              </label>
-                              <select
-                                id="intermediatecourseLevel"
-                                className="form-control"
-                                value={interCourseLevel}
-                                onChange={handleInterCourseLevel}
-                              >
-                                <option
-                                  value="default"
-                                  className="dark:bg-slate-700"
-                                  disabled
-                                >
-                                  Select Course Level
-                                </option>
-                                <option value="High School">High School</option>
-                                <option value="Intermediate">
-                                  Intermediate
-                                </option>
-                                {/* <option value="Graduation">Graduation</option>
-                                <option value="Post Graduation">
-                                  Post Graduation
-                                </option> */}
-                              
-                              </select>
-                            
-                            </div>
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Board Name
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Board Name"
-                                value={interBoardOrUniversityName}
-                                onChange={(e) =>
-                                  setInterBoardOrUniversityName(e.target.value)
-                                }
-                              />
-                            </div>
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                School Name
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="School Name"
-                                value={interSchoolOrCollageName}
-                                onChange={(e) =>
-                                  setInterSchoolOrCollageName(e.target.value)
-                                }
-                              />
-                            </div>
-                            <div className="input-area relative">
-                              <label for="fileInput" className="form-label">
-                                Document Upload
-                              </label>
-                              <input
-                                type="file"
-                                id="fileInput"
-                                className="form-control"
-                                multiple
-                                accept="image/*,.pdf,.doc,.docx"
-                                onChange={handleInterFileChange}
-                                // accept=".pdf,.doc,.docx"
-                              />
-                            </div>
-                            <div className="input-area">
-                              <label
-                                for="selectintermediate"
-                                className="form-label"
-                              >
-                                Course Duration
-                              </label>
-                              <select
-                                id="selectintermediate"
-                                className="form-control"
-                                value={intermediateCourseMonths}
-                                onChange={handleIntermediateChange}
-                              >
-                                <option
-                                  value="default"
-                                  className="dark:bg-slate-700"
-                                  disabled
-                                >
-                                  Select Course Duration
-                                </option>
-                              
-                                <option
-                                  value="12 months"
-                                  className="dark:bg-slate-700"
-                                >
-                                  12 months
-                                </option>
-                                {/* <option
-                                  value="18 months"
-                                  className="dark:bg-slate-700"
-                                >
-                                  18 months
-                                </option> */}
-                             
-                              </select>
-                              {intermediateCourseMonths !== "default" && (
-                                <p className="duration-text">
-                                  duration :
-                                  {calculateYearsAndMonths(
-                                    intermediateCourseMonths
-                                  )}
-                                </p>
-                              )}
-                            </div>
-
-                            <div>
-                              <label for="default-picker" class="form-label">
-                                Start Date
-                              </label>
-                              <Flatpickr
-                                className="form-control"
-                                id="default-picker"
-                                value={startInterDate}
-                                onChange={handleStartInterDateChange}
-                                options={{
-                                  dateFormat: "Y-m-d",
-                                enableTime: false,
-                                
-                                }}
-                              />
-                            </div>
-                            <div>
-                              <label for="default-picker" class="form-label">
-                                 Complete Date
-                              </label>
-                              <Flatpickr
-                                className="form-control"
-                                id="default-picker"
-                                value={completeInterDate}
-                                onChange={handleCompleteInterDateChange}
-                                options={{
-                                  dateFormat: "Y-m-d",
-                                enableTime: false,
-                                 
-                                }}
-                              />
-                            </div>
-                            <div className="input-area">
-                              <label
-                                htmlFor="interdurationtype"
-                                className="form-label"
-                              >
-                                Duration Type
-                              </label>
-                              <select
-                                id="interdurationtype"
-                                className="form-control"
-                                value={interDurationType}
-                                onChange={handleInterDurationType}
-                              >
-                                <option
-                                  value="default"
-                                  className="dark:bg-slate-700"
-                                 
-                                  disabled
-                                >
-                                  Select Duration Type
-                                </option>
-                                <option
-                                  value="semester"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Semester
-                                </option>
-                                <option
-                                  value="yearly"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Yearly
-                                </option>
-                                <option
-                                  value="monthly"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Monthly
-                                </option>
-                              </select>
-                            </div>
-                            <div className="input-area">
-                              <label
-                                htmlFor="intercoursetype"
-                                className="form-label"
-                              >
-                                Course Type
-                              </label>
-                              <select
-                                id="intercoursetype"
-                                className="form-control"
-                                value={interCourseType}
-                                onChange={handleInterCourseType}
-                              >
-                                <option
-                                  value="default"
-                                  className="dark:bg-slate-700"
-                                 
-                                  disabled
-                                >
-                                  Select Course Type
-                                </option>
-                                <option
-                                  value="certification"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Certification
-                                </option>
-                                <option
-                                  value="diploma"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Diploma
-                                </option>
-                                <option
-                                  value="degree"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Degree
-                                </option>
-                              </select>
-                            </div>
-                          </div>
-
-                          <button
-                            className="btn inline-flex justify-center btn-dark"
-                            type="submit"
-                            onClick={(e) => handleInterSubmit(e)}
-                          >
-                            Submit
-                          </button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {/* Intermediate End */}
-
-                {/* Graduation Begin */}
-                {data && graduationData.onGoing === false  ? (
-                  <div className="card xl:col-span-2 mt-5">
-                    <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
-                        <div className="flex-1 flex justify-between">
-                          <div className="card-title text-slate-900 dark:text-white">
-                            Graduation
-                          </div>
-                          <div className="flex">
-                          <img src={edit} alt="edit" style={{width:'17px',height:'17px'}} /> &nbsp;
-                          <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
-                            Edit
-                          </div>
-                          </div>
-                        </div>
-                      </header>
-                      <div className="card-text h-full ">
-                        <form className="space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                            <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Full Name
-                            </label>
-                            <div className="relative form-control">
-                             {graduationData.fullName}
-                            </div>
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Course Name
-                            </label>
-                            <div className="relative form-control">
-                             {graduationData.courseName}
-                            </div>
-                          </div>
-
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentcourseLevel"
-                              className="form-label"
-                            >
-                              Current Course Level
-                            </label>
-                            <div className="relative form-control">
-                            {graduationData.courseLevel}
-                            </div>
-                            
-                          </div>
-
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Board Name
-                            </label>
-                            <div className="relative form-control">
-                             {graduationData.boardOrUniversityName}
-                            </div>
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              School / College Name
-                            </label>
-                            <div className="relative form-control">
-                           {graduationData.schoolOrCollageName}
-                            </div>
-                          </div>
-                          {/* <div className="input-area relative">
-                            <label for="fileInput" className="form-label">
-                              Document Upload
-                            </label>
-                            <div className="relative form-control">
-                            
-                            </div>
-                          </div> */}
-                          <div className="input-area">
-                            <label
-                              for="selectcurrentcourse"
-                              className="form-label"
-                            >
-                              Course Duration
-                            </label>
-                            <div className="relative form-control">
-                            {graduationData.courseDuration}
-                            </div>
-                          </div>
-
-                          <div>
-                            <label for="default-picker" class="form-label">
-                              Start Date
-                            </label>
-                            <div className="relative form-control">
-                             {graduationData.startDate}
-                            </div>
-                          </div>
-                          <div>
-                            <label for="default-picker" class="form-label">
-                              Complete Date
-                            </label>
-                            <div className="relative form-control">
-                             {graduationData.endDate}
-                            </div>
-                          </div>
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentdurationtype"
-                              className="form-label"
-                            >
-                              Duration Type
-                            </label>
-                            <div className="relative form-control">
-                             {graduationData.durationType}
-                            </div>
-                            
-                          </div>
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentcoursetype"
-                              className="form-label"
-                            >
-                              Course Type
-                            </label>
-                            <div className="relative form-control">
-                             {graduationData.courseType}
-                            </div>
-                          </div>
-                         
-                        </div>
-                       </form>
-                        
-                    </div>
-                  </div>
-                </div>):(
-                showGraduationForm && (
-                  <div className="card xl:col-span-2 mt-5">
-                    <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
-                        <div className="flex-1">
-                          <div className="card-title text-slate-900 dark:text-white">
-                            Graduation
-                          </div>
-                        </div>
-                      </header>
-                      <div className="card-text h-full ">
-                        <form className="space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Full Name
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Full Name"
-                                value={graduationFullName}
-                                onChange={(e) =>
-                                  setGraduationFullName(e.target.value)
-                                }
-                              />
-                            </div>
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Course Name
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter Your Course"
-                                value={graduationCourseName}
-                                onChange={(e) =>
-                                  setGraduationCourseName(e.target.value)
-                                }
-                              />
-                            </div>
-
-                            <div className="input-area">
-                              <label
-                                htmlFor="graduationcourseLevel"
-                                className="form-label"
-                              >
-                                Current Course Level
-                              </label>
-                              <select
-                                id="graduationcourseLevel"
-                                className="form-control"
-                                value={graduationCourseLevel}
-                                onChange={handleGraduationCourseLevel}
-                              >
-                                <option
-                                  value="default"
-                                  className="dark:bg-slate-700"
-                                  disabled
-                                >
-                                  Select Course Level
-                                </option>
-                                <option value="High School">High School</option>
-                                <option value="Intermediate">
-                                  Intermediate
-                                </option>
-                                <option value="Graduation">Graduation</option>
-                                <option value="Post Graduation">
-                                  Post Graduation
-                                </option>
-                              
-                              </select>
-                            
-                            </div>
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Board / University Name
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Board / University Name"
-                                value={graduationBoardOrUniversityName}
-                                onChange={(e) =>
-                                  setGraduationBoardOrUniversityName(e.target.value)
-                                }
-                              />
-                            </div>
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                School / College Name
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="School / College Name"
-                                value={graduationSchoolOrCollageName}
-                                onChange={(e) =>
-                                  setGraduationSchoolOrCollageName(e.target.value)
-                                }
-                              />
-                            </div>
-                            <div className="input-area relative">
-                              <label for="fileInput" className="form-label">
-                                Document Upload
-                              </label>
-                              <input
-                                type="file"
-                                id="fileInput"
-                                className="form-control"
-                                multiple
-                                accept="image/*,.pdf,.doc,.docx"
-                                onChange={handleGraduationFileChange}
-                                // accept=".pdf,.doc,.docx"
-                              />
-                            </div>
-                            <div className="input-area">
-                              <label
-                                for="selectgraduation"
-                                className="form-label"
-                              >
-                                Course Duration
-                              </label>
-                              <select
-                                id="selectgraduation"
-                                className="form-control"
-                                value={graduationCourseMonths}
-                                onChange={handleGraduationChange}
-                              >
-                                <option
-                                  value="default"
-                                  className="dark:bg-slate-700"
-                                  disabled
-                                >
-                                  Select Course Duration
-                                </option>
-                              
-                                <option
-                                  value="12 months"
-                                  className="dark:bg-slate-700"
-                                >
-                                  12 months
-                                </option>
-                                <option
-                                  value="24 months"
-                                  className="dark:bg-slate-700"
-                                >
-                                  24 months
                                 </option>
                                 <option
                                   value="36 months"
@@ -3516,19 +1166,22 @@ setPostGraduationCourseMonths(months);
                                   36 months
                                 </option>
                                 <option
+                                  value="42 months"
+                                  className="dark:bg-slate-700"
+                                >
+                                  42 months
+                                </option>
+                                <option
                                   value="48 months"
                                   className="dark:bg-slate-700"
                                 >
                                   48 months
                                 </option>
-                             
                               </select>
-                              {graduationCourseMonths !== "default" && (
+                              {currentCourseMonths !== "default" && (
                                 <p className="duration-text">
                                   duration :
-                                  {calculateYearsAndMonths(
-                                    graduationCourseMonths
-                                  )}
+                                  {calculateYearsAndMonths(currentCourseMonths)}
                                 </p>
                               )}
                             </div>
@@ -3538,50 +1191,57 @@ setPostGraduationCourseMonths(months);
                                 Start Date
                               </label>
                               <Flatpickr
+                                style={{ fontSize: "12px" }}
                                 className="form-control"
                                 id="default-picker"
-                                value={startGraduationDate}
-                                onChange={handleStartGraduationDateChange}
+                                value={startDate}
+                                onChange={handleStartDateChange}
                                 options={{
                                   dateFormat: "Y-m-d",
-                                enableTime: false,
-                                
+                                  enableTime: false,
+                                  // time_24hr: true, // Use 24-hour time format
+                                  // utc: false, // Set to false if you want to display local time
+                                  //timeZone: "UTC", // Set the desired time zone
                                 }}
                               />
                             </div>
                             <div>
                               <label for="default-picker" class="form-label">
-                                 Complete Date
+                                Expected Complete Date
                               </label>
                               <Flatpickr
+                                style={{ fontSize: "12px" }}
                                 className="form-control"
                                 id="default-picker"
-                                value={completeGraduationDate}
-                                onChange={handleCompleteGraduationDateChange}
+                                value={completeDate}
+                                onChange={handleCompleteDateChange}
                                 options={{
                                   dateFormat: "Y-m-d",
-                                enableTime: false,
-                                 
+                                  enableTime: false,
+                                  //  time_24hr: true, // Use 24-hour time format
+                                  // utc: false, // Set to false if you want to display local time
+                                  // timeZone: "UTC", // Set the desired time zone
                                 }}
                               />
                             </div>
                             <div className="input-area">
                               <label
-                                htmlFor="graduationdurationtype"
+                                htmlFor="currentdurationtype"
                                 className="form-label"
                               >
                                 Duration Type
                               </label>
                               <select
-                                id="graduationdurationtype"
+                                id="currentdurationtype"
                                 className="form-control"
-                                value={graduationDurationType}
-                                onChange={handleGraduationDurationType}
+                                value={currentDurationType}
+                                onChange={handleCurrentDurationType}
+                                style={{ fontSize: "12px" }}
                               >
                                 <option
                                   value="default"
                                   className="dark:bg-slate-700"
-                                 
+                                  selected
                                   disabled
                                 >
                                   Select Duration Type
@@ -3608,51 +1268,91 @@ setPostGraduationCourseMonths(months);
                             </div>
                             <div className="input-area">
                               <label
-                                htmlFor="graduationcoursetype"
+                                htmlFor="currentcoursetype"
                                 className="form-label"
                               >
                                 Course Type
                               </label>
                               <select
-                                id="graduationcoursetype"
+                                id="currentcoursetype"
                                 className="form-control"
-                                value={graduationCourseType}
-                                onChange={handleGraduationCourseType}
+                                value={currentCourseType}
+                                onChange={handleCurrentCourseType}
+                                style={{ fontSize: "12px" }}
                               >
                                 <option
                                   value="default"
                                   className="dark:bg-slate-700"
-                                 
-                                  disabled
+                                  selected
                                 >
                                   Select Course Type
                                 </option>
                                 <option
-                                  value="certification"
+                                  value="Certification"
                                   className="dark:bg-slate-700"
                                 >
                                   Certification
                                 </option>
                                 <option
-                                  value="diploma"
+                                  value="Diploma"
                                   className="dark:bg-slate-700"
                                 >
                                   Diploma
                                 </option>
                                 <option
-                                  value="degree"
+                                  value="Degree"
                                   className="dark:bg-slate-700"
                                 >
                                   Degree
                                 </option>
+                                {/* <option
+                                value="others"
+                                className="dark:bg-slate-700"
+                              >
+                                Others
+                              </option> */}
                               </select>
                             </div>
+                            {showOthersFields && (
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Your Highest Education
+                                </label>
+
+                                <select
+                                  id="currentcourseLevel"
+                                  className="form-control"
+                                  value={highestEducation}
+                                  onChange={handleHighestEducation}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Highest Education
+                                  </option>
+                                  <option value="High School">
+                                    High School
+                                  </option>
+                                  <option value="Intermediate">
+                                    Intermediate
+                                  </option>
+                                  {/* <option value="diploma">diploma</option> */}
+                                  <option value="Graduation">Graduation</option>
+                                  <option value="Post Graduation">
+                                    Post Graduation
+                                  </option>
+                                </select>
+                              </div>
+                            )}
                           </div>
 
                           <button
                             className="btn inline-flex justify-center btn-dark"
-                            type="submit"
-                            onClick={(e) => handleGraduationSubmit(e)}
+                            type="button"
+                            onClick={(e) => handleSubmit(e)}
                           >
                             Submit
                           </button>
@@ -3660,150 +1360,29 @@ setPostGraduationCourseMonths(months);
                       </div>
                     </div>
                   </div>
-                ))}
+                )}
 
-                {/* Graduation End */}
-                {/* Post Graduation Begin */}
-                {data && postGraduationData.onGoing === false  ? (
+                {/* Current course detail  end*/}
+                {/* Highschool section Begin */}
+                {data && highSchoolData && highSchoolData.onGoing === false ? (
                   <div className="card xl:col-span-2 mt-5">
                     <div className="card-body flex flex-col p-6">
                       <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
                         <div className="flex-1 flex justify-between">
                           <div className="card-title text-slate-900 dark:text-white">
-                           Post Graduation
+                            HighSchool
                           </div>
                           <div className="flex">
-                          <img src={edit} alt="edit" style={{width:'17px',height:'17px'}} /> &nbsp;
-                          <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
-                            Edit
-                          </div>
-                          </div>
-                        </div>
-                      </header>
-                      <div className="card-text h-full ">
-                        <form className="space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                            <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Full Name
-                            </label>
-                            <div className="relative form-control">
-                             {postGraduationData.fullName}
+                            <img
+                              src={edit}
+                              alt="edit"
+                              style={{ width: "17px", height: "17px" }}
+                            />{" "}
+                            &nbsp;
+                            <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
+                              Edit
                             </div>
                           </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Course Name
-                            </label>
-                            <div className="relative form-control">
-                             {postGraduationData.courseName}
-                            </div>
-                          </div>
-
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentcourseLevel"
-                              className="form-label"
-                            >
-                              Current Course Level
-                            </label>
-                            <div className="relative form-control">
-                            {postGraduationData.courseLevel}
-                            </div>
-                            
-                          </div>
-
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Board Name
-                            </label>
-                            <div className="relative form-control">
-                             {postGraduationData.boardOrUniversityName}
-                            </div>
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              School / College Name
-                            </label>
-                            <div className="relative form-control">
-                           {postGraduationData.schoolOrCollageName}
-                            </div>
-                          </div>
-                          {/* <div className="input-area relative">
-                            <label for="fileInput" className="form-label">
-                              Document Upload
-                            </label>
-                            <div className="relative form-control">
-                            
-                            </div>
-                          </div> */}
-                          <div className="input-area">
-                            <label
-                              for="selectcurrentcourse"
-                              className="form-label"
-                            >
-                              Course Duration
-                            </label>
-                            <div className="relative form-control">
-                            {postGraduationData.courseDuration}
-                            </div>
-                          </div>
-
-                          <div>
-                            <label for="default-picker" class="form-label">
-                              Start Date
-                            </label>
-                            <div className="relative form-control">
-                             {postGraduationData.startDate}
-                            </div>
-                          </div>
-                          <div>
-                            <label for="default-picker" class="form-label">
-                              Complete Date
-                            </label>
-                            <div className="relative form-control">
-                             {postGraduationData.endDate}
-                            </div>
-                          </div>
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentdurationtype"
-                              className="form-label"
-                            >
-                              Duration Type
-                            </label>
-                            <div className="relative form-control">
-                             {postGraduationData.durationType}
-                            </div>
-                            
-                          </div>
-                          <div className="input-area">
-                            <label
-                              htmlFor="currentcoursetype"
-                              className="form-label"
-                            >
-                              Course Type
-                            </label>
-                            <div className="relative form-control">
-                             {postGraduationData.courseType}
-                            </div>
-                          </div>
-                         
-                        </div>
-                       </form>
-                        
-                    </div>
-                  </div>
-                </div>):(
-                showPostGraduationForm && (
-                  <div className="card xl:col-span-2 mt-5">
-                    <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
-                        <div className="flex-1">
-                          <div className="card-title text-slate-900 dark:text-white">
-                          Post Graduation
-                          </div>
-                         
                         </div>
                       </header>
                       <div className="card-text h-full ">
@@ -3813,279 +1392,1719 @@ setPostGraduationCourseMonths(months);
                               <label for="largeInput" className="form-label">
                                 Full Name
                               </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Full Name"
-                                value={postGraduationFullName}
-                                onChange={(e) =>
-                                  setPostGraduationFullName(e.target.value)
-                                }
-                              />
+                              <div className="relative form-control">
+                                {highSchoolData.fullName}
+                              </div>
                             </div>
                             <div className="input-area relative">
                               <label for="largeInput" className="form-label">
                                 Course Name
                               </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter Your Course"
-                                value={postGraduationCourseName}
-                                onChange={(e) =>
-                                  setPostGraduationCourseName(e.target.value)
-                                }
-                              />
+                              <div className="relative form-control">
+                                {highSchoolData.courseName}
+                              </div>
                             </div>
 
                             <div className="input-area">
                               <label
-                                htmlFor="postgraduationcourseLevel"
+                                htmlFor="currentcourseLevel"
                                 className="form-label"
                               >
                                 Current Course Level
                               </label>
-                              <select
-                                id="postgraduationcourseLevel"
-                                className="form-control"
-                                value={postGraduationCourseLevel}
-                                onChange={handlePostGraduationCourseLevel}
-                              >
-                                <option
-                                  value="default"
-                                  className="dark:bg-slate-700"
-                                  disabled
-                                >
-                                  Select Course Level
-                                </option>
-                                <option value="High School">High School</option>
-                                <option value="Intermediate">
-                                  Intermediate
-                                </option>
-                                <option value="Graduation">Graduation</option>
-                                <option value="Post Graduation">
-                                  Post Graduation
-                                </option>
-                              
-                              </select>
-                            
+                              <div className="relative form-control">
+                                {highSchoolData.courseLevel}
+                              </div>
                             </div>
+
                             <div className="input-area relative">
                               <label for="largeInput" className="form-label">
-                                Board / University Name
+                                Board Name
                               </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Board / University Name"
-                                value={postGraduationBoardOrUniversityName}
-                                onChange={(e) =>
-                                  setPostGraduationBoardOrUniversityName(e.target.value)
-                                }
-                              />
+                              <div className="relative form-control">
+                                {highSchoolData.boardOrUniversityName}
+                              </div>
                             </div>
                             <div className="input-area relative">
                               <label for="largeInput" className="form-label">
                                 School / College Name
                               </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="School / College Name"
-                                value={postGraduationSchoolOrCollageName}
-                                onChange={(e) =>
-                                  setPostGraduationSchoolOrCollageName(e.target.value)
-                                }
-                              />
+                              <div className="relative form-control">
+                                {highSchoolData.schoolOrCollageName}
+                              </div>
                             </div>
-                            <div className="input-area relative">
-                              <label for="fileInput" className="form-label">
-                                Document Upload
-                              </label>
-                              <input
-                                type="file"
-                                id="fileInput"
-                                className="form-control"
-                                multiple
-                                accept="image/*,.pdf,.doc,.docx"
-                                onChange={handlePostGraduationFileChange}
-                                // accept=".pdf,.doc,.docx"
-                              />
+                            {/* <div className="input-area relative">
+                            <label for="fileInput" className="form-label">
+                              Document Upload
+                            </label>
+                            <div className="relative form-control">
+                            
                             </div>
+                          </div> */}
                             <div className="input-area">
                               <label
-                                for="selectpostgraduation"
+                                for="selectcurrentcourse"
                                 className="form-label"
                               >
                                 Course Duration
                               </label>
-                              <select
-                                id="selectpostgraduation"
-                                className="form-control"
-                                value={postGraduationCourseMonths}
-                                onChange={handlePostGraduationChange}
-                              >
-                                <option
-                                  value="default"
-                                  className="dark:bg-slate-700"
-                                  disabled
-                                >
-                                  Select Course Duration
-                                </option>
-                              
-                                {/* <option
-                                  value="12 months"
-                                  className="dark:bg-slate-700"
-                                >
-                                  12 months
-                                </option> */}
-                                <option
-                                  value="24 months"
-                                  className="dark:bg-slate-700"
-                                >
-                                  24 months
-                                </option>
-                             
-                             
-                              </select>
-                              {postGraduationCourseMonths !== "default" && (
-                                <p className="duration-text">
-                                  duration :
-                                  {calculateYearsAndMonths(
-                                    postGraduationCourseMonths
-                                  )}
-                                </p>
-                              )}
+                              <div className="relative form-control">
+                                {highSchoolData.courseDuration}
+                              </div>
                             </div>
 
                             <div>
                               <label for="default-picker" class="form-label">
                                 Start Date
                               </label>
-                              <Flatpickr
-                                className="form-control"
-                                id="default-picker"
-                                value={startPostGraduationDate}
-                                onChange={handleStartPostGraduationDateChange}
-                                options={{
-                                  dateFormat: "Y-m-d",
-                                enableTime: false,
-                                
-                                }}
-                              />
+                              <div className="relative form-control">
+                                {highSchoolData.startDate}
+                              </div>
                             </div>
                             <div>
                               <label for="default-picker" class="form-label">
-                                 Complete Date
+                                Complete Date
                               </label>
-                              <Flatpickr
-                                className="form-control"
-                                id="default-picker"
-                                value={completePostGraduationDate}
-                                onChange={handleCompletePostGraduationDateChange}
-                                options={{
-                                  dateFormat: "Y-m-d",
-                                enableTime: false,
-                                 
-                                }}
-                              />
+                              <div className="relative form-control">
+                                {highSchoolData.endDate}
+                              </div>
                             </div>
                             <div className="input-area">
                               <label
-                                htmlFor="postgraduationdurationtype"
+                                htmlFor="currentdurationtype"
                                 className="form-label"
                               >
                                 Duration Type
                               </label>
-                              <select
-                                id="postgraduationdurationtype"
-                                className="form-control"
-                                value={postGraduationDurationType}
-                                onChange={handlePostGraduationDurationType}
-                              >
-                                <option
-                                  value="default"
-                                  className="dark:bg-slate-700"
-                                 
-                                  disabled
-                                >
-                                  Select Duration Type
-                                </option>
-                                <option
-                                  value="semester"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Semester
-                                </option>
-                                <option
-                                  value="yearly"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Yearly
-                                </option>
-                                <option
-                                  value="monthly"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Monthly
-                                </option>
-                              </select>
+                              <div className="relative form-control">
+                                {highSchoolData.durationType}
+                              </div>
                             </div>
                             <div className="input-area">
                               <label
-                                htmlFor="postgraduationcoursetype"
+                                htmlFor="currentcoursetype"
                                 className="form-label"
                               >
                                 Course Type
                               </label>
-                              <select
-                                id="postgraduationcoursetype"
-                                className="form-control"
-                                value={postGraduationCourseType}
-                                onChange={handlePostGraduationCourseType}
-                              >
-                                <option
-                                  value="default"
-                                  className="dark:bg-slate-700"
-                                 
-                                  disabled
-                                >
-                                  Select Course Type
-                                </option>
-                                <option
-                                  value="certification"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Certification
-                                </option>
-                                <option
-                                  value="diploma"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Diploma
-                                </option>
-                                <option
-                                  value="degree"
-                                  className="dark:bg-slate-700"
-                                >
-                                  Degree
-                                </option>
-                              </select>
+                              <div className="relative form-control">
+                                {highSchoolData.courseType}
+                              </div>
                             </div>
                           </div>
-
-                          <button
-                            className="btn inline-flex justify-center btn-dark"
-                            type="submit"
-                            onClick={(e) => handlePostGraduationSubmit(e)}
-                          >
-                            Submit
-                          </button>
                         </form>
                       </div>
                     </div>
                   </div>
-                ))}
+                ) : (
+                  showHighSchoolForm && (
+                    <div className="card xl:col-span-2 mt-5">
+                      <div className="card-body flex flex-col p-6">
+                        <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                          <div className="flex-1">
+                            <div className="card-title text-slate-900 dark:text-white">
+                              HighSchool
+                            </div>
+                          </div>
+                        </header>
+                        <div className="card-text h-full ">
+                          <form className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Full Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Full Name"
+                                  value={highFullName}
+                                  onChange={(e) =>
+                                    setHighFullName(e.target.value)
+                                  }
+                                />
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Course Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Enter Your Course"
+                                  value={highCourseName}
+                                  onChange={(e) =>
+                                    setHighCourseName(e.target.value)
+                                  }
+                                />
+                              </div>
+
+                              <div className="input-area">
+                                <label
+                                  htmlFor="highschoolcourseLevel"
+                                  className="form-label"
+                                >
+                                  Course Level
+                                </label>
+                                <select
+                                  id="highschoolcourseLevel"
+                                  className="form-control"
+                                  value={highCourseLevel}
+                                  onChange={handleHighCourseLevel}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Course Level
+                                  </option>
+                                  <option
+                                    value="High School"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    High School
+                                  </option>
+                                  <option
+                                    value="Intermediate"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Intermediate
+                                  </option>
+                                </select>
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Board Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Board Name"
+                                  value={highBoardOrUniversityName}
+                                  onChange={(e) =>
+                                    setHighBoardOrUniversityName(e.target.value)
+                                  }
+                                />
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  School Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="School Name"
+                                  value={highSchoolOrCollageName}
+                                  onChange={(e) =>
+                                    setHighSchoolOrCollageName(e.target.value)
+                                  }
+                                />
+                              </div>
+                              <div className="input-area relative">
+                                <label for="fileInput" className="form-label">
+                                  Document Upload
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="file"
+                                  id="fileInput"
+                                  className="form-control"
+                                  multiple
+                                  accept="image/*,.pdf,.doc,.docx"
+                                  onChange={handleHighFileChange}
+                                  // accept=".pdf,.doc,.docx"
+                                />
+                              </div>
+                              <div className="input-area">
+                                <label
+                                  for="selecthighschool"
+                                  className="form-label"
+                                >
+                                  Course Duration
+                                </label>
+                                <select
+                                  id="selectcurrentcourse"
+                                  className="form-control"
+                                  value={selectedMonths}
+                                  onChange={handleSelectChange}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Course Duration
+                                  </option>
+
+                                  <option
+                                    value="12 months"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    12 months
+                                  </option>
+                                </select>
+                                {selectedMonths !== "default" && (
+                                  <p className="duration-text">
+                                    duration :
+                                    {calculateYearsAndMonths(selectedMonths)}
+                                  </p>
+                                )}
+                              </div>
+
+                              <div>
+                                <label for="default-picker" class="form-label">
+                                  Start Date
+                                </label>
+                                <Flatpickr
+                                  style={{ fontSize: "12px" }}
+                                  className="form-control"
+                                  id="default-picker"
+                                  value={startHighDate}
+                                  onChange={handleStartHighDateChange}
+                                  options={{
+                                    dateFormat: "Y-m-d",
+                                    enableTime: false,
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <label for="default-picker" class="form-label">
+                                  Complete Date
+                                </label>
+                                <Flatpickr
+                                  style={{ fontSize: "12px" }}
+                                  className="form-control"
+                                  id="default-picker"
+                                  value={completeHighDate}
+                                  onChange={handleCompleteHighDateChange}
+                                  options={{
+                                    dateFormat: "Y-m-d",
+                                    enableTime: false,
+                                  }}
+                                />
+                              </div>
+                              <div className="input-area">
+                                <label
+                                  htmlFor="highschooldurationtype"
+                                  className="form-label"
+                                >
+                                  Duration Type
+                                </label>
+                                <select
+                                  id="highschooldurationtype"
+                                  className="form-control"
+                                  value={highDurationType}
+                                  onChange={handleHighDurationType}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Duration Type
+                                  </option>
+                                  <option
+                                    value="semester"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Semester
+                                  </option>
+                                  <option
+                                    value="yearly"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Yearly
+                                  </option>
+                                  <option
+                                    value="monthly"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Monthly
+                                  </option>
+                                </select>
+                              </div>
+                              <div className="input-area">
+                                <label
+                                  htmlFor="highcoursetype"
+                                  className="form-label"
+                                >
+                                  Course Type
+                                </label>
+                                <select
+                                  id="highcoursetype"
+                                  className="form-control"
+                                  value={highCourseType}
+                                  onChange={handleHighCourseType}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Course Type
+                                  </option>
+                                  <option
+                                    value="certification"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Certification
+                                  </option>
+                                  <option
+                                    value="diploma"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Diploma
+                                  </option>
+                                  <option
+                                    value="degree"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Degree
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <button
+                              className="btn inline-flex justify-center btn-dark"
+                              type="submit"
+                              onClick={(e) => handleHighSubmit(e)}
+                            >
+                              Submit
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                )}
+
+                {/* Highschool section end */}
+
+                {/* Intermediate Begin */}
+
+                {data && interData && interData.onGoing === false ? (
+                  <div className="card xl:col-span-2 mt-5">
+                    <div className="card-body flex flex-col p-6">
+                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                        <div className="flex-1 flex justify-between">
+                          <div className="card-title text-slate-900 dark:text-white">
+                            Intermediate
+                          </div>
+                          <div className="flex">
+                            <img
+                              src={edit}
+                              alt="edit"
+                              style={{ width: "17px", height: "17px" }}
+                            />{" "}
+                            &nbsp;
+                            <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
+                              Edit
+                            </div>
+                          </div>
+                        </div>
+                      </header>
+                      <div className="card-text h-full ">
+                        <form className="space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Full Name
+                              </label>
+                              <div className="relative form-control">
+                                {interData.fullName}
+                              </div>
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Course Name
+                              </label>
+                              <div className="relative form-control">
+                                {interData.courseName}
+                              </div>
+                            </div>
+
+                            <div className="input-area">
+                              <label
+                                htmlFor="currentcourseLevel"
+                                className="form-label"
+                              >
+                                Current Course Level
+                              </label>
+                              <div className="relative form-control">
+                                {interData.courseLevel}
+                              </div>
+                            </div>
+
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Board Name
+                              </label>
+                              <div className="relative form-control">
+                                {interData.boardOrUniversityName}
+                              </div>
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                School / College Name
+                              </label>
+                              <div className="relative form-control">
+                                {interData.schoolOrCollageName}
+                              </div>
+                            </div>
+                            {/* <div className="input-area relative">
+                            <label for="fileInput" className="form-label">
+                              Document Upload
+                            </label>
+                            <div className="relative form-control">
+                            
+                            </div>
+                          </div> */}
+                            <div className="input-area">
+                              <label
+                                for="selectcurrentcourse"
+                                className="form-label"
+                              >
+                                Course Duration
+                              </label>
+                              <div className="relative form-control">
+                                {interData.courseDuration}
+                              </div>
+                            </div>
+
+                            <div>
+                              <label for="default-picker" class="form-label">
+                                Start Date
+                              </label>
+                              <div className="relative form-control">
+                                {interData.startDate}
+                              </div>
+                            </div>
+                            <div>
+                              <label for="default-picker" class="form-label">
+                                Complete Date
+                              </label>
+                              <div className="relative form-control">
+                                {interData.endDate}
+                              </div>
+                            </div>
+                            <div className="input-area">
+                              <label
+                                htmlFor="currentdurationtype"
+                                className="form-label"
+                              >
+                                Duration Type
+                              </label>
+                              <div className="relative form-control">
+                                {interData.durationType}
+                              </div>
+                            </div>
+                            <div className="input-area">
+                              <label
+                                htmlFor="currentcoursetype"
+                                className="form-label"
+                              >
+                                Course Type
+                              </label>
+                              <div className="relative form-control">
+                                {interData.courseType}
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  showIntermediateForm && (
+                    <div className="card xl:col-span-2 mt-5">
+                      <div className="card-body flex flex-col p-6">
+                        <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                          <div className="flex-1">
+                            <div className="card-title text-slate-900 dark:text-white">
+                              Intermediate
+                            </div>
+                          </div>
+                        </header>
+                        <div className="card-text h-full ">
+                          <form className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Full Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Full Name"
+                                  value={interFullName}
+                                  onChange={(e) =>
+                                    setInterFullName(e.target.value)
+                                  }
+                                />
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Course Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Enter Your Course"
+                                  value={interCourseName}
+                                  onChange={(e) =>
+                                    setInterCourseName(e.target.value)
+                                  }
+                                />
+                              </div>
+
+                              <div className="input-area">
+                                <label
+                                  htmlFor="intermediatecourseLevel"
+                                  className="form-label"
+                                >
+                                  Current Course Level
+                                </label>
+                                <select
+                                  id="intermediatecourseLevel"
+                                  className="form-control"
+                                  value={interCourseLevel}
+                                  onChange={handleInterCourseLevel}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Course Level
+                                  </option>
+                                  <option value="High School">
+                                    High School
+                                  </option>
+                                  <option value="Intermediate">
+                                    Intermediate
+                                  </option>
+                                  {/* <option value="Graduation">Graduation</option>
+                                <option value="Post Graduation">
+                                  Post Graduation
+                                </option> */}
+                                </select>
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Board Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Board Name"
+                                  value={interBoardOrUniversityName}
+                                  onChange={(e) =>
+                                    setInterBoardOrUniversityName(
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  School Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="School Name"
+                                  value={interSchoolOrCollageName}
+                                  onChange={(e) =>
+                                    setInterSchoolOrCollageName(e.target.value)
+                                  }
+                                />
+                              </div>
+                              <div className="input-area relative">
+                                <label for="fileInput" className="form-label">
+                                  Document Upload
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="file"
+                                  id="fileInput"
+                                  className="form-control"
+                                  multiple
+                                  accept="image/*,.pdf,.doc,.docx"
+                                  onChange={handleInterFileChange}
+                                  // accept=".pdf,.doc,.docx"
+                                />
+                              </div>
+                              <div className="input-area">
+                                <label
+                                  for="selectintermediate"
+                                  className="form-label"
+                                >
+                                  Course Duration
+                                </label>
+                                <select
+                                  id="selectintermediate"
+                                  className="form-control"
+                                  value={intermediateCourseMonths}
+                                  onChange={handleIntermediateChange}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Course Duration
+                                  </option>
+
+                                  <option
+                                    value="12 months"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    12 months
+                                  </option>
+                                </select>
+                                {intermediateCourseMonths !== "default" && (
+                                  <p className="duration-text">
+                                    duration :
+                                    {calculateYearsAndMonths(
+                                      intermediateCourseMonths
+                                    )}
+                                  </p>
+                                )}
+                              </div>
+
+                              <div>
+                                <label for="default-picker" class="form-label">
+                                  Start Date
+                                </label>
+                                <Flatpickr
+                                  style={{ fontSize: "12px" }}
+                                  className="form-control"
+                                  id="default-picker"
+                                  value={startInterDate}
+                                  onChange={handleStartInterDateChange}
+                                  options={{
+                                    dateFormat: "Y-m-d",
+                                    enableTime: false,
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <label for="default-picker" class="form-label">
+                                  Complete Date
+                                </label>
+                                <Flatpickr
+                                  style={{ fontSize: "12px" }}
+                                  className="form-control"
+                                  id="default-picker"
+                                  value={completeInterDate}
+                                  onChange={handleCompleteInterDateChange}
+                                  options={{
+                                    dateFormat: "Y-m-d",
+                                    enableTime: false,
+                                  }}
+                                />
+                              </div>
+                              <div className="input-area">
+                                <label
+                                  htmlFor="interdurationtype"
+                                  className="form-label"
+                                >
+                                  Duration Type
+                                </label>
+                                <select
+                                  id="interdurationtype"
+                                  className="form-control"
+                                  value={interDurationType}
+                                  onChange={handleInterDurationType}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Duration Type
+                                  </option>
+                                  <option
+                                    value="semester"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Semester
+                                  </option>
+                                  <option
+                                    value="yearly"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Yearly
+                                  </option>
+                                  <option
+                                    value="monthly"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Monthly
+                                  </option>
+                                </select>
+                              </div>
+                              <div className="input-area">
+                                <label
+                                  htmlFor="intercoursetype"
+                                  className="form-label"
+                                >
+                                  Course Type
+                                </label>
+                                <select
+                                  id="intercoursetype"
+                                  className="form-control"
+                                  value={interCourseType}
+                                  onChange={handleInterCourseType}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Course Type
+                                  </option>
+                                  <option
+                                    value="certification"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Certification
+                                  </option>
+                                  <option
+                                    value="diploma"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Diploma
+                                  </option>
+                                  <option
+                                    value="degree"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Degree
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <button
+                              className="btn inline-flex justify-center btn-dark"
+                              type="submit"
+                              onClick={(e) => handleInterSubmit(e)}
+                            >
+                              Submit
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                )}
+                {/* Intermediate End */}
+
+                {/* Graduation Begin */}
+                {data && graduationData && graduationData.onGoing === false ? (
+                  <div className="card xl:col-span-2 mt-5">
+                    <div className="card-body flex flex-col p-6">
+                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                        <div className="flex-1 flex justify-between">
+                          <div className="card-title text-slate-900 dark:text-white">
+                            Graduation
+                          </div>
+                          <div className="flex">
+                            <img
+                              src={edit}
+                              alt="edit"
+                              style={{ width: "17px", height: "17px" }}
+                            />{" "}
+                            &nbsp;
+                            <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
+                              Edit
+                            </div>
+                          </div>
+                        </div>
+                      </header>
+                      <div className="card-text h-full ">
+                        <form className="space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Full Name
+                              </label>
+                              <div className="relative form-control">
+                                {graduationData.fullName}
+                              </div>
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Course Name
+                              </label>
+                              <div className="relative form-control">
+                                {graduationData.courseName}
+                              </div>
+                            </div>
+
+                            <div className="input-area">
+                              <label
+                                htmlFor="currentcourseLevel"
+                                className="form-label"
+                              >
+                                Current Course Level
+                              </label>
+                              <div className="relative form-control">
+                                {graduationData.courseLevel}
+                              </div>
+                            </div>
+
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Board Name
+                              </label>
+                              <div className="relative form-control">
+                                {graduationData.boardOrUniversityName}
+                              </div>
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                School / College Name
+                              </label>
+                              <div className="relative form-control">
+                                {graduationData.schoolOrCollageName}
+                              </div>
+                            </div>
+                            {/* <div className="input-area relative">
+                            <label for="fileInput" className="form-label">
+                              Document Upload
+                            </label>
+                            <div className="relative form-control">
+                            
+                            </div>
+                          </div> */}
+                            <div className="input-area">
+                              <label
+                                for="selectcurrentcourse"
+                                className="form-label"
+                              >
+                                Course Duration
+                              </label>
+                              <div className="relative form-control">
+                                {graduationData.courseDuration}
+                              </div>
+                            </div>
+
+                            <div>
+                              <label for="default-picker" class="form-label">
+                                Start Date
+                              </label>
+                              <div className="relative form-control">
+                                {graduationData.startDate}
+                              </div>
+                            </div>
+                            <div>
+                              <label for="default-picker" class="form-label">
+                                Complete Date
+                              </label>
+                              <div className="relative form-control">
+                                {graduationData.endDate}
+                              </div>
+                            </div>
+                            <div className="input-area">
+                              <label
+                                htmlFor="currentdurationtype"
+                                className="form-label"
+                              >
+                                Duration Type
+                              </label>
+                              <div className="relative form-control">
+                                {graduationData.durationType}
+                              </div>
+                            </div>
+                            <div className="input-area">
+                              <label
+                                htmlFor="currentcoursetype"
+                                className="form-label"
+                              >
+                                Course Type
+                              </label>
+                              <div className="relative form-control">
+                                {graduationData.courseType}
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  showGraduationForm && (
+                    <div className="card xl:col-span-2 mt-5">
+                      <div className="card-body flex flex-col p-6">
+                        <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                          <div className="flex-1">
+                            <div className="card-title text-slate-900 dark:text-white">
+                              Graduation
+                            </div>
+                          </div>
+                        </header>
+                        <div className="card-text h-full ">
+                          <form className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Full Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Full Name"
+                                  value={graduationFullName}
+                                  onChange={(e) =>
+                                    setGraduationFullName(e.target.value)
+                                  }
+                                />
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Course Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Enter Your Course"
+                                  value={graduationCourseName}
+                                  onChange={(e) =>
+                                    setGraduationCourseName(e.target.value)
+                                  }
+                                />
+                              </div>
+
+                              <div className="input-area">
+                                <label
+                                  htmlFor="graduationcourseLevel"
+                                  className="form-label"
+                                >
+                                  Current Course Level
+                                </label>
+                                <select
+                                  id="graduationcourseLevel"
+                                  className="form-control"
+                                  value={graduationCourseLevel}
+                                  onChange={handleGraduationCourseLevel}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Course Level
+                                  </option>
+                                  <option value="High School">
+                                    High School
+                                  </option>
+                                  <option value="Intermediate">
+                                    Intermediate
+                                  </option>
+                                  <option value="Graduation">Graduation</option>
+                                  <option value="Post Graduation">
+                                    Post Graduation
+                                  </option>
+                                </select>
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Board / University Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Board / University Name"
+                                  value={graduationBoardOrUniversityName}
+                                  onChange={(e) =>
+                                    setGraduationBoardOrUniversityName(
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  School / College Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="School / College Name"
+                                  value={graduationSchoolOrCollageName}
+                                  onChange={(e) =>
+                                    setGraduationSchoolOrCollageName(
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </div>
+                              <div className="input-area relative">
+                                <label for="fileInput" className="form-label">
+                                  Document Upload
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="file"
+                                  id="fileInput"
+                                  className="form-control"
+                                  multiple
+                                  accept="image/*,.pdf,.doc,.docx"
+                                  onChange={handleGraduationFileChange}
+                                  // accept=".pdf,.doc,.docx"
+                                />
+                              </div>
+                              <div className="input-area">
+                                <label
+                                  for="selectgraduation"
+                                  className="form-label"
+                                >
+                                  Course Duration
+                                </label>
+                                <select
+                                  style={{ fontSize: "12px" }}
+                                  id="selectgraduation"
+                                  className="form-control"
+                                  value={graduationCourseMonths}
+                                  onChange={handleGraduationChange}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Course Duration
+                                  </option>
+
+                                  <option
+                                    value="12 months"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    12 months
+                                  </option>
+                                  <option
+                                    value="24 months"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    24 months
+                                  </option>
+                                  <option
+                                    value="36 months"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    36 months
+                                  </option>
+                                  <option
+                                    value="48 months"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    48 months
+                                  </option>
+                                </select>
+                                {graduationCourseMonths !== "default" && (
+                                  <p className="duration-text">
+                                    duration :
+                                    {calculateYearsAndMonths(
+                                      graduationCourseMonths
+                                    )}
+                                  </p>
+                                )}
+                              </div>
+
+                              <div>
+                                <label for="default-picker" class="form-label">
+                                  Start Date
+                                </label>
+                                <Flatpickr
+                                  style={{ fontSize: "12px" }}
+                                  className="form-control"
+                                  id="default-picker"
+                                  value={startGraduationDate}
+                                  onChange={handleStartGraduationDateChange}
+                                  options={{
+                                    dateFormat: "Y-m-d",
+                                    enableTime: false,
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <label for="default-picker" class="form-label">
+                                  Complete Date
+                                </label>
+                                <Flatpickr
+                                  style={{ fontSize: "12px" }}
+                                  className="form-control"
+                                  id="default-picker"
+                                  value={completeGraduationDate}
+                                  onChange={handleCompleteGraduationDateChange}
+                                  options={{
+                                    dateFormat: "Y-m-d",
+                                    enableTime: false,
+                                  }}
+                                />
+                              </div>
+                              <div className="input-area">
+                                <label
+                                  htmlFor="graduationdurationtype"
+                                  className="form-label"
+                                >
+                                  Duration Type
+                                </label>
+                                <select
+                                  id="graduationdurationtype"
+                                  className="form-control"
+                                  value={graduationDurationType}
+                                  onChange={handleGraduationDurationType}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Duration Type
+                                  </option>
+                                  <option
+                                    value="semester"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Semester
+                                  </option>
+                                  <option
+                                    value="yearly"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Yearly
+                                  </option>
+                                  <option
+                                    value="monthly"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Monthly
+                                  </option>
+                                </select>
+                              </div>
+                              <div className="input-area">
+                                <label
+                                  htmlFor="graduationcoursetype"
+                                  className="form-label"
+                                >
+                                  Course Type
+                                </label>
+                                <select
+                                  id="graduationcoursetype"
+                                  className="form-control"
+                                  value={graduationCourseType}
+                                  onChange={handleGraduationCourseType}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Course Type
+                                  </option>
+                                  <option
+                                    value="certification"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Certification
+                                  </option>
+                                  <option
+                                    value="diploma"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Diploma
+                                  </option>
+                                  <option
+                                    value="degree"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Degree
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <button
+                              className="btn inline-flex justify-center btn-dark"
+                              type="submit"
+                              onClick={(e) => handleGraduationSubmit(e)}
+                            >
+                              Submit
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                )}
+
+                {/* Graduation End */}
+                {/* Post Graduation Begin */}
+                {data &&
+                postGraduationData &&
+                postGraduationData.onGoing === false ? (
+                  <div className="card xl:col-span-2 mt-5">
+                    <div className="card-body flex flex-col p-6">
+                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                        <div className="flex-1 flex justify-between">
+                          <div className="card-title text-slate-900 dark:text-white">
+                            Post Graduation
+                          </div>
+                          <div className="flex">
+                            <img
+                              src={edit}
+                              alt="edit"
+                              style={{ width: "17px", height: "17px" }}
+                            />{" "}
+                            &nbsp;
+                            <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
+                              Edit
+                            </div>
+                          </div>
+                        </div>
+                      </header>
+                      <div className="card-text h-full ">
+                        <form className="space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Full Name
+                              </label>
+                              <div className="relative form-control">
+                                {postGraduationData.fullName}
+                              </div>
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Course Name
+                              </label>
+                              <div className="relative form-control">
+                                {postGraduationData.courseName}
+                              </div>
+                            </div>
+
+                            <div className="input-area">
+                              <label
+                                htmlFor="currentcourseLevel"
+                                className="form-label"
+                              >
+                                Current Course Level
+                              </label>
+                              <div className="relative form-control">
+                                {postGraduationData.courseLevel}
+                              </div>
+                            </div>
+
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Board Name
+                              </label>
+                              <div className="relative form-control">
+                                {postGraduationData.boardOrUniversityName}
+                              </div>
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                School / College Name
+                              </label>
+                              <div className="relative form-control">
+                                {postGraduationData.schoolOrCollageName}
+                              </div>
+                            </div>
+                            {/* <div className="input-area relative">
+                            <label for="fileInput" className="form-label">
+                              Document Upload
+                            </label>
+                            <div className="relative form-control">
+                            
+                            </div>
+                          </div> */}
+                            <div className="input-area">
+                              <label
+                                for="selectcurrentcourse"
+                                className="form-label"
+                              >
+                                Course Duration
+                              </label>
+                              <div className="relative form-control">
+                                {postGraduationData.courseDuration}
+                              </div>
+                            </div>
+
+                            <div>
+                              <label for="default-picker" class="form-label">
+                                Start Date
+                              </label>
+                              <div className="relative form-control">
+                                {postGraduationData.startDate}
+                              </div>
+                            </div>
+                            <div>
+                              <label for="default-picker" class="form-label">
+                                Complete Date
+                              </label>
+                              <div className="relative form-control">
+                                {postGraduationData.endDate}
+                              </div>
+                            </div>
+                            <div className="input-area">
+                              <label
+                                htmlFor="currentdurationtype"
+                                className="form-label"
+                              >
+                                Duration Type
+                              </label>
+                              <div className="relative form-control">
+                                {postGraduationData.durationType}
+                              </div>
+                            </div>
+                            <div className="input-area">
+                              <label
+                                htmlFor="currentcoursetype"
+                                className="form-label"
+                              >
+                                Course Type
+                              </label>
+                              <div className="relative form-control">
+                                {postGraduationData.courseType}
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  showPostGraduationForm && (
+                    <div className="card xl:col-span-2 mt-5">
+                      <div className="card-body flex flex-col p-6">
+                        <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                          <div className="flex-1">
+                            <div className="card-title text-slate-900 dark:text-white">
+                              Post Graduation
+                            </div>
+                          </div>
+                        </header>
+                        <div className="card-text h-full ">
+                          <form className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Full Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Full Name"
+                                  value={postGraduationFullName}
+                                  onChange={(e) =>
+                                    setPostGraduationFullName(e.target.value)
+                                  }
+                                />
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Course Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Enter Your Course"
+                                  value={postGraduationCourseName}
+                                  onChange={(e) =>
+                                    setPostGraduationCourseName(e.target.value)
+                                  }
+                                />
+                              </div>
+
+                              <div className="input-area">
+                                <label
+                                  htmlFor="postgraduationcourseLevel"
+                                  className="form-label"
+                                >
+                                  Current Course Level
+                                </label>
+                                <select
+                                  id="postgraduationcourseLevel"
+                                  className="form-control"
+                                  value={postGraduationCourseLevel}
+                                  onChange={handlePostGraduationCourseLevel}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Course Level
+                                  </option>
+                                  <option value="High School">
+                                    High School
+                                  </option>
+                                  <option value="Intermediate">
+                                    Intermediate
+                                  </option>
+                                  <option value="Graduation">Graduation</option>
+                                  <option value="Post Graduation">
+                                    Post Graduation
+                                  </option>
+                                </select>
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Board / University Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Board / University Name"
+                                  value={postGraduationBoardOrUniversityName}
+                                  onChange={(e) =>
+                                    setPostGraduationBoardOrUniversityName(
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  School / College Name
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="School / College Name"
+                                  value={postGraduationSchoolOrCollageName}
+                                  onChange={(e) =>
+                                    setPostGraduationSchoolOrCollageName(
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </div>
+                              <div className="input-area relative">
+                                <label for="fileInput" className="form-label">
+                                  Document Upload
+                                </label>
+                                <input
+                                  style={{ fontSize: "12px" }}
+                                  type="file"
+                                  id="fileInput"
+                                  className="form-control"
+                                  multiple
+                                  accept="image/*,.pdf,.doc,.docx"
+                                  onChange={handlePostGraduationFileChange}
+                                  // accept=".pdf,.doc,.docx"
+                                />
+                              </div>
+                              <div className="input-area">
+                                <label
+                                  for="selectpostgraduation"
+                                  className="form-label"
+                                >
+                                  Course Duration
+                                </label>
+                                <select
+                                  style={{ fontSize: "12px" }}
+                                  id="selectpostgraduation"
+                                  className="form-control"
+                                  value={postGraduationCourseMonths}
+                                  onChange={handlePostGraduationChange}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Course Duration
+                                  </option>
+
+                                  {/* <option
+                                  value="12 months"
+                                  className="dark:bg-slate-700"
+                                >
+                                  12 months
+                                </option> */}
+                                  <option
+                                    value="24 months"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    24 months
+                                  </option>
+                                </select>
+                                {postGraduationCourseMonths !== "default" && (
+                                  <p className="duration-text">
+                                    duration :
+                                    {calculateYearsAndMonths(
+                                      postGraduationCourseMonths
+                                    )}
+                                  </p>
+                                )}
+                              </div>
+
+                              <div>
+                                <label for="default-picker" class="form-label">
+                                  Start Date
+                                </label>
+                                <Flatpickr
+                                  style={{ fontSize: "12px" }}
+                                  className="form-control"
+                                  id="default-picker"
+                                  value={startPostGraduationDate}
+                                  onChange={handleStartPostGraduationDateChange}
+                                  options={{
+                                    dateFormat: "Y-m-d",
+                                    enableTime: false,
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <label for="default-picker" class="form-label">
+                                  Complete Date
+                                </label>
+                                <Flatpickr
+                                  style={{ fontSize: "12px" }}
+                                  className="form-control"
+                                  id="default-picker"
+                                  value={completePostGraduationDate}
+                                  onChange={
+                                    handleCompletePostGraduationDateChange
+                                  }
+                                  options={{
+                                    dateFormat: "Y-m-d",
+                                    enableTime: false,
+                                  }}
+                                />
+                              </div>
+                              <div className="input-area">
+                                <label
+                                  htmlFor="postgraduationdurationtype"
+                                  className="form-label"
+                                >
+                                  Duration Type
+                                </label>
+                                <select
+                                  id="postgraduationdurationtype"
+                                  className="form-control"
+                                  value={postGraduationDurationType}
+                                  onChange={handlePostGraduationDurationType}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Duration Type
+                                  </option>
+                                  <option
+                                    value="semester"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Semester
+                                  </option>
+                                  <option
+                                    value="yearly"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Yearly
+                                  </option>
+                                  <option
+                                    value="monthly"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Monthly
+                                  </option>
+                                </select>
+                              </div>
+                              <div className="input-area">
+                                <label
+                                  htmlFor="postgraduationcoursetype"
+                                  className="form-label"
+                                >
+                                  Course Type
+                                </label>
+                                <select
+                                  id="postgraduationcoursetype"
+                                  className="form-control"
+                                  value={postGraduationCourseType}
+                                  onChange={handlePostGraduationCourseType}
+                                  style={{ fontSize: "12px" }}
+                                >
+                                  <option
+                                    value="default"
+                                    className="dark:bg-slate-700"
+                                    disabled
+                                  >
+                                    Select Course Type
+                                  </option>
+                                  <option
+                                    value="certification"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Certification
+                                  </option>
+                                  <option
+                                    value="diploma"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Diploma
+                                  </option>
+                                  <option
+                                    value="degree"
+                                    className="dark:bg-slate-700"
+                                  >
+                                    Degree
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <button
+                              className="btn inline-flex justify-center btn-dark"
+                              type="submit"
+                              onClick={(e) => handlePostGraduationSubmit(e)}
+                            >
+                              Submit
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                )}
                 {/* Post Graduation End */}
               </div>
             </div>

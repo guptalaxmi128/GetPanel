@@ -4,18 +4,53 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import SearchIcon from "@mui/icons-material/Search";
 import icon from "../../../../assets/images/ck-white.svg";
 import filter from "../../../../assets/images/filter.png";
+import close from "../../../../assets/close.png";
 import { Link } from "react-router-dom";
+import getepayPortal from "../../../../Getepay_pg_react/Getepay_pg_react/index";
+import { Config } from "../../../../Getepay_pg_react/Getepay_pg_react/config";
 
 
 const Today = () => {
+  const [showModal,setShowModal]=useState(false);
+  const [amount,setAmount]=useState('');
+  const currentTime = new Date();
+  const date = (new Date(currentTime.getTime() + (330) * 60000)).toUTCString();
+  const transactionDate = `${date.slice(0, 3)} ${date.slice(8, 11)} ${date.slice(5, 7)} ${date.slice(17, 25)} IST ${date.slice(12, 16)}`;
+ 
+  const data = {
+    mid: "971288",
+    amount: amount,
+    merchantTransactionId: "sd12121",
+    transactionDate: transactionDate,
+    terminalId: "Getepay.merchant131530@icici",
+    udf1: "1234567890",
+    udf2: "Test",
+    udf3: "test@gmail.com",
+    udf4: "",
+    udf5: "",
+    udf6: "",
+    udf7: "",
+    udf8: "",
+    udf9: "",
+    udf10: "",
+    ru: "https://global-education-t.onrender.com/api/donar/returnUrl",
+      //  ru: "http://localhost:5000/api/donar/returnUrl",
+    callbackUrl: "https://global-education-t.onrender.com/api/donar/callbackUrl",
+    currency: "INR",
+    paymentMode: "ALL",
+    bankId: "",
+    txnType: "single",
+    productType: "IPG",
+    txnNote: "Test Txn",
+    vpa: "Getepay.merchant131530@icici",
+  }; 
 
  
-
 
   return (
     <div className=" space-y-5">
       <div className="card">
-        <div className="card-body px-6 ">
+        <div className="px-6 ">
           <div className="overflow-x-auto -mx-6 dashcode-data-table">
             <span className=" col-span-8  "></span>
             <span className="  col-span-4 "></span>
@@ -50,7 +85,7 @@ const Today = () => {
                       display:'flex'
                     }}
                   >
-                  <SearchIcon style={{margin:"8px",color:'#EC6E46'}} />
+                   <SearchIcon style={{ margin: "10px", color: "#EC6E46",fontSize:'20px' }} />
                     <input
                       type="text"
                       name="search"
@@ -59,7 +94,8 @@ const Today = () => {
                         border: "none",
                         outline: "none",
                         boxShadow: "none",
-                        width:'300px'
+                        width:'300px',
+                        fontSize:'12px'
                       }}
                       placeholder="Search Users by Name or Email"
                     />
@@ -75,18 +111,18 @@ const Today = () => {
                   >
                     <tr>
                       <th scope="col" className=" table-th ">
-                        <div class="checkbox-area">
-                          <label class="inline-flex items-center cursor-pointer">
+                        <div className="checkbox-area">
+                          <label className="inline-flex items-center cursor-pointer">
                             <input
                               type="checkbox"
-                              class="hidden"
+                              className="hidden"
                               name="checkbox"
                             />
-                            <span class="h-4 w-4 border flex-none border-slate-100 dark:border-slate-800 rounded inline-flex ltr:mr-3 rtl:ml-3 relative transition-all duration-150 bg-slate-100 dark:bg-slate-900">
+                            <span className="h-4 w-4 border flex-none border-slate-100 dark:border-slate-800 rounded inline-flex ltr:mr-3 rtl:ml-3 relative transition-all duration-150 bg-slate-100 dark:bg-slate-900">
                               <img
                                 src={icon}
                                 alt=""
-                                class="h-[10px] w-[10px] block m-auto opacity-0"
+                                className="h-[10px] w-[10px] block m-auto opacity-0"
                               />
                             </span>
                           </label>
@@ -97,10 +133,6 @@ const Today = () => {
                         Name
                       </th>
 
-                      {/* <th scope="col" className=" table-th ">
-                        Mobile Number
-                      </th> */}
-
                       <th scope="col" className=" table-th ">
                           Current Course
                       </th>
@@ -110,7 +142,7 @@ const Today = () => {
                       </th>
 
                       <th scope="col" className=" table-th ">
-                        Profile
+                        View Details
                       </th>
 
                       <th scope="col" className=" table-th ">
@@ -122,18 +154,18 @@ const Today = () => {
                     <tr>
                       <td className="table-td">
                         {" "}
-                        <div class="checkbox-area">
-                          <label class="inline-flex items-center cursor-pointer">
+                        <div className="checkbox-area">
+                          <label className="inline-flex items-center cursor-pointer">
                             <input
                               type="checkbox"
-                              class="hidden"
+                              className="hidden"
                               name="checkbox"
                             />
-                            <span class="h-4 w-4 border flex-none border-slate-100 dark:border-slate-800 rounded inline-flex ltr:mr-3 rtl:ml-3 relative transition-all duration-150 bg-slate-100 dark:bg-slate-900">
+                            <span className="h-4 w-4 border flex-none border-slate-100 dark:border-slate-800 rounded inline-flex ltr:mr-3 rtl:ml-3 relative transition-all duration-150 bg-slate-100 dark:bg-slate-900">
                               <img
                                 src={icon}
                                 alt=""
-                                class="h-[10px] w-[10px] block m-auto opacity-0"
+                                className="h-[10px] w-[10px] block m-auto opacity-0"
                               />
                             </span>
                           </label>
@@ -141,9 +173,8 @@ const Today = () => {
                       </td>
                       <td className="table-td ">
                       <span style={{color:'#000',fontWeight:500}}>Jenny Wilson</span>
-                        {/* <div className="table-data">example@email.com</div> */}
                       </td>
-                      {/* <td className="table-td table-data">+91 7088440955</td> */}
+                     
                       <td className="table-td">
                         <div
                           className="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500
@@ -172,16 +203,67 @@ const Today = () => {
                         </Link>
                       </td>
                       <td className="table-td ">
-                      <div style={{display:'flex',flexDirection:'row',}}>
+                      <div style={{display:'flex',flexDirection:'row'}}>
                         <div
                           className="inline-block px-3 min-w-[100px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500
-        bg-success-500"
+        bg-success-500 cursor-pointer" onClick={()=>setShowModal(!showModal)}
                         >
                           Donate Now
                         </div>
+                        {showModal && (
+            <>
+              <div className="alert-modal">
+                <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+                  <div
+                    className="bg-white rounded-md p-6 "
+                    style={{
+                      width: "500px",
+                      height: "150px",
+                      borderRadius: "5px",
+                      padding: "20px",
+                    }}
+                  >
+                    <img
+                      src={close}
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        marginLeft: "445px",
+                        marginTop: "3px",
+                        marginBottom: "5px",
+                        pointer: "cursor",
+                      }}
+                      alt="close"
+                      onClick={() => setShowModal(false)}
+                    />
+                   <div className="fromGroup">
+                  <label className="block capitalize form-label">Donate Amount</label>
+                  <div className="relative ">
+                    <input
+                      type="text"
+                      name="amount"
+                      className="form-control py-2"
+                      placeholder="Enter Amount"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                    />
+                      <button
+                          className="btn inline-flex justify-center btn-dark" style={{margin:'10px'}}
+                          type="button"
+                          onClick={() => getepayPortal(data, Config)}
+                        >
+                          Pay Now
+                        </button>
+                  </div>
+                </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
                         <div
-                          className="inline-block px-3 min-w-[100px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500
-        bg-warning-500"
+                          className="inline-block px-3 min-w-[100px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-danger-500
+        bg-danger-500"
                         >
                           Rejected
                         </div>
@@ -192,18 +274,18 @@ const Today = () => {
                     <tr>
                       <td className="table-td">
                         {" "}
-                        <div class="checkbox-area">
-                          <label class="inline-flex items-center cursor-pointer">
+                        <div className="checkbox-area">
+                          <label className="inline-flex items-center cursor-pointer">
                             <input
                               type="checkbox"
-                              class="hidden"
+                              className="hidden"
                               name="checkbox"
                             />
-                            <span class="h-4 w-4 border flex-none border-slate-100 dark:border-slate-800 rounded inline-flex ltr:mr-3 rtl:ml-3 relative transition-all duration-150 bg-slate-100 dark:bg-slate-900">
+                            <span className="h-4 w-4 border flex-none border-slate-100 dark:border-slate-800 rounded inline-flex ltr:mr-3 rtl:ml-3 relative transition-all duration-150 bg-slate-100 dark:bg-slate-900">
                               <img
                                 src={icon}
                                 alt=""
-                                class="h-[10px] w-[10px] block m-auto opacity-0"
+                                className="h-[10px] w-[10px] block m-auto opacity-0"
                               />
                             </span>
                           </label>
@@ -247,13 +329,64 @@ const Today = () => {
                       <div style={{display:'flex',flexDirection:'row',}}>
                         <div
                           className="inline-block px-3 min-w-[100px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500
-        bg-success-500"
+        bg-success-500 cursor-pointer" onClick={()=>setShowModal(!showModal)}
                         >
                           Donate Now
                         </div>
+                        {showModal && (
+            <>
+              <div className="alert-modal">
+                <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+                  <div
+                    className="bg-white rounded-md p-6 "
+                    style={{
+                      width: "500px",
+                      height: "150px",
+                      borderRadius: "5px",
+                      padding: "20px",
+                    }}
+                  >
+                    <img
+                      src={close}
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        marginLeft: "445px",
+                        marginTop: "3px",
+                        marginBottom: "5px",
+                        pointer: "cursor",
+                      }}
+                      alt="close"
+                      onClick={() => setShowModal(false)}
+                    />
+                   <div className="fromGroup">
+                  <label className="block capitalize form-label">Donate Amount</label>
+                  <div className="relative ">
+                    <input
+                      type="text"
+                      name="amount"
+                      className="form-control py-2"
+                      placeholder="Enter Amount"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                    />
+                      <button
+                          className="btn inline-flex justify-center btn-dark" style={{margin:'10px'}}
+                          type="button"
+                          onClick={() => getepayPortal(data, Config)}
+                        >
+                          Pay Now
+                        </button>
+                  </div>
+                </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
                         <div
-                          className="inline-block px-3 min-w-[100px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500
-        bg-warning-500"
+                          className="inline-block px-3 min-w-[100px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-danger-500
+        bg-danger-500"
                         >
                           Rejected
                         </div>
@@ -264,18 +397,18 @@ const Today = () => {
                     <tr>
                       <td className="table-td">
                         {" "}
-                        <div class="checkbox-area">
-                          <label class="inline-flex items-center cursor-pointer">
+                        <div className="checkbox-area">
+                          <label className="inline-flex items-center cursor-pointer">
                             <input
                               type="checkbox"
-                              class="hidden"
+                              className="hidden"
                               name="checkbox"
                             />
-                            <span class="h-4 w-4 border flex-none border-slate-100 dark:border-slate-800 rounded inline-flex ltr:mr-3 rtl:ml-3 relative transition-all duration-150 bg-slate-100 dark:bg-slate-900">
+                            <span className="h-4 w-4 border flex-none border-slate-100 dark:border-slate-800 rounded inline-flex ltr:mr-3 rtl:ml-3 relative transition-all duration-150 bg-slate-100 dark:bg-slate-900">
                               <img
                                 src={icon}
                                 alt=""
-                                class="h-[10px] w-[10px] block m-auto opacity-0"
+                                className="h-[10px] w-[10px] block m-auto opacity-0"
                               />
                             </span>
                           </label>
@@ -317,13 +450,64 @@ const Today = () => {
                       <div style={{display:'flex',flexDirection:'row',}}>
                         <div
                           className="inline-block px-3 min-w-[100px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500
-        bg-success-500"
+        bg-success-500 cursor-pointer" onClick={()=>setShowModal(!showModal)}
                         >
                           Donate Now
                         </div>
+                        {showModal && (
+            <>
+              <div className="alert-modal">
+                <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+                  <div
+                    className="bg-white rounded-md p-6 "
+                    style={{
+                      width: "500px",
+                      height: "150px",
+                      borderRadius: "5px",
+                      padding: "20px",
+                    }}
+                  >
+                    <img
+                      src={close}
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        marginLeft: "445px",
+                        marginTop: "3px",
+                        marginBottom: "5px",
+                        pointer: "cursor",
+                      }}
+                      alt="close"
+                      onClick={() => setShowModal(false)}
+                    />
+                   <div className="fromGroup">
+                  <label className="block capitalize form-label">Donate Amount</label>
+                  <div className="relative ">
+                    <input
+                      type="text"
+                      name="amount"
+                      className="form-control py-2"
+                      placeholder="Enter Amount"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                    />
+                      <button
+                          className="btn inline-flex justify-center btn-dark" style={{margin:'10px'}}
+                          type="button"
+                          onClick={() => getepayPortal(data, Config)}
+                        >
+                          Pay Now
+                        </button>
+                  </div>
+                </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
                         <div
-                          className="inline-block px-3 min-w-[100px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500
-        bg-warning-500"
+                          className="inline-block px-3 min-w-[100px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-danger-500
+        bg-danger-500"
                         >
                           Rejected
                         </div>
@@ -334,10 +518,10 @@ const Today = () => {
                   </tbody>
                   
                 </table>
-                <div class="card-body flex flex-col p-6" style={{backgroundColor:' rgba(236, 110, 70, 0.2)'}}>
-                    <div class="card-text h-full flex flex-wrap items-center justify-between">
-                      <div class="flex items-center space-x-2 mb-2 sm:mb-0">
-                        <select class="dataNumber borde bg-transparent !border-slate-400 dark:!border-slate-600 !pr-5 rounded-md" id="dataNumber">
+                <div className="card-body flex flex-col p-6" style={{backgroundColor:' rgba(236, 110, 70, 0.2)'}}>
+                    <div className="card-text h-full flex flex-wrap items-center justify-between">
+                      <div className="flex items-center space-x-2 mb-2 sm:mb-0">
+                        <select className="dataNumber borde bg-transparent !border-slate-400 dark:!border-slate-600 !pr-5 rounded-md" id="dataNumber">
                           <option value="0" disabled="disabled">Go</option>
                           <option value="1">1</option>
                           <option value="5">5</option>
@@ -346,47 +530,47 @@ const Today = () => {
                         <span>of 10 entries</span>
                       </div>
                       <div>
-                        <ul class="list-none">
-                          <li class="inline-block">
-                            <a href="#" class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
+                        <ul className="list-none">
+                          <li className="inline-block">
+                            <a href="#" className="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
                                         dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
                                         duration-300 relative top-[2px] pl-2">
                               {/* <iconify-icon icon="material-symbols:arrow-back-ios-rounded"></iconify-icon> */}
                               <KeyboardArrowLeftIcon style={{fontSize:'medium',marginRight:'10px'}} />
                             </a>
                           </li>
-                          <li class="inline-block">
-                            <a href="#" class="flex items-center justify-center w-6 h-6 bg-slate-100 text-slate-800
+                          <li className="inline-block">
+                            <a href="#" className="flex items-center justify-center w-6 h-6 bg-slate-100 text-slate-800
                                         dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
                                         duration-300 p-active">
                               1</a>
                           </li>
-                          <li class="inline-block">
-                            <a href="#" class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
+                          <li className="inline-block">
+                            <a href="#" className="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
                                         dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
                                         duration-300 ">
                               2</a>
                           </li>
-                          <li class="inline-block">
-                            <a href="#" class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
+                          <li className="inline-block">
+                            <a href="#" className="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
                                         dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
                                         duration-300 ">
                               3</a>
                           </li>
-                          <li class="inline-block">
-                            <a href="#" class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
+                          <li className="inline-block">
+                            <a href="#" className="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
                                         dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
                                         duration-300 ">
                               4</a>
                           </li>
-                          <li class="inline-block">
-                            <a href="#" class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
+                          <li className="inline-block">
+                            <a href="#" className="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
                                         dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
                                         duration-300 ">
                               5</a>
                           </li>
-                          <li class="inline-block">
-                            <a href="#" class="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
+                          <li className="inline-block">
+                            <a href="#" className="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
                                         dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
                                         duration-300 relative top-[2px]">
                               {/* <iconify-icon icon="material-symbols:arrow-forward-ios-rounded"></iconify-icon> */}

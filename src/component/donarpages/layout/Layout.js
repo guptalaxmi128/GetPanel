@@ -346,7 +346,7 @@ useEffect(() => {
                       <h4 class="font-medium lg:text-2xl text-xl capitalize text-slate-900 inline-block ltr:pr-4 rtl:pl-4 mb-4 sm:mb-0 flex space-x-3 rtl:space-x-reverse">
                         Dashboard
                       </h4>
-                      <p style={{ color: "#8e8e8e" }}>
+                      <p style={{ color: "#8e8e8e",fontSize:'16px',fontFamily:'Poppins' }}>
                         Hii, {name}. Welcome back to GET.
                       </p>
                     </div>

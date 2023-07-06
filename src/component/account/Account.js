@@ -1,24 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
-import LogoutIcon from "@mui/icons-material/Logout";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import Sidebar from "../sidebar/Sidebar";
-import user from "../../assets/user.png";
 import close from "../../assets/close.png";
 import edit from "../../assets/edit.png";
 import {
   useAddAccountMutation,
+  useAddverifyOTPForUpdateAccountMutation,
   useGetAccountQuery,
-  useGetNotificationQuery,
-  useGetProfileQuery,
+  useGetOTPForUpdateAccountQuery,
 } from "../../services/signUpApi";
+import StudentNotification from "../studentNotification/StudentNotification";
 
 const Account = () => {
-  const [notification, setNotification] = useState("");
-  const [isNotification, setIsNotification] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [accountNumber, setAccountNumber] = useState("");
   const [isAccountNumberSet, setIsAccountNumberSet] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -27,11 +20,14 @@ const Account = () => {
   const [id, setId] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [UPIId, setUPIId] = useState("");
-  const [name, setName] = useState("");
   const [showAlertModal, setShowAlertModal] = useState(false);
 
   const [showAlert, setShowAlert] = useState(false);
   const accountNoRef = useRef(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [message, setMessage] = useState("");
+  const [showRequest, setShowRequest] = useState(false);
+  const [verifyOtp,setVerifyOtp]=useState('');
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -40,7 +36,7 @@ const Account = () => {
 
   const handleAccountNumberChange = (event) => {
     if (!isAccountNumberSet) {
-      setShowAlert(true);
+      // setShowAlert(true);
       setIsAccountNumberSet(true);
     } else {
       const value = event.target.value;
@@ -48,43 +44,27 @@ const Account = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    alert("Student logout successfully!");
-  };
 
-  const { data: studentNotification, isSuccess: studentIsSuccess } =
-    useGetNotificationQuery();
 
-  console.log(studentNotification);
-  console.log("data", notification);
-
-  useEffect(() => {
-    if (studentNotification && studentIsSuccess && studentNotification.data) {
-      setNotification(studentNotification.data);
-    }
-  }, [studentNotification, studentIsSuccess]);
   const handleEditClick = () => {
     setShowAlert(false);
-    accountNoRef.current.focus();
+    // accountNoRef.current.focus();
   };
 
-  useEffect(() => {
-    if (showAlert) {
-      accountNoRef.current.blur();
-    }
-  }, [showAlert]);
+  // useEffect(() => {
+  //   if (showAlert) {
+  //     accountNoRef.current.blur();
+  //   }
+  // }, [showAlert]);
 
-  const handleBlur = (event) => {
-    const value = event.target.value;
-    if (value !== "") {
-      setShowAlert(true);
-    }
-  };
+  // const handleBlur = (event) => {
+  //   const value = event.target.value;
+  //   if (value !== "") {
+  //     setShowAlert(true);
+  //   }
+  // };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+ 
 
   const [addAccount] = useAddAccountMutation();
   const { data, isSuccess } = useGetAccountQuery();
@@ -98,6 +78,7 @@ const Account = () => {
       setIFSCCode(data.IFSCCode);
       setUPIId(data.UPIId);
       setSelectedFile(data.UPIQRCode);
+      setId(data.id);
     }
   }, [data, isSuccess]);
 
@@ -107,12 +88,7 @@ const Account = () => {
       ? filePath.substring(filePath.lastIndexOf("\\") + 1)
       : "";
 
-  const { data: userData, isSuccess: userIsSuccess } = useGetProfileQuery();
-  useEffect(() => {
-    if (userData && userIsSuccess) {
-      setName(userData.name);
-    }
-  }, [userData, userIsSuccess]);
+
 
   const clearTextInput = () => {
     setAccountName("");
@@ -176,11 +152,40 @@ const Account = () => {
     console.log(formData);
     const res = await addAccount(formData);
     if (res.data) {
+      setShowAlert(true);
       setShowAlertModal(true);
       console.log(res);
       clearTextInput();
     }
   };
+
+  const { data: sendRequest, isSuccess: sendRequestIsSuccess } =
+    useGetOTPForUpdateAccountQuery(id);
+
+  const handleRequest = () => {
+    if (sendRequest && sendRequestIsSuccess && sendRequest.success) {
+      setMessage(sendRequest.message);
+      setShowRequest(true);
+      setShowEditModal(false);
+    }
+  };
+
+  // console.log(message);
+  const [addverifyOTPForUpdateAccount] =useAddverifyOTPForUpdateAccountMutation();
+
+  const handleEditVerifyOtp = async (e)=>{
+    e.preventDefault();
+    const formData = {
+     otp:verifyOtp,
+     accountDetailId:id
+    };
+    console.log(formData);
+    const res = await addverifyOTPForUpdateAccount(formData);
+    alert("Otp send successfully!");
+    console.log(res);
+    // clearTextInput();
+
+  }
 
   return (
     <>
@@ -277,171 +282,9 @@ const Account = () => {
                 </div>
                 {/* <!-- end horizental --> */}
 
-                <div className="main-menu">
-                  <ul>
-                    <li
-                      className="
-             menu-item-has-children 
-              "
-                    >
-                      {/* <!--  Single menu --> */}
-
-                      {/* <!-- has dropdown --> */}
-
-                      <a href="javascript:void()">
-                        <div className="flex flex-1 items-center space-x-[6px] rtl:space-x-reverse">
-                          <span className="icon-box">
-                            <iconify-icon icon="heroicons-outline:home">
-                              {" "}
-                            </iconify-icon>
-                          </span>
-                          <div className="text-box">Dashboard</div>
-                        </div>
-                        <div className="flex-none text-sm ltr:ml-3 rtl:mr-3 leading-[1] relative top-1">
-                          <iconify-icon icon="heroicons-outline:chevron-down">
-                            {" "}
-                          </iconify-icon>
-                        </div>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+              
                 {/* <!-- end top menu --> */}
-                <div className="nav-tools flex items-center lg:space-x-5 space-x-3 rtl:space-x-reverse leading-0">
-                  {/* <!-- BEGIN: Notification Dropdown --> */}
-                  {/* <!-- Notifications Dropdown area --> */}
-                  <div className="relative md:block hidden">
-                    <button
-                      className="lg:h-[32px] lg:w-[32px] lg:bg-slate-50 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer
-      rounded-full text-[20px] flex flex-col items-center justify-center"
-                    >
-                      <NotificationsIcon
-                        onClick={() => setIsNotification(!isNotification)}
-                      />
-                      <span
-                        className="absolute -right-1 lg:top-0 -top-[6px] h-4 w-4 bg-red-500 text-[8px] font-semibold flex flex-col items-center
-        justify-center rounded-full text-white z-[99]"
-                      >
-                        4
-                      </span>
-                    </button>
-                    {/* <!-- Notifications Dropdown --> */}
-                    {isNotification && (
-                      <div
-                        className="dropdown-menu z-10  bg-white divide-y divide-slate-100 dark:divide-slate-900 shadow w-[335px]
-      dark:bg-slate-800 border dark:border-slate-900 !top-[23px] rounded-md absolute"
-                        style={{ right: "0" }}
-                      >
-                        <div className="flex items-center justify-between py-3 px-3">
-                          <h3 className="text-sm font-Inter font-medium text-slate-700 dark:text-white">
-                            Notifications
-                          </h3>
-                          <a
-                            className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white"
-                            href="#"
-                          >
-                            See All
-                          </a>
-                        </div>
-                        {notification.map((notification) => (
-                          <div
-                            className="divide-y divide-slate-100 dark:divide-slate-900"
-                            role="none"
-                            key={notification.id}
-                          >
-                            <div className="bg-slate-100 dark:bg-slate-700 dark:text-white text-slate-800 block w-full px-4 py-2 text-sm relative">
-                              <div className="flex ltr:text-left rtl:text-right">
-                                <div className="flex-none ltr:mr-3 rtl:ml-3">
-                                  <div className="h-8 w-8 bg-white rounded-full">
-                                    <img
-                                      src={user}
-                                      alt="user"
-                                      className="border-transparent block w-full h-full object-cover rounded-full border"
-                                    />
-                                  </div>
-                                </div>
-                                &nbsp;&nbsp;
-                                <div className="flex-1">
-                                  <div className="text-slate-600 text-xs leading-4">
-                                    {notification.message}
-                                  </div>
-                                  <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
-                                    {notification.link}
-                                  </div>
-                                  <div className="text-slate-400 dark:text-slate-400 text-xs mt-1">
-                                    {notification.postingTime}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  {/* <!-- END: Notification Dropdown --> */}
-
-                  {/* <!-- BEGIN: Profile Dropdown --> */}
-                  {/* <!-- Profile DropDown Area --> */}
-                  <div className="md:block hidden w-full">
-                    <button
-                      className="text-slate-800 dark:text-white focus:ring-0 focus:outline-none font-medium rounded-lg text-sm text-center
-      inline-flex items-center"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <div
-                        className="lg:h-8 lg:w-8 h-7 w-7 rounded-full flex-1 ltr:mr-[10px] rtl:ml-[10px]"
-                        style={{ marginRight: 10 }}
-                      >
-                        <img
-                          src={user}
-                          alt="user"
-                          className="block w-full h-full object-cover rounded-full"
-                        />
-                      </div>
-                      <span className="flex-none text-slate-600 dark:text-white text-sm font-normal items-center lg:flex hidden overflow-hidden text-ellipsis whitespace-nowrap">
-                        {name}
-                      </span>
-                      <KeyboardArrowDownIcon onClick={toggleDropdown} />
-                    </button>
-                    {/* <!-- Dropdown menu --> */}
-                    {isDropdownOpen && (
-                      <div
-                        className="dropdown-menu z-10  bg-white divide-slate-100 shadow w-44 dark:bg-slate-800 border dark:border-slate-700 top-[23px] rounded-md
-      overflow-hidden absolute "
-                      >
-                        <ul className="py-1 text-sm text-slate-800 dark:text-slate-200">
-                          <li>
-                            <Link
-                              to={"/login"}
-                              className="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-600 dark:hover:text-white font-inter text-sm text-slate-600
-            dark:text-white font-normal"
-                              onClick={handleLogout}
-                            >
-                              {/* <iconify-icon
-                              icon="heroicons-outline:login"
-                              className="relative top-[2px] text-lg ltr:mr-1 rtl:ml-1"
-                            ></iconify-icon> */}
-                              <LogoutIcon style={{ fontSize: "medium" }} />{" "}
-                              &nbsp;
-                              <span className="font-Inter">Logout</span>
-                            </Link>
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                  {/* <!-- END: Header --> */}
-                  <button className="smallDeviceMenuController md:hidden block leading-0">
-                    <iconify-icon
-                      className="cursor-pointer text-slate-900 dark:text-white text-2xl"
-                      icon="heroicons-outline:menu-alt-3"
-                    ></iconify-icon>
-                  </button>
-                  {/* <!-- end mobile menu --> */}
-                </div>
+               <StudentNotification />
                 {/* <!-- end nav tools --> */}
               </div>
             </div>
@@ -494,13 +337,138 @@ const Account = () => {
                             College/ School/ Institute Account Details
                           </div>
                           <div className="flex">
-                          <img src={edit} alt="edit" style={{width:'17px',height:'17px'}} /> &nbsp;
-                          <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
-                            Edit
-                          </div>
+                            <img
+                              src={edit}
+                              alt="edit"
+                              style={{ width: "15px", height: "15px" }}
+                            />{" "}
+                            &nbsp;
+                            <div
+                              className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white"
+                              onClick={() => setShowEditModal(!showEditModal)}
+                              style={{ cursor: "pointer" }}
+                            >
+                              Edit
+                            </div>
                           </div>
                         </div>
                       </header>
+
+                      {message && showRequest && (
+                        <div className="alert-modal">
+                          <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+                            <div
+                              className="bg-white rounded-md p-6 "
+                              style={{
+                                width: "500px",
+                                height: "130px",
+                                borderRadius: "5px",
+                                padding: "20px",
+                                position: "relative"
+                              }}
+                            >
+                              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                              <img
+                                src={close}
+                                style={{
+                                  width: "15px",
+                                  height: "15px",
+                                  marginBottom: "10px",
+                                  cursor:'pointer'
+                                }}
+                                alt="close"
+                                onClick={() => setShowRequest(false)}
+                              />
+                              </div>
+                              <div className="alert alert-danger light-mode" style={{fontSize:'12px'}}>
+                                {message}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {showEditModal && (
+                        <>
+                          <div className="alert-modal">
+                            <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+                              <div
+                                className="bg-white rounded-md p-6 "
+                                style={{ width: "450px", height: "190px" }}
+                              >
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                  }}
+                                >
+                                  <div
+                                    className="text-lg font-bold mb-3 text-center"
+                                    style={{ flex: 1 }}
+                                  >
+                                    Update Request For Account Details
+                                  </div>
+                                  <img
+                                    src={close}
+                                    style={{
+                                      width: "15px",
+                                      height: "15px",
+                                      cursor: "pointer",
+                                      marginBottom: "12px",
+                                    }}
+                                    alt="close"
+                                    onClick={() => setShowEditModal(false)}
+                                  />
+                                </div>
+                                {/* <div className="grid md:grid-cols-2 gap-6 m-auto" > */}
+                                <div className="input-area ">
+                                  <label htmlFor="verifyOtp" className="form-label">
+                                    Enter OTP
+                                  </label>
+                                  <div className="relative">
+                                    <input
+                                      id="verifyOtp"
+                                      type="number"
+                                      name="verifyOtp"
+                                      className="form-control"
+                                      placeholder="Enter OTP"
+                                      value={verifyOtp}
+                                      onChange={(e)=>setVerifyOtp(e.target.value)}
+                                    />
+                                  </div>
+                                  <div
+                                    className="text-slate-600 text-xs leading-4"
+                                    style={{ fontSize: "10px", margin: "8px" }}
+                                  >
+                                    {" "}
+                                    Don't have OTP.{" "}
+                                    <span
+                                      onClick={handleRequest}
+                                      style={{
+                                        color: "blue",
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      Click here
+                                    </span>{" "}
+                                    to send a request to the admin to edit your
+                                    account details.
+                                  </div>
+
+                                  <button
+                                    className="btn btn-dark block w-full text-center mt-3"
+                                   onClick={handleEditVerifyOtp}
+                                  >
+                                    Submit
+                                  </button>
+                                </div>
+
+                                {/* </div> */}
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
                       <div class="card-text h-full">
                         <div class="grid md:grid-cols-2 gap-6">
                           {accountName && (
@@ -619,7 +587,7 @@ const Account = () => {
                     <div class="card-body flex flex-col p-6">
                       <header class="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
                         <div class="flex-1">
-                          <div class="card-title text-slate-900 dark:text-white">
+                          <div class="card-title text-slate-900 dark:text-white" style={{fontSize:'18px'}}>
                             {" "}
                             College/ School/ Institute Account Details
                           </div>
@@ -634,6 +602,7 @@ const Account = () => {
                               </label>
                               <div class="relative">
                                 <input
+                                  style={{fontSize:'12px'}}
                                   id="name"
                                   type="text"
                                   name="name"
@@ -656,6 +625,7 @@ const Account = () => {
                               </label>
                               <div class="relative">
                                 <input
+                                  style={{fontSize:'12px'}}
                                   id="account_number"
                                   type="number"
                                   name="account_number"
@@ -664,8 +634,8 @@ const Account = () => {
                                   required="required"
                                   value={accountNumber}
                                   onChange={handleAccountNumberChange}
-                                  onBlur={handleBlur}
-                                  ref={accountNoRef}
+                                  // onBlur={handleBlur}
+                                  // ref={accountNoRef}
                                 />
                               </div>
                               {showAlert && (
@@ -703,6 +673,7 @@ const Account = () => {
                               </label>
                               <div class="relative">
                                 <input
+                                  style={{fontSize:'12px'}}
                                   id="branch"
                                   type="text"
                                   name="branch"
@@ -720,6 +691,7 @@ const Account = () => {
                               </label>
                               <div class="relative">
                                 <input
+                                  style={{fontSize:'12px'}}
                                   id="ifsc_code"
                                   type="text"
                                   name="ifsc_code"
@@ -744,17 +716,17 @@ const Account = () => {
                               style={{
                                 width: "50%",
                                 height: "1px",
-                                backgroundColor: "#f1f5f9",
+                                backgroundColor: "gray",
                                 border: "none",
-                                marginTop: "10px",
+                                // marginTop: "10px",
                               }}
                             />
-                            <p>OR</p>
+                            <p style={{fontSize:'12px',marginTop:'3px'}}>OR</p>
                             <hr
                               style={{
                                 width: "50%",
                                 height: "1px",
-                                backgroundColor: "#f1f5f9",
+                                backgroundColor: "gray",
                                 border: "none",
                                 marginTop: "10px",
                               }}
@@ -767,6 +739,7 @@ const Account = () => {
                               </label>
                               <div class="relative">
                                 <input
+                                  style={{fontSize:'12px'}}
                                   id="upi"
                                   type="text"
                                   name="upi"
@@ -783,6 +756,7 @@ const Account = () => {
                                 QR Code
                               </label>
                               <input
+                                style={{fontSize:'12px'}}
                                 type="file"
                                 id="fileInput"
                                 className="form-control"

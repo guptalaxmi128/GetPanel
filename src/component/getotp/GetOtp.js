@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import backgroundImg from "../../assets/page-bg.png";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 import { useLocation, useNavigate ,Link } from "react-router-dom";
 import { useVerifyRegisterOtpMutation } from "../../services/signUpApi";
 
@@ -14,6 +16,8 @@ const GetOtp = () => {
 
   const [otpError, setOtpError] = useState("");
   const [emailOtpError, setEmailOtpError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg,setErrorMsg]=useState(false);
 
   const [verifyRegisterOtp] = useVerifyRegisterOtpMutation();
 
@@ -22,9 +26,51 @@ const GetOtp = () => {
     setMobileNumberOtp("");
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!mobileNumberOtp) {
+  //     setOtpError("Please enter mobile number otp");
+  //   } else if (mobileNumberOtp.length !== 6) {
+  //     setOtpError("Mobile number otp should have 6 digits");
+  //   } else {
+  //     setOtpError("");
+  //   }
+  //   if (!emailOtp) {
+  //     setEmailOtpError("Email otp is required");
+  //   } else if (emailOtp.length !== 6) {
+  //     setEmailOtpError("Email otp should have 6 digits");
+  //   } else {
+  //     setEmailOtpError("");
+  //   }
+  //   if (
+  //     mobileNumberOtp &&
+  //     mobileNumberOtp.length === 6 &&
+  //     emailOtp &&
+  //     emailOtp.length === 6
+  //   ) {
+  //     const formData = {
+  //       email,
+  //       mobileNumber,
+  //       emailOTP: emailOtp,
+  //       mobileOTP: mobileNumberOtp,
+  //     };
+  //     console.log(formData);
+  //     setIsLoading(true);
+  //     const res = await verifyRegisterOtp(formData);
+  //     console.log(res);
+  //     if (res.data.success) {
+  //       localStorage.setItem("authToken", res.data.authToken);
+  //       console.log(localStorage);
+  //       clearTextInput();
+  //       navigate("/student/home"); // Navigate to home page
+  //     }
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!mobileNumberOtp) {
       setOtpError("Please enter mobile number otp");
     } else if (mobileNumberOtp.length !== 6) {
@@ -39,12 +85,7 @@ const GetOtp = () => {
     } else {
       setEmailOtpError("");
     }
-    if (
-      mobileNumberOtp &&
-      mobileNumberOtp.length === 6 &&
-      emailOtp &&
-      emailOtp.length === 6
-    ) {
+    if (mobileNumberOtp && mobileNumberOtp.length === 6 && emailOtp && emailOtp.length === 6) {
       const formData = {
         email,
         mobileNumber,
@@ -52,13 +93,26 @@ const GetOtp = () => {
         mobileOTP: mobileNumberOtp,
       };
       console.log(formData);
-      const res = await verifyRegisterOtp(formData);
-      console.log(res);
-      if (res.data.success) {
-        localStorage.setItem("authToken", res.data.authToken);
-        console.log(localStorage);
-        clearTextInput();
-        navigate("/student/home"); // Navigate to home page
+      setIsLoading(true);
+      try {
+        const res = await verifyRegisterOtp(formData);
+        console.log(res);
+        if (res && res.data && res.data.success) {
+          localStorage.setItem("authToken", res.data.authToken);
+          console.log(localStorage);
+          clearTextInput();
+          navigate("/student/home"); // Navigate to home page
+        } else if (res && res.error.data && res.error.data.message) {
+          setErrorMsg(res.error.data.message);
+        }
+         else {
+          setErrorMsg("An error occurred"); // Set the error message from the response
+        }
+      } catch (error) {
+        console.error(error);
+        setErrorMsg(error.message); // Set generic error message on error
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -92,8 +146,8 @@ const GetOtp = () => {
               style={{ paddingTop: "2.5rem", paddingBottom: "2.5rem" }}
             >
               <div className="text-center 2xl:mb-10 mb-5">
-                <h4 className="font-medium">Sign Up</h4>
-                <div className="text-slate-500 dark:text-slate-400 text-base">
+                <h4 className="font-medium" style={{fontSize:'16px',fontWeight:600}}>Sign Up</h4>
+                <div className="text-slate-500 dark:text-slate-400 text-base" style={{fontSize:'14px'}}>
                   Sign up to your account to start using GET
                 </div>
               </div>
@@ -108,6 +162,7 @@ const GetOtp = () => {
                   </label>
                   <div className="relative ">
                     <input
+                      style={{ fontSize: '13px' }}
                       type="number"
                       name="emailotp"
                       className="form-control py-2"
@@ -134,6 +189,7 @@ const GetOtp = () => {
                   </label>
                   <div className="relative ">
                     <input
+                      style={{ fontSize: '13px' }}
                       type="number"
                       name="mobilenumberotp"
                       className="  form-control py-2"
@@ -154,6 +210,36 @@ const GetOtp = () => {
                     ) : null}
                   </div>
                 </div>
+                {isLoading && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      backgroundColor: "rgba(255, 255, 255, 0.8)",
+                      zIndex: 9999,
+                    }}
+                  >
+                    <CircularProgress />
+                  </Box>
+                )}
+                {errorMsg && (
+                      <span
+                        style={{
+                          color: "red",
+                          marginLeft: 6,
+                          fontSize: "12px",
+                          marginTop:'5px'
+                        }}
+                      >
+                        {errorMsg}
+                      </span>
+                    )}
+                    {errorMsg ?  <br/> :''} 
                 <Link to={"/student/resend-register-otp"}>
                   <span className="text-slate-500" style={{fontSize:'12px'}}>
                     Resend Otp

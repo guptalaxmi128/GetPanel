@@ -71,30 +71,24 @@ const Sidebar = () => {
       >
         <ul className="sidebar-menu">
           <li
-          className={activeItem === 0 ? "active" : ""}
-          onClick={() => handleItemClick(0)}
+            className={activeItem === 0 ? "active" : ""}
+            onClick={() => handleItemClick(0)}
           >
-            <NavLink
-              to="/student/home"
-            className="navItem"
-            >
+            <NavLink to="/student/home" className="navItem">
               <span className="flex items-center">
-                <HomeRoundedIcon /> &nbsp; &nbsp;
+                <HomeRoundedIcon  sx={{ fontSize: '20px' }} /> &nbsp; &nbsp;
                 <span>Dashboard</span>
               </span>
             </NavLink>
           </li>
 
           <li
-          className={activeItem === 1 ? "active" : ""}
-          onClick={() => handleItemClick(1)}
+            className={activeItem === 1 ? "active" : ""}
+            onClick={() => handleItemClick(1)}
           >
-           
-            <NavLink
-             to="/student/course" className="navItem"
-            >
+            <NavLink to="/student/course" className="navItem">
               <span className="flex items-center">
-                <ListAltOutlinedIcon />
+                <ListAltOutlinedIcon sx={{ fontSize: '20px' }}  />
                 &nbsp; &nbsp;
                 <span>Current Course</span>
               </span>
@@ -106,7 +100,7 @@ const Sidebar = () => {
           >
             <NavLink to="/student/account" className="navItem">
               <span className="flex items-center">
-                <GroupSharpIcon /> &nbsp; &nbsp;
+                <GroupSharpIcon  sx={{ fontSize: '20px' }} /> &nbsp; &nbsp;
                 <span>Account Details</span>
               </span>
             </NavLink>
@@ -117,7 +111,7 @@ const Sidebar = () => {
           >
             <NavLink to="/student/wallet" className="navItem">
               <span className="flex items-center">
-                <AccountBalanceWalletOutlinedIcon /> &nbsp; &nbsp;
+                <AccountBalanceWalletOutlinedIcon  sx={{ fontSize: '20px' }} /> &nbsp; &nbsp;
                 <span>Wallet</span>
               </span>
             </NavLink>
@@ -128,7 +122,8 @@ const Sidebar = () => {
           >
             <NavLink to="/student/profile" className="navItem">
               <span className="flex items-center">
-                <DescriptionOutlinedIcon /> &nbsp;&nbsp;&nbsp;
+                <DescriptionOutlinedIcon sx={{ fontSize: '20px' }} />{" "}
+                &nbsp;&nbsp;&nbsp;
                 <span>Profile</span>
               </span>
             </NavLink>
@@ -139,7 +134,7 @@ const Sidebar = () => {
           >
             <NavLink to="/student/courses" className="navItem">
               <span className="flex items-center">
-                <ListAltOutlinedIcon />
+                <ListAltOutlinedIcon  sx={{ fontSize: '20px' }} />
                 &nbsp;&nbsp;&nbsp;
                 <span>Course Offered</span>
               </span>
@@ -151,7 +146,7 @@ const Sidebar = () => {
           >
             <NavLink to="/login" className="navItem" onClick={handleLogout}>
               <span className="flex items-center">
-                <LogoutIcon />
+                <LogoutIcon sx={{ fontSize: '20px' }}  />
                 &nbsp;&nbsp;&nbsp;
                 <span>Logout</span>
               </span>

@@ -22,6 +22,7 @@ const SignUp = () => {
   const [emailError, setEmailError] = useState("");
   const [mobileNumberError, setMobileNumberError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [message,setMessage]=useState('')
 
   const handleSelectChange = (e) => {
     setSelectedOption(e.target.value);
@@ -77,20 +78,38 @@ const SignUp = () => {
       setIsLoading(true);
 
       if (selectedOption === "student") {
-        // Make API call for student registration
-        const res = await registerUser(formData);
-        console.log(res);
-        if (res.data.success) {
+        try {
+          const res = await registerUser(formData);
+          console.log(res);
           clearTextInput();
-          navigate("/student/getotp", { state: { mobileNumber, email } }); // Navigate to OTP page
+          if (res && res.data && res.data.success) {
+            setMessage("");
+            navigate("/student/getotp", { state: { mobileNumber, email } });
+          } else if (res && res.error.data && res.error.data.message) {
+            setMessage(res.error.data.message);
+          } else {
+            setMessage("An error occurred");
+          }
+        } catch (error) {
+          console.log(error);
+          setMessage(error.message);
         }
       } else if (selectedOption === "donar") {
-        // Make API call for donor registration
-        const res = await registerDonar(formData);
-        console.log(res);
-        if (res.data.success) {
+        try {
+          const res = await registerDonar(formData);
+          console.log(res);
           clearTextInput();
-          navigate("/donar/getotp", { state: { mobileNumber, email } }); // Navigate to donor page
+          if (res && res.data && res.data.success) {
+            setMessage("");
+            navigate("/donar/getotp", { state: { mobileNumber, email } });
+          } else if (res && res.error.data && res.error.data.message) {
+            setMessage(res.error.data.message);
+          } else {
+            setMessage("An error occurred");
+          }
+        } catch (error) {
+          console.log(error);
+          setMessage(error.message);
         }
       }
       setIsLoading(false);
@@ -130,8 +149,8 @@ const SignUp = () => {
           </div> */}
 
               <div className="text-center 2xl:mb-10 mb-5">
-                <h4 className="font-medium">Sign Up</h4>
-                <div className="text-slate-500 dark:text-slate-400 text-base">
+                <h4 className="font-medium" style={{fontSize:'16px',fontWeight:600}}> Sign Up</h4>
+                <div className="text-slate-500 dark:text-slate-400 text-base" style={{fontSize:'14px'}}>
                   Sign up to your account to start using GET
                 </div>
               </div>
@@ -153,6 +172,7 @@ const SignUp = () => {
                       className="form-control"
                       value={selectedOption}
                       onChange={handleSelectChange}
+                      style={{ fontSize: '13px' }}
                     >
                       <option
                         value="default"
@@ -170,6 +190,7 @@ const SignUp = () => {
                   <label className="block capitalize form-label">name</label>
                   <div className="relative ">
                     <input
+                      style={{ fontSize: '13px' }}
                       type="text"
                       name="name"
                       className="form-control py-2"
@@ -182,7 +203,7 @@ const SignUp = () => {
                         style={{
                           color: "red",
                           marginLeft: 8,
-                          fontSize: "14px",
+                          fontSize: "12px",
                         }}
                       >
                         {nameError}
@@ -194,6 +215,7 @@ const SignUp = () => {
                   <label className="block capitalize form-label">email</label>
                   <div className="relative ">
                     <input
+                      style={{ fontSize: '13px' }}
                       type="email"
                       name="email"
                       className="form-control py-2"
@@ -206,7 +228,7 @@ const SignUp = () => {
                         style={{
                           color: "red",
                           marginLeft: 8,
-                          fontSize: "14px",
+                          fontSize: "12px",
                         }}
                       >
                         {emailError}
@@ -220,6 +242,7 @@ const SignUp = () => {
                   </label>
                   <div className="relative ">
                     <input
+                      style={{ fontSize: '13px' }}
                       type="number"
                       name="mobilenumber"
                       className="  form-control py-2"
@@ -232,7 +255,7 @@ const SignUp = () => {
                         style={{
                           color: "red",
                           marginLeft: 8,
-                          fontSize: "14px",
+                          fontSize: "12px",
                         }}
                       >
                         {mobileNumberError}
@@ -280,6 +303,18 @@ const SignUp = () => {
                     <CircularProgress />
                   </Box>
                 )}
+                {message && (
+                      <span
+                        style={{
+                          color: "red",
+                          marginLeft: 6,
+                          fontSize: "12px",
+                          marginTop:'5px'
+                        }}
+                      >
+                        {message}
+                      </span>
+                    )}
                 <button
                   className="btn btn-dark block w-full text-center"
                   type="button"

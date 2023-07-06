@@ -26,7 +26,7 @@ const DonationRequest = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const { data,isSuccess}=useGetDonarQuery();
-  // console.log(data)
+  console.log(data)
   
   useEffect(()=>{
    if(data && isSuccess){
@@ -36,8 +36,8 @@ const DonationRequest = () => {
 
 
 
-  const { data :acceptRaiseFund,isSuccess:acceptRaiseFundIsSuccess}=useGetAcceptRaiseFundQuery();
-//   console.log("donar",acceptRaiseFund)
+  // const { data :acceptRaiseFund,isSuccess:acceptRaiseFundIsSuccess}=useGetAcceptRaiseFundQuery();
+  // console.log("donar",acceptRaiseFund)
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -376,19 +376,19 @@ useEffect(() => {
                       >
                         <Tab
                           label="Today"
-                          style={{ color: value === 0 ? "#EC6E46" : "#000" }}
+                          style={{fontSize:'12px', color: value === 0 ? "#EC6E46" : "#000" }}
                         />
                         <Tab
                           label="All"
-                          style={{ color: value === 1 ? "#EC6E46" : "#000" }}
+                          style={{  fontSize:'12px',color: value === 1 ? "#EC6E46" : "#000" }}
                         />
                       </Tabs>
                     </Box>
                     <TabPanel value={value} index={0}>
-                      <All />
+                      <Today />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                      <Today />
+                    <All /> 
                     </TabPanel>
                   </>
                 </div>

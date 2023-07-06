@@ -1,0 +1,365 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.home1 {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 600px;
+  background-color: #e3f9ff;
+  padding-top: 100px;
+}
+.home1-upper {
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  justify-content: center;
+  align-items: center;
+  height: 90%;
+  width: 100%;
+}
+.home1-upper-left {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 45%;
+  justify-content: center;
+}
+.home1-upper-left-text1 {
+  font-size: 35px;
+  font-weight: 600;
+  color: #433b7d;
+  width: 800px;
+}
+.home1-upper-left-text2 {
+  font-size: 35px;
+  width: 80%;
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: #f8a031;
+}
+
+
+.home1-upper-right {
+  display: flex;
+  width: 45%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.home1-upper-right {
+  width: 523px;
+  height: 521px;
+  background: #433b7d;
+  border-radius: 50%;
+  position: relative;
+}
+.card1 {
+  width: 268px;
+  height: 78px;
+  background-color: #fff;
+  float: left;
+  margin-right: 550px;
+  position: absolute;
+  top: 180px;
+  transform: translateY(-60%);
+  border-radius: 5px;
+  /* padding:10px; */
+  z-index: 1;
+}
+.cardContent1 {
+  display: flex;
+  align-items: center;
+  height: 78px;
+  text-align: center;
+}
+.cardText1 {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+  width: 178px;
+  height: 30px;
+  color: black;
+  margin: auto;
+}
+
+.card2 {
+  width: 315px;
+  height: 74px;
+  background-color: #fff;
+  float: right;
+  /* margin-right: 300px; */
+  position: absolute;
+  top: 75px;
+  transform: translateX(68%);
+  border-radius: 4px;
+  z-index: 100;
+}
+ .cardContent2 {
+  display: flex;
+  align-items: center;
+  height: 78px;
+  text-align: center;
+ 
+}
+/* .cardText5 {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+  width: 254px;
+  height: 30px;
+  color: black;
+  margin: auto;
+  flex: 0 0 auto;
+}  */
+
+
+
+.cardText5 {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+  width: 100%;
+  max-width: 254px;
+  height: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  color: black;
+}
+
+.card3 {
+  width: 253px;
+  height: 75px;
+  background-color: #fff;
+  float: right;
+  margin-left: 450px;
+  position: absolute;
+  /* top: 200px; */
+  transform: translateY(130%);
+  border-radius: 4px;
+  z-index: 100;
+}
+.cardContent3 {
+  display: flex;
+  align-items: center;
+  height: 75px;
+  text-align: center;
+}
+.cardText3 {
+  color: #000;
+  font-size: 9px;
+  font-weight: 700;
+  width: 255px;
+  height: 30px;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+  margin: auto;
+}
+.cardText9 {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+  width: 213px;
+  height: 30px;
+  color: black;
+  margin: auto;
+}
+
+.card4 {
+  width: 507px;
+  height: 68px;
+  background-color: #fff;
+  position: absolute;
+  transform: translateY(305%);
+  border-radius: 4px;
+  z-index: 100;
+}
+
+.cardContent4 {
+    display: flex;
+    align-items: center;
+    height: 68px;
+    text-align: center;
+  }
+
+.heading1 {
+  color: #f8a031;
+  font-size: 35px;
+  font-weight: 600;
+}
+.student-img {
+  width: 591px;
+  height: 351px;
+  z-index: 99;
+}
+.subheading{
+    flex-direction: row;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width:400px;
+    height:200px;
+    /* background-color: pink; */
+    margin-top: 100px;
+}
+.circle{
+    width: 50px;
+    height:50px;
+    border-radius: 50%;
+    background: #dcdcdc;
+    margin: auto;
+}
+.content1{
+   width:150px;
+   height:30px;
+   font-size: 16px;
+   font-weight: 600;
+   color:#000;
+   text-align: center;
+   margin-top: 2px;
+   
+}
+.content2{
+    width: 150px;
+    height:30px;
+    font-size: 12px;
+    color:#8e8e8e;
+    font-weight: 600;
+    text-align: center;
+}
+.content3{
+    width:150px;
+    height:30px;
+    font-size: 16px;
+    font-weight: 600;
+    color:#000;
+    text-align: center;
+    margin-top: 2px;
+ }
+ .content4{
+     width: 150px;
+     height:30px;
+     font-size: 12px;
+     color:rgb(247, 191, 191);
+     font-weight: 600;
+     text-align: center;
+ }
+ .content5{
+    width:150px;
+    height:30px;
+    font-size: 16px;
+    font-weight: 600;
+    color:#000;
+    text-align: center;
+    margin-top: 2px;
+ }
+ .content6{
+     width: 150px;
+     height:30px;
+     font-size: 12px;
+     color:rgb(170, 249, 196);
+     font-weight: 600;
+     text-align: center;
+ }
+
+ 
+ @media (max-width: 850px) {
+  .home1 {
+    height: auto;
+  }
+  .home1-upper {
+    flex-direction: column;
+    width:100%;
+  }
+  .home1-upper-left {
+    width: 100%;
+    padding: 50px;
+  }
+  .home1-upper-right {
+    width: 100%;
+    padding: 50px;
+  }
+  .home1-upper-left-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+  .home1-left {
+    width: 100%;
+  }
+  .home1-right {
+    width: 100%;
+  }
+
+  .home1-upper-left-text1 {
+    text-align: left;
+    width: 100%;
+  }
+  .home1-upper-left-text2 {
+    width: 100%;
+  }
+  
+} 
+
+@media (max-width: 720px) {
+  .home1 {
+    height: auto;
+  }
+  .home1-upper {
+    flex-direction: column;
+  }
+  .home1-upper-left {
+    width: 100%;
+    padding: 50px;
+  }
+  .home1-upper-right {
+    width: 100%;
+    padding: 50px;
+  }
+  .home1-upper-left-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+  .home1-left {
+    width: 100%;
+  }
+  .home1-right {
+    width: 100%;
+  }
+
+  .home1-upper-left-text1 {
+    text-align: left;
+    width: 100%;
+  }
+  .home1-upper-left-text2 {
+    width: 100%;
+  }
+}
+@media (max-width: 500px) {
+  .home1-upper {
+    padding: 20px 0px;
+  }
+  .home1-upper-left-text2 {
+    text-align: justify;
+  }
+  .home1-upper-right {
+    padding: 50px 25px;
+  }
+  .home1-upper-left {
+    padding: 50px 25px;
+  }
+  .home1-upper-left-text1 {
+    font-size: 35px;
+  }
+ 
+}

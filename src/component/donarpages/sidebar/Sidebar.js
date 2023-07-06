@@ -16,7 +16,7 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    alert("Student logout successfully!");
+    alert("Donar logout successfully!");
   };
 
   return (
@@ -75,7 +75,7 @@ const Sidebar = () => {
           >
             <NavLink to="/donar/home" className="navItem">
               <span className="flex items-center">
-                <HomeRoundedIcon /> &nbsp; &nbsp;
+                <HomeRoundedIcon sx={{ fontSize: '20px' }}  /> &nbsp; &nbsp;
                 <span>Dashboard</span>
               </span>
             </NavLink>
@@ -87,7 +87,7 @@ const Sidebar = () => {
           >
             <NavLink to="/donar/donation-request" className="navItem">
               <span className="flex items-center">
-                <ListAltOutlinedIcon />
+                <ListAltOutlinedIcon sx={{ fontSize: '20px' }}  />
                 &nbsp; &nbsp;
                 <span>Donation Request</span>
               </span>
@@ -99,7 +99,7 @@ const Sidebar = () => {
           >
             <NavLink to="/donar/donated" className="navItem">
               <span className="flex items-center">
-                <GroupSharpIcon /> &nbsp; &nbsp;
+                <GroupSharpIcon sx={{ fontSize: '20px' }}  /> &nbsp; &nbsp;
                 <span>Donated</span>
               </span>
             </NavLink>
@@ -110,7 +110,7 @@ const Sidebar = () => {
           >
             <NavLink to="/donar/profile" className="navItem">
               <span className="flex items-center">
-                <DescriptionOutlinedIcon /> &nbsp;&nbsp;&nbsp;
+                <DescriptionOutlinedIcon sx={{ fontSize: '20px' }}  /> &nbsp;&nbsp;&nbsp;
                 <span>Profile</span>
               </span>
             </NavLink>
@@ -122,7 +122,7 @@ const Sidebar = () => {
           >
             <NavLink to="/login" className="navItem" onClick={handleLogout}>
               <span className="flex items-center">
-                <LogoutIcon />
+                <LogoutIcon  sx={{ fontSize: '20px' }} />
                 &nbsp;&nbsp;&nbsp;
                 <span>Logout</span>
               </span>

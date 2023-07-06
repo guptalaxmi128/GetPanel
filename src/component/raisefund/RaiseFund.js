@@ -7,10 +7,14 @@ import Sidebar from "../sidebar/Sidebar";
 import user from "../../assets/images/user/user-1.jpg";
 import close from "../../assets/close.png";
 import edit from "../../assets/edit.png";
-import { useAddRaiseFundCourseMutation, useGetGapYearQuery,useGetProfileQuery } from "../../services/signUpApi";
+import {
+  useAddRaiseFundCourseMutation,
+  useGetGapYearQuery,
+  useGetProfileQuery,
+} from "../../services/signUpApi";
 
 const RaiseFund = () => {
-  const [name,setName]=useState('');
+  const [name, setName] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [boardOrUniversityName, setBoardOrUniversityName] = useState("");
   const [schoolOrCollageName, setSchoolOrCollageName] = useState("");
@@ -19,18 +23,17 @@ const RaiseFund = () => {
   const [feeReceipt, setFeeReceipt] = useState(null);
   const [courseName, setCourseName] = useState("");
   const [currentCourse, setCurrentCourse] = useState("");
-  const [qualification,setQualification]=useState('');
-  const [gapJustification,setGapJustification]=useState('');
-  const [financialHelp,setFinancialHelp]=useState('');
-  const [extraFees,setExtraFees]=useState('default');
-  const [gapDocument,setGapDocument]=useState([]);
-  const [currentCourseId,setCurrentCourseId]=useState('');
-  const [fullName,setFullName]=useState('');
-  
+  const [qualification, setQualification] = useState("");
+  const [gapJustification, setGapJustification] = useState("");
+  const [financialHelp, setFinancialHelp] = useState("");
+  const [extraFees, setExtraFees] = useState("default");
+  const [gapDocument, setGapDocument] = useState([]);
+  const [currentCourseId, setCurrentCourseId] = useState("");
+  const [fullName, setFullName] = useState("");
 
-  const [errorMessage, setErrorMessage] = useState('');
-  const [gapJustificationError, setGapJustificationError] = useState('');
-  const [financialHelpError,setFinancialHelpError]=useState('');
+  const [errorMessage, setErrorMessage] = useState("");
+  const [gapJustificationError, setGapJustificationError] = useState("");
+  const [financialHelpError, setFinancialHelpError] = useState("");
 
   const [courseFees, setCourseFees] = useState("");
   const [yourContribution, setYourContribution] = useState("");
@@ -45,9 +48,9 @@ const RaiseFund = () => {
 
   useEffect(() => {
     if (data && isSuccess) {
-     setFullName(data.data.studentName)
+      setFullName(data.data.studentName);
       setCourseName(data.data.courseName);
-      setCurrentCourse(data.data.currentCourse);
+      setCurrentCourse(data.data.currentCourse); //modified currentCourse
       setBoardOrUniversityName(data.data.boardOrUniversityName);
       setSchoolOrCollageName(data.data.schoolOrCollageName);
       setGapInEducation(data.data.gapInEducation);
@@ -66,39 +69,41 @@ const RaiseFund = () => {
     const fileType = file.type;
 
     // Check if the selected file is either an image or a PDF
-    if (fileType.startsWith('image/') || fileType === 'application/pdf') {
+    if (fileType.startsWith("image/") || fileType === "application/pdf") {
       setFeeReceipt(file);
-      setErrorMessage('');
+      setErrorMessage("");
     } else {
       // Reset the selected file if it's not an image or PDF
       setFeeReceipt(null);
-      setErrorMessage('Please select a valid image or PDF file.');
+      setErrorMessage("Please select a valid image or PDF file.");
     }
   };
-
 
   const handleGapJustificationChange = (event) => {
     const text = event.target.value;
 
     if (text.length >= 100 && text.length <= 2000) {
       setGapJustification(text);
-      setGapJustificationError('');
+      setGapJustificationError("");
     } else {
       setGapJustification(text);
-      setGapJustificationError('Please enter at least 100 and at most 2000 characters.');
+      setGapJustificationError(
+        "Please enter at least 100 and at most 2000 characters."
+      );
     }
   };
 
-  
   const handleFinancialHelpChange = (event) => {
     const text = event.target.value;
 
     if (text.length >= 200 && text.length <= 3000) {
       setFinancialHelp(text);
-      setFinancialHelpError('');
+      setFinancialHelpError("");
     } else {
       setFinancialHelp(text);
-      setFinancialHelpError('Please enter at least 200 and at most 2000 characters.');
+      setFinancialHelpError(
+        "Please enter at least 200 and at most 2000 characters."
+      );
     }
   };
   const { data: userData, isSuccess: userIsSuccess } = useGetProfileQuery();
@@ -126,81 +131,79 @@ const RaiseFund = () => {
     setRequiredAmount(newRequiredAmount);
   };
 
-     // for multiple images and pdf
-     const handleFileChange = (event) => {
-      const files = event.target.files;
-      const fileList = [];
-  
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        fileList.push(file);
-      }
-  
-      setGapDocument(fileList);
-    };
-  
-    const handleExtraFeesChange = (event) => {
-      const value = event.target.value;
-      setExtraFees(value);
-    };
+  // for multiple images and pdf
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+    const fileList = [];
 
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      fileList.push(file);
+    }
 
-    
-    const [addRaiseFundCourse]=useAddRaiseFundCourseMutation();
+    setGapDocument(fileList);
+  };
+
+  const handleExtraFeesChange = (event) => {
+    const value = event.target.value;
+    setExtraFees(value);
+  };
+
+  const [addRaiseFundCourse] = useAddRaiseFundCourseMutation();
   const handleSubmit = async (e) => {
     e.preventDefault();
-   try {
-     const formData = new FormData();
-     formData.append("studentName", fullName);
-     formData.append("currentCourse", currentCourse);
-     formData.append("courseName", courseName);
-     formData.append("schoolOrCollageName", schoolOrCollageName);
-     formData.append("boardOrUniversityName", boardOrUniversityName);
-     formData.append("durationType", durationType);
-     formData.append("whyDoYouRequiredFinancialHelf", financialHelp);
-     formData.append("extraFees", extraFees);
-     formData.append("gapInEducation", gapInEducation);
-     formData.append("courseFees", courseFees);
-     formData.append("yourContribution", yourContribution);
-     formData.append("yourRequirements", requiredAmount);
-     formData.append("qualification", qualification);
-     formData.append("currentCourseId", currentCourseId);
-     formData.append("feeReceipt", feeReceipt);
-     if (gapJustification) {
-      formData.append("gapJustification", gapJustification);
+    try {
+      const formData = new FormData();
+      formData.append("studentName", fullName);
+      formData.append("currentCourse", currentCourse);
+      formData.append("courseName", courseName);
+      formData.append("schoolOrCollageName", schoolOrCollageName);
+      formData.append("boardOrUniversityName", boardOrUniversityName);
+      formData.append("durationType", durationType);
+      formData.append("whyDoYouRequiredFinancialHelf", financialHelp);
+      formData.append("extraFees", extraFees);
+      formData.append("gapInEducation", gapInEducation);
+      formData.append("courseFees", courseFees);
+      formData.append("yourContribution", yourContribution);
+      formData.append("yourRequirements", requiredAmount);
+      formData.append("qualification", qualification);
+      formData.append("currentCourseId", currentCourseId);
+      formData.append("feeReceipt", feeReceipt);
+      if (gapJustification) {
+        formData.append("gapJustification", gapJustification);
+      }
+
+      if (gapDocument && gapDocument.length > 0) {
+        gapDocument.forEach((file) => {
+          formData.append("gapDocument", file);
+        });
+      }
+      const res = await addRaiseFundCourse(formData);
+      setShowAlert(true);
+      console.log(res);
+      if (res.data.success) {
+        setShowAlert(!showAlert);
+        setShowAlertModal(true);
+        clearTextInput();
+      }
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    if (gapDocument && gapDocument.length > 0) {
-      gapDocument.forEach((file) => {
-        formData.append("gapDocument", file);
-      });
-    }
-     const res = await addRaiseFundCourse(formData);
-     setShowAlert(true);
-     console.log(res);
-     if(res.data.success){
-      setShowAlert(!showAlert)
-      setShowAlertModal(true);
-      clearTextInput();
-     }
-   } catch (error) {
-     console.log(error);
-   }
- };
+  const clearTextInput = () => {
+    setCourseFees("");
+    setExtraFees("default");
+    // setRequiredAmount("");
+    setGapDocument(null);
+    setQualification("");
+    setFinancialHelp("");
+    // setYourContribution('');
+    setGapJustification("");
+    setGapDocument(null);
+  };
 
- const clearTextInput = () => {
-  setCourseFees("");
-  setExtraFees("default");
-  // setRequiredAmount("");
-  setGapDocument(null);
-  setQualification('');
-  setFinancialHelp("");
-  // setYourContribution('');
-  setGapJustification('');
-  setGapDocument(null);
-};
-
-//  console.log(document);
+  //  console.log(document);
   return (
     <>
       <Sidebar />
@@ -307,7 +310,7 @@ const RaiseFund = () => {
 
                       {/* <!-- has dropdown --> */}
 
-                      <a href="javascript:void()">
+                      {/* <a href="javascript:void()">
                         <div className="flex flex-1 items-center space-x-[6px] rtl:space-x-reverse">
                           <span className="icon-box">
                             <iconify-icon icon="heroicons-outline:home">
@@ -321,7 +324,7 @@ const RaiseFund = () => {
                             {" "}
                           </iconify-icon>
                         </div>
-                      </a>
+                      </a> */}
                     </li>
                   </ul>
                 </div>
@@ -617,62 +620,82 @@ const RaiseFund = () => {
                           Raise Fund for your Education
                         </div>
                         <div className="flex">
-                          <img src={edit} alt="edit" style={{width:'17px',height:'17px'}} /> &nbsp;
-                        <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
+                          <img
+                            src={edit}
+                            alt="edit"
+                            style={{ width: "17px", height: "17px" }}
+                          />{" "}
+                          &nbsp;
+                          <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
                             Edit
                           </div>
-                          </div>
+                        </div>
                       </div>
                     </header>
-                    {data && data.data.extraFees ? ( <div className="card-text h-full">
-                      <form
-                        className="space-y-4"
-                        //   id="multipleValidation"
-                      > 
-                  
-                        <div className="grid md:grid-cols-2 gap-6">
-                        <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Full Name
-                            </label>
-                            <div className="relative form-control">
+                    {data && data.data.extraFees ? (
+                      <div className="card-text h-full">
+                        <form
+                          className="space-y-4"
+                          //   id="multipleValidation"
+                        >
+                          <div className="grid md:grid-cols-2 gap-6">
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Full Name
+                              </label>
+                              <div
+                                className="relative form-control"
+                                style={{ fontSize: "13px" }}
+                              >
                                 {fullName}
                               </div>
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Current Course
-                            </label>
-                            <div className="relative form-control">
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Current Course
+                              </label>
+                              <div
+                                className="relative form-control"
+                                style={{ fontSize: "13px" }}
+                              >
                                 {currentCourse}
                               </div>
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Qualification
-                            </label>
-                            <div className="relative form-control">
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Qualification
+                              </label>
+                              <div
+                                className="relative form-control"
+                                style={{ fontSize: "13px" }}
+                              >
                                 {data.data.qualification}
                               </div>
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Board / University Name
-                            </label>
-                            <div className="relative form-control">
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Board / University Name
+                              </label>
+                              <div
+                                className="relative form-control"
+                                style={{ fontSize: "13px" }}
+                              >
                                 {boardOrUniversityName}
                               </div>
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              School / College Name
-                            </label>
-                            <div className="relative form-control">
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                School / College Name
+                              </label>
+                              <div
+                                className="relative form-control"
+                                style={{ fontSize: "13px" }}
+                              >
                                 {schoolOrCollageName}
                               </div>
-                          </div>
+                            </div>
 
-                          {/* <div className="input-area relative">
+                            {/* <div className="input-area relative">
                             <label for="fileInput" className="form-label">
                               Fee Receipt Upload 
                             </label>
@@ -680,35 +703,45 @@ const RaiseFund = () => {
                             
                           </div> */}
 
-                          {/* <div className="grid md:grid-cols-2 gap-6"> */}
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Course Name
-                            </label>
-                            <div className="relative form-control">
+                            {/* <div className="grid md:grid-cols-2 gap-6"> */}
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Course Name
+                              </label>
+                              <div
+                                className="relative form-control"
+                                style={{ fontSize: "13px" }}
+                              >
                                 {courseName}
                               </div>
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Gap in Education
-                            </label>
-                            <div className="relative form-control">
+                            </div>
+                            <div className="input-area relative">
+                              <label
+                                for="largeInput"
+                                className="form-label"
+                                style={{ fontSize: "13px" }}
+                              >
+                                Gap in Education
+                              </label>
+                              <div className="relative form-control">
                                 {gapInEducation}
                               </div>
-                          </div>
-                          <div className="input-area">
-                            <label
-                              htmlFor="durationtype"
-                              className="form-label"
-                            >
-                              Duration Type
-                            </label>
-                            <div className="relative form-control">
+                            </div>
+                            <div className="input-area">
+                              <label
+                                htmlFor="durationtype"
+                                className="form-label"
+                              >
+                                Duration Type
+                              </label>
+                              <div
+                                className="relative form-control"
+                                style={{ fontSize: "13px" }}
+                              >
                                 {durationType}
                               </div>
-                          </div>
-                          {/* <div class="input-area">
+                            </div>
+                            {/* <div class="input-area">
                             <label for="description" class="form-label">
                               Could you please provide some insight into the
                               reasons or circumstances that led to the gap in
@@ -719,7 +752,7 @@ const RaiseFund = () => {
                               </div>
                              
                           </div> */}
-                          {/* <div className="input-area relative">
+                            {/* <div className="input-area relative">
                             <label for="fileInput" className="form-label">
                               Certificate Upload (Could you please upload the
                               document or file that provides information about
@@ -727,42 +760,54 @@ const RaiseFund = () => {
                             </label>
                           </div> */}
 
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Course Fees
-                            </label>
-                            <div className="relative form-control">
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Course Fees
+                              </label>
+                              <div
+                                className="relative form-control"
+                                style={{ fontSize: "13px" }}
+                              >
                                 {data.data.courseFees}
                               </div>
-                          </div>
+                            </div>
 
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Your Contribution
-                            </label>
-                            <div className="relative form-control">
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Your Contribution
+                              </label>
+                              <div
+                                className="relative form-control"
+                                style={{ fontSize: "13px" }}
+                              >
                                 {data.data.yourContribution}
                               </div>
-                          </div>
+                            </div>
 
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Your Requirements
-                            </label>
-                            <div className="relative form-control">
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Your Requirements
+                              </label>
+                              <div
+                                className="relative form-control"
+                                style={{ fontSize: "13px" }}
+                              >
                                 {data.data.yourRequirements}
                               </div>
-                          </div>
+                            </div>
 
-                          <div className="input-area">
-                            <label htmlFor="extraFees" className="form-label">
-                              Extra Fees (if any)
-                            </label>
-                            <div className="relative form-control">
+                            <div className="input-area">
+                              <label htmlFor="extraFees" className="form-label">
+                                Extra Fees (if any)
+                              </label>
+                              <div
+                                className="relative form-control"
+                                style={{ fontSize: "13px" }}
+                              >
                                 {data.data.extraFees}
                               </div>
-                          </div>
-                          {/* <div class="input-area">
+                            </div>
+                            {/* <div class="input-area">
                             <label for="description" class="form-label">
                               Why do you required Financial
                               Assessment/Additional Help{" "}
@@ -771,365 +816,395 @@ const RaiseFund = () => {
                                 {data.data.financialHelp}
                               </div>
                           </div> */}
-                        </div>
-                      
-                      </form>
-                    </div>):(
+                          </div>
+                        </form>
+                      </div>
+                    ) : (
                       <div className="card-text h-full">
-                      <form
-                        className="space-y-4"
-                        //   id="multipleValidation"
-                      > 
-                  
-                        <div className="grid md:grid-cols-2 gap-6">
-                        <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Full Name
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Full Name"
-                              value={fullName}
-                              disabled
-                            />
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Current Course
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Current Course"
-                              value={currentCourse}
-                              disabled
-                            />
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Qualification
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Qualification"
-                              value={qualification}
-                              onChange={(e) => setQualification(e.target.value)}
-                            />
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Board / University Name
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Board / University Name"
-                              value={boardOrUniversityName}
-                              disabled
-                            />
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              School / College Name
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="School / College Name"
-                              value={schoolOrCollageName}
-                              disabled
-                            />
-                          </div>
+                        <form
+                          className="space-y-4"
+                          //   id="multipleValidation"
+                        >
+                          <div className="grid md:grid-cols-2 gap-6">
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Full Name
+                              </label>
+                              <input
+                                style={{ fontSize: "13px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Full Name"
+                                value={fullName}
+                                disabled
+                              />
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Current Course
+                              </label>
+                              <input
+                                style={{ fontSize: "13px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Current Course"
+                                value={currentCourse}
+                                disabled
+                              />
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Qualification
+                              </label>
+                              <input
+                                style={{ fontSize: "13px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Qualification"
+                                value={qualification}
+                                onChange={(e) =>
+                                  setQualification(e.target.value)
+                                }
+                              />
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Board / University Name
+                              </label>
+                              <input
+                                style={{ fontSize: "13px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Board / University Name"
+                                value={boardOrUniversityName}
+                                disabled
+                              />
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                School / College Name
+                              </label>
+                              <input
+                                style={{ fontSize: "13px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="School / College Name"
+                                value={schoolOrCollageName}
+                                disabled
+                              />
+                            </div>
 
-                          <div className="input-area relative">
-                            <label for="fileInput" className="form-label">
-                              Fee Receipt Upload 
-                            </label>
-                            <input
-                              type="file"
-                              id="fileInput"
-                              className="form-control"
-                              accept="image/*,.pdf"
-                              onChange={handleFeeReceiptChange}
-                           
-                            />
-                              {errorMessage && <p style={{fontSize:'12px',color:'red'}}>{errorMessage}</p>}
-                          </div>
+                            <div className="input-area relative">
+                              <label for="fileInput" className="form-label">
+                                Fee Receipt Upload
+                              </label>
+                              <input
+                                style={{ fontSize: "13px" }}
+                                type="file"
+                                id="fileInput"
+                                className="form-control"
+                                accept="image/*,.pdf"
+                                onChange={handleFeeReceiptChange}
+                              />
+                              {errorMessage && (
+                                <p style={{ fontSize: "12px", color: "red" }}>
+                                  {errorMessage}
+                                </p>
+                              )}
+                            </div>
 
-                          {/* <div className="grid md:grid-cols-2 gap-6"> */}
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Course Name
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Course Name"
-                              value={courseName}
-                              disabled
-                            />
-                          </div>
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Gap in Education
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Your Answer"
-                              value={gapInEducation}
-                              disabled
-                            />
-                          </div>
-                          <div className="input-area">
-                            <label
-                              htmlFor="durationtype"
-                              className="form-label"
-                            >
-                              Duration Type
-                            </label>
-                            <select
-                              id="durationtype"
-                              className="form-control"
-                              value={durationType}
-                              disabled
-                            >
-                              <option
-                                value="default"
-                                className="dark:bg-slate-700"
-                                selected
+                            {/* <div className="grid md:grid-cols-2 gap-6"> */}
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Course Name
+                              </label>
+                              <input
+                                style={{ fontSize: "13px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Course Name"
+                                value={courseName}
+                                disabled
+                              />
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Gap in Education
+                              </label>
+                              <input
+                                style={{ fontSize: "13px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Your Answer"
+                                value={gapInEducation}
+                                disabled
+                              />
+                            </div>
+                            <div className="input-area">
+                              <label
+                                htmlFor="durationtype"
+                                className="form-label"
+                              >
+                                Duration Type
+                              </label>
+                              <select
+                                id="durationtype"
+                                className="form-control"
+                                value={durationType}
+                                style={{ fontSize: "13px" }}
                                 disabled
                               >
-                                Select Duration Type
-                              </option>
-                              <option
-                                value="semester"
-                                className="dark:bg-slate-700"
+                                <option
+                                  value="default"
+                                  className="dark:bg-slate-700"
+                                  selected
+                                  disabled
+                                >
+                                  Select Duration Type
+                                </option>
+                                <option
+                                  value="semester"
+                                  className="dark:bg-slate-700"
+                                >
+                                  Semester
+                                </option>
+                                <option
+                                  value="yearly"
+                                  className="dark:bg-slate-700"
+                                >
+                                  Yearly
+                                </option>
+                                <option
+                                  value="monthly"
+                                  className="dark:bg-slate-700"
+                                >
+                                  Monthly
+                                </option>
+                              </select>
+                            </div>
+                            <div class="input-area">
+                              <label for="description" class="form-label">
+                                Could you please provide some insight into the
+                                reasons or circumstances that led to the gap in
+                                your education?
+                              </label>
+                              <textarea
+                                style={{ fontSize: "13px" }}
+                                id="description"
+                                rows="5"
+                                class="form-control"
+                                placeholder="Your Answer"
+                                value={gapJustification}
+                                onChange={handleGapJustificationChange}
+                              />
+                              {gapJustificationError && (
+                                <p style={{ fontSize: "12px", color: "red" }}>
+                                  {gapJustificationError}
+                                </p>
+                              )}
+                            </div>
+                            <div className="input-area relative">
+                              <label for="fileInput" className="form-label">
+                                Certificate Upload (Could you please upload the
+                                document or file that provides information about
+                                your education gap?)
+                              </label>
+                              <input
+                                style={{ fontSize: "13px" }}
+                                type="file"
+                                id="fileInput"
+                                className="form-control"
+                                multiple
+                                accept="image/*,.pdf"
+                                onChange={handleFileChange}
+                              />
+                            </div>
+
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Course Fees
+                              </label>
+                              <input
+                                style={{ fontSize: "13px" }}
+                                type="number"
+                                className="form-control"
+                                placeholder="Course Fees"
+                                value={courseFees}
+                                onChange={handleCourseFeeChange}
+                              />
+                            </div>
+
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Your Contribution
+                              </label>
+                              <input
+                                style={{ fontSize: "13px" }}
+                                type="number"
+                                className="form-control"
+                                placeholder="Your Contribution"
+                                value={yourContribution}
+                                onChange={handleYourContributionChange}
+                              />
+                            </div>
+
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Your Requirements
+                              </label>
+                              <input
+                                style={{ fontSize: "13px" }}
+                                type="number"
+                                className="form-control"
+                                placeholder="Your Requirements"
+                                value={requiredAmount}
+                                readOnly
+                              />
+                            </div>
+
+                            <div className="input-area">
+                              <label htmlFor="extraFees" className="form-label">
+                                Extra Fees (if any)
+                              </label>
+                              <select
+                                id="extraFees"
+                                className="form-control"
+                                value={extraFees}
+                                onChange={handleExtraFeesChange}
+                                style={{ fontSize: "13px" }}
                               >
-                                Semester
-                              </option>
-                              <option
-                                value="yearly"
-                                className="dark:bg-slate-700"
-                              >
-                                Yearly
-                              </option>
-                              <option
-                                value="monthly"
-                                className="dark:bg-slate-700"
-                              >
-                                Monthly
-                              </option>
-                            </select>
+                                <option
+                                  value="default"
+                                  className="dark:bg-slate-700"
+                                  selected
+                                  disabled
+                                >
+                                  Select Extra Fees
+                                </option>
+                                <option
+                                  value="exam"
+                                  className="dark:bg-slate-700"
+                                >
+                                  Exam Fees
+                                </option>
+                                <option
+                                  value="test"
+                                  className="dark:bg-slate-700"
+                                >
+                                  Test Fees
+                                </option>
+                                <option
+                                  value="book"
+                                  className="dark:bg-slate-700"
+                                >
+                                  Book Fees
+                                </option>
+                                <option
+                                  value="tour"
+                                  className="dark:bg-slate-700"
+                                >
+                                  Tour Fees
+                                </option>
+                              </select>
+                            </div>
+                            <div class="input-area">
+                              <label for="description" class="form-label">
+                                Why do you required Financial
+                                Assessment/Additional Help{" "}
+                              </label>
+                              <textarea
+                                style={{ fontSize: "13px" }}
+                                id="description"
+                                rows="5"
+                                class="form-control"
+                                placeholder="Your Answer"
+                                value={financialHelp}
+                                onChange={handleFinancialHelpChange}
+                              />
+                              {financialHelpError && (
+                                <p style={{ fontSize: "12px", color: "red" }}>
+                                  {financialHelpError}
+                                </p>
+                              )}
+                            </div>
                           </div>
-                          <div class="input-area">
-                            <label for="description" class="form-label">
-                              Could you please provide some insight into the
-                              reasons or circumstances that led to the gap in
-                              your education?
-                            </label>
-                            <textarea
-                              id="description"
-                              rows="5"
-                              class="form-control"
-                              placeholder="Your Answer"
-                              value={gapJustification}
-                              onChange={handleGapJustificationChange}
-                            />
-                              {gapJustificationError && <p style={{fontSize:'12px',color:'red'}}>{gapJustificationError}</p>}
-                          </div>
-                          <div className="input-area relative">
-                            <label for="fileInput" className="form-label">
-                              Certificate Upload (Could you please upload the
-                              document or file that provides information about
-                              your education gap?)
-                            </label>
-                            <input
-                              type="file"
-                              id="fileInput"
-                              className="form-control"
-                              multiple
-                              accept="image/*,.pdf"
-                              onChange={handleFileChange}
-                            />
-                          </div>
-
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Course Fees
-                            </label>
-                            <input
-                              type="number"
-                              className="form-control"
-                              placeholder="Course Fees"
-                              value={courseFees}
-                              onChange={handleCourseFeeChange}
-                            />
-                          </div>
-
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Your Contribution
-                            </label>
-                            <input
-                              type="number"
-                              className="form-control"
-                              placeholder="Your Contribution"
-                              value={yourContribution}
-                              onChange={handleYourContributionChange}
-                            />
-                          </div>
-
-                          <div className="input-area relative">
-                            <label for="largeInput" className="form-label">
-                              Your Requirements
-                            </label>
-                            <input
-                              type="number"
-                              className="form-control"
-                              placeholder="Your Requirements"
-                              value={requiredAmount}
-                              readOnly
-                            />
-                          </div>
-
-                          <div className="input-area">
-                            <label htmlFor="extraFees" className="form-label">
-                              Extra Fees (if any)
-                            </label>
-                            <select
-                              id="extraFees"
-                              className="form-control"
-                             value={extraFees}
-                             onChange={handleExtraFeesChange}
+                          <div className="relative">
+                            <button
+                              className="btn inline-flex justify-center btn-dark"
+                              type="button"
+                              onClick={handleSubmit}
                             >
-                              <option
-                                value="default"
-                                className="dark:bg-slate-700"
-                                selected
-                                disabled
-                              >
-                                Select Extra Fees
-                              </option>
-                              <option
-                                value="exam"
-                                className="dark:bg-slate-700"
-                              >
-                                Exam Fees
-                              </option>
-                              <option
-                                value="test"
-                                className="dark:bg-slate-700"
-                              >
-                                Test Fees
-                              </option>
-                              <option
-                                value="book"
-                                className="dark:bg-slate-700"
-                              >
-                                Book Fees
-                              </option>
-                              <option
-                                value="tour"
-                                className="dark:bg-slate-700"
-                              >
-                                Tour Fees
-                              </option>
-                            </select>
-                          </div>
-                          <div class="input-area">
-                            <label for="description" class="form-label">
-                              Why do you required Financial
-                              Assessment/Additional Help{" "}
-                            </label>
-                            <textarea
-                              id="description"
-                              rows="5"
-                              class="form-control"
-                              placeholder="Your Answer"
-                              value={financialHelp}
-                              onChange={handleFinancialHelpChange}
-                            />
-                               {financialHelpError && <p style={{fontSize:'12px',color:'red'}}>{financialHelpError}</p>}
-                          </div>
-                        </div>
-                        <div className="relative">
-                          <button
-                            className="btn inline-flex justify-center btn-dark"
-                            type="button"
-                            onClick={handleSubmit}
-                          >
-                            Submit
-                          </button>
-                          {showAlert && (
-                            <div className="alert-modal">
-                              <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-                                <div className="bg-white rounded-md p-6">
-                                  <div className="text-lg font-bold mb-3">
-                                    Alert
-                                  </div>
-                                  <div className="alert alert-danger light-mode">
-                                    Your contribution is ₹{yourContribution} and
-                                    your requirement is ₹{requiredAmount}. You
-                                    cannot change it in future.
-                                  </div>
-                                  <div className="flex justify-end mt-6">
-                                    {/* <button
+                              Submit
+                            </button>
+                            {showAlert && (
+                              <div className="alert-modal">
+                                <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+                                  <div className="bg-white rounded-md p-6">
+                                    <div className="text-lg font-bold mb-3">
+                                      Alert
+                                    </div>
+                                    <div className="alert alert-danger light-mode">
+                                      Your contribution is ₹{yourContribution}{" "}
+                                      and your requirement is ₹{requiredAmount}.
+                                      You cannot change it in future.
+                                    </div>
+                                    <div className="flex justify-end mt-6">
+                                      {/* <button
                                       onClick={() => setShowAlert(false)}
                                       className="mr-3"
                                     >
                                       Edit
                                     </button> */}
-                                    <button onClick={() => setShowAlert(false)}>
-                                      OK
-                                    </button>
+                                      <button
+                                        onClick={() => setShowAlert(false)}
+                                      >
+                                        OK
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          )}
-                        </div>
-                      </form>
-                    </div>
+                            )}
+                          </div>
+                        </form>
+                      </div>
                     )}
-                   
+
                     {showAlertModal && (
-            <>
-              <div className="alert-modal">
-                <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-                  <div
-                    className="bg-white rounded-md p-6 "
-                    style={{
-                      width: "500px",
-                      height: "150px",
-                      borderRadius: "5px",
-                      padding: "20px",
-                    }}
-                  >
-                    <img
-                      src={close}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        marginLeft: "445px",
-                        marginTop: "3px",
-                        marginBottom: "5px",
-                        pointer: "cursor",
-                      }}
-                      alt="close"
-                      onClick={() => setShowAlertModal(false)}
-                    />
-                    <div className="alert alert-danger light-mode">
-                    Raise Fund created successfully! Thank you for raising funds.
-                    
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+                      <>
+                        <div className="alert-modal">
+                          <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+                            <div
+                              className="bg-white rounded-md p-6 "
+                              style={{
+                                width: "500px",
+                                height: "150px",
+                                borderRadius: "5px",
+                                padding: "20px",
+                              }}
+                            >
+                              <img
+                                src={close}
+                                style={{
+                                  width: "20px",
+                                  height: "20px",
+                                  marginLeft: "445px",
+                                  marginTop: "3px",
+                                  marginBottom: "5px",
+                                  pointer: "cursor",
+                                }}
+                                alt="close"
+                                onClick={() => setShowAlertModal(false)}
+                              />
+                              <div className="alert alert-danger light-mode">
+                                Raise Fund created successfully! Thank you for
+                                raising funds.
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

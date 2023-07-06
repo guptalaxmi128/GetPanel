@@ -1,13 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = {
+  currentUserType: localStorage.getItem('currentUserType') || '',
+};
+
 const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    currentUserType: '',
-  },
+  initialState,
   reducers: {
     setCurrentUserType: (state, action) => {
       state.currentUserType = action.payload;
+      localStorage.setItem('currentUserType', action.payload);
     },
   },
 });
