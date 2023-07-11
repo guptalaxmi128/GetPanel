@@ -264,7 +264,7 @@ const DownloadReceiptOtp = () => {
                  {data.map((item,index)=>{
                     return(
                         <div id="component-to-download">
-                    <div style={{ padding: "10px" }}>
+                    <div style={{ padding: "10px" }} key={item.id}>
                       <div className="lg:w-1/2 w-full flex flex-col items-center justify-center">
                         <div
                           className="auth-box-3"

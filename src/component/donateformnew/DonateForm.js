@@ -63,8 +63,8 @@ const DonateForm = () => {
     udf9: "",
     udf10: "",
 
-    // ru: "https://global-education-t.onrender.com/api/public/returnUrl",
-    ru: "http://localhost:5000/api/public/returnUrl",
+    ru: "https://global-education-t.onrender.com/api/public/returnUrl",
+    // ru: "http://localhost:5000/api/public/returnUrl",
     callbackUrl:
       "https://global-education-t.onrender.com/api/public/callbackUrl",
     currency: "INR",
