@@ -27,11 +27,12 @@ const All = () => {
     8,
     11
   )} ${date.slice(5, 7)} ${date.slice(17, 25)} IST ${date.slice(12, 16)}`;
+  const transactionId= new Date().getTime();
 
   const data = {
     mid: "971288",
     amount: amount,
-    merchantTransactionId: "sd12121",
+    merchantTransactionId: transactionId,
     transactionDate: transactionDate,
     terminalId: "Getepay.merchant131530@icici",
     udf1: donarId,

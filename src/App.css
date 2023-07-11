@@ -62,7 +62,7 @@ body {
 hr {
     height: 0;
  /* 1 */
-    color: inherit;
+    /* color: inherit; */
  /* 2 */
     border-top-width: 1px;
  /* 3 */
@@ -12194,6 +12194,11 @@ ul.custom-list ul li{
   background-color: rgb(51 65 85 / var(--tw-bg-opacity));
 } */
 
+.hrOverride {
+  border: 1px solid black !important;
+  margin: 0px !important;
+  color: #000 !important;
+}
 .navItem.active {
   background-color: rgba(236, 110, 70, 0.1);
   color: #EC6E46;

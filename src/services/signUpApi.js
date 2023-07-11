@@ -421,6 +421,31 @@ export const signUpApi = createApi({
       },
     }),
 
+    publicUserReceipt: builder.mutation({
+      query: (user) => {
+        return {
+          url: "public/getReceipt",
+          method: "POST",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    publicUserReceiptOtp: builder.mutation({
+      query: (user) => {
+        return {
+          url: "public/OTPForReceipt",
+          method: "POST",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+
   }),
 });
 
@@ -458,6 +483,8 @@ export const {
   useUpdateDonarProfileMutation,
   useAddDonarProfileImageMutation,
   useGetDonarProfileImageQuery,
-  useGetDonarStudentProfileQuery
+  useGetDonarStudentProfileQuery,
+  usePublicUserReceiptMutation,
+  usePublicUserReceiptOtpMutation
 
 } = signUpApi;

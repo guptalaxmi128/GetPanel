@@ -168,15 +168,15 @@ function DrawerAppBar(props) {
           Login
         </button>
         </NavLink>
-        {/* <NavLink to={"/donate-now"}> */}
+        <NavLink to={"/donate-now"}>
         <button
           className="login-home-button"
           style={{ width: '120px', height: '40px', marginLeft: '10px' }}
-          onClick={toggleModal}
+          // onClick={toggleModal}
         >
           Donate Now
         </button>
-        {/* </NavLink> */}
+        </NavLink>
       </List>
     </Box>
   );
@@ -270,14 +270,14 @@ function DrawerAppBar(props) {
                       </NavLink>
                     </li>
                     <li>
-                    {/* <NavLink to={"/donate-now"}> */}
+                    <NavLink to={"/donate-now"}>
                       <button className="login-home-button"
                         style={{ width: '120px', height: '40px',alignItems:'center',justifyContent:'center',marginLeft:'20px'}}
-                        onClick={toggleModal}
+                        // onClick={toggleModal}
                        >
                         Donate Now
                       </button>
-                      {/* </NavLink> */}
+                      </NavLink>
                     </li>
                   </ul>
                 </div>
@@ -310,7 +310,10 @@ function DrawerAppBar(props) {
         <Box component="main" sx={{}} />
       </Box>
       {/* {showModal && <Modal toggle={toggleModal} />} */}
-      {showModal && <DonateForm  toggle={toggleModal} />}
+      {/* {showModal && <DonateForm 
+      //  toggle={toggleModal} 
+
+       />} */}
     </>
   );
 }

@@ -30,6 +30,11 @@ import Contact from "./component/contact/Contact";
 import Team from "./component/team/Team";
 import StudentProfile from "./component/donarpages/studentprofile/StudentProfile";
 import DonateForm from "./component/donateformnew/DonateForm";
+import Receipt from "./component/receipt/Receipt";
+import SuccessPage from "./component/successpage/SuccessPage";
+import FailedPage from "./component/failedpage/FailedPage";
+import PendingPage from "./component/pendingpage/PendingPage";
+import DownloadReceiptOtp from "./component/downloadReceipt/DownloadReceiptOtp";
 // import DonarCourse from "./component/donarpages/course/Course";
 // import LearnMore from "./component/courselearnmore/LearnMore";
 
@@ -109,6 +114,46 @@ function App() {
             element={
               <PublicElement>
                 <Login />
+              </PublicElement>
+            }
+          />
+           <Route
+            path="/receipt"
+            element={
+              <PublicElement>
+                <Receipt />
+              </PublicElement>
+            }
+          />
+           <Route
+            path="/success"
+            element={
+              <PublicElement>
+                <SuccessPage />
+              </PublicElement>
+            }
+          />
+            <Route
+            path="/failed"
+            element={
+              <PublicElement>
+                <FailedPage />
+              </PublicElement>
+            }
+          />
+            <Route
+            path="/pending"
+            element={
+              <PublicElement>
+                <PendingPage />
+              </PublicElement>
+            }
+          />
+            <Route
+            path="/get-public-user"
+            element={
+              <PublicElement>
+               <DownloadReceiptOtp />
               </PublicElement>
             }
           />
