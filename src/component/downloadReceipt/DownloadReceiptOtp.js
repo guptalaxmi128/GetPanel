@@ -43,6 +43,19 @@ const DownloadReceiptOtp = () => {
       .save();
   };
 
+  function formatDate(createdAt) {
+    const date = new Date(createdAt);
+    const day = date.getDate();
+    const month = date.getMonth() + 1; // Months are zero-based
+    const year = date.getFullYear();
+
+    // Pad single digits with leading zero
+    const formattedDay = day < 10 ? `0${day}` : day;
+    const formattedMonth = month < 10 ? `0${month}` : month;
+
+    return `${formattedDay}/${formattedMonth}/${year}`;
+}
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -143,6 +156,7 @@ const DownloadReceiptOtp = () => {
                 >
                   Download Receipt
                 </h4>
+              
                 {/* <div
                   className="text-slate-500 dark:text-slate-400 text-base"
                   style={{ fontSize: "14px" }}
@@ -349,7 +363,7 @@ const DownloadReceiptOtp = () => {
                               }}
                             >
                               <p style={{ color: "#000", fontWeight: 600 }}>
-                                Date : DD/MM/YYYY
+                                Date : {formatDate(item.createdAt)}
                               </p>
                               <p style={{ color: "#000", fontWeight: 600 }}>
                                 Receipt No : &nbsp; {item.merchantTransactionId}
