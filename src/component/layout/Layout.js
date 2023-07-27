@@ -176,9 +176,9 @@ const Layout = () => {
           {/* <!-- END: Header --> */}
           {/* <!-- END: Header --> */}
           <div
-            className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px]"
+            className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px] layout-container"
             id="content_wrapper"
-            style={{ backgroundColor: "#F1F5F9" }}
+
           >
             <div className="page-content">
               <div id="content_layout">
@@ -224,7 +224,7 @@ const Layout = () => {
                           }}
                         >
                           <NavLink to="/student/raise-fund">
-                            <div className="text-xl font-medium text-slate-900 mb-2">
+                            <div className="text-xl font-medium text-slate-900 mb-2" style={{fontSize:'15px'}}>
                               Raise Fund for your Education
                             </div>
                           </NavLink>
@@ -242,7 +242,7 @@ const Layout = () => {
                                 <div id="wline1"></div>
                               </div>
                               <div className="flex-1">
-                                <div className="text-slate-800 dark:text-slate-300 text-sm mb-1 font-medium">
+                                <div className="text-slate-800 dark:text-slate-300 text-sm mb-1 font-medium" style={{fontSize:'15px'}}>
                                   Total Fund Raised
                                 </div>
                                 <div className="text-slate-900 dark:text-white text-lg font-medium">
@@ -258,7 +258,7 @@ const Layout = () => {
                                 <div id="wline2"></div>
                               </div>
                               <div className="flex-1">
-                                <div className="text-slate-800 dark:text-slate-300 text-sm mb-1 font-medium">
+                                <div className="text-slate-800 dark:text-slate-300 text-sm mb-1 font-medium" style={{fontSize:'15px'}}>
                                   Fund required
                                 </div>
                                 <div className="text-slate-900 dark:text-white text-lg font-medium">
@@ -274,7 +274,7 @@ const Layout = () => {
                                 <div id="wline3"></div>
                               </div>
                               <div className="flex-1">
-                                <div className="text-slate-800 dark:text-slate-300 text-sm mb-1 font-medium">
+                                <div className="text-slate-800 dark:text-slate-300 text-sm mb-1 font-medium" style={{fontSize:'15px'}}>
                                   Fund withdraw
                                 </div>
                                 <div className="text-slate-900 dark:text-white text-lg font-medium">

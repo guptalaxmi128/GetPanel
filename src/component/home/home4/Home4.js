@@ -30,14 +30,13 @@ function Home4() {
     <div className="home4">
       <img src={background} alt="background" className="background-image" />
       <div className="home4-upper">
-        <div className="home4-upper-left">
+        {/* <div className="home4-upper-left"> */}
           <div className="text-overlay">
             <h2>Get In</h2>
             <h2>Touch With Us</h2>
           </div>
         </div>
-      </div>
-      <div className="home4-upper-right">
+        <div className="home4-upper-right">
         <div className="first-part">
           <FormControl
             variant="standard"
@@ -114,6 +113,8 @@ function Home4() {
         </FormControl>
         <button className="home4-btn">Submit</button>
       </div>
+      {/* </div> */}
+    
     </div>
   );
 }

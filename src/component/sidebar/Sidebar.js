@@ -76,8 +76,8 @@ const Sidebar = () => {
           >
             <NavLink to="/student/home" className="navItem">
               <span className="flex items-center">
-                <HomeRoundedIcon  sx={{ fontSize: '20px' }} /> &nbsp; &nbsp;
-                <span>Dashboard</span>
+                <HomeRoundedIcon sx={{ fontSize: "20px" }} /> &nbsp; &nbsp;
+                <span style={{ fontSize: "15px" }}>Dashboard</span>
               </span>
             </NavLink>
           </li>
@@ -88,9 +88,9 @@ const Sidebar = () => {
           >
             <NavLink to="/student/course" className="navItem">
               <span className="flex items-center">
-                <ListAltOutlinedIcon sx={{ fontSize: '20px' }}  />
+                <ListAltOutlinedIcon sx={{ fontSize: "20px" }} />
                 &nbsp; &nbsp;
-                <span>Current Course</span>
+                <span style={{ fontSize: "15px" }}>Current Course</span>
               </span>
             </NavLink>
           </li>
@@ -100,8 +100,8 @@ const Sidebar = () => {
           >
             <NavLink to="/student/account" className="navItem">
               <span className="flex items-center">
-                <GroupSharpIcon  sx={{ fontSize: '20px' }} /> &nbsp; &nbsp;
-                <span>Account Details</span>
+                <GroupSharpIcon sx={{ fontSize: "20px" }} /> &nbsp; &nbsp;
+                <span style={{ fontSize: "15px" }}>Account Details</span>
               </span>
             </NavLink>
           </li>
@@ -111,8 +111,9 @@ const Sidebar = () => {
           >
             <NavLink to="/student/wallet" className="navItem">
               <span className="flex items-center">
-                <AccountBalanceWalletOutlinedIcon  sx={{ fontSize: '20px' }} /> &nbsp; &nbsp;
-                <span>Wallet</span>
+                <AccountBalanceWalletOutlinedIcon sx={{ fontSize: "20px" }} />{" "}
+                &nbsp; &nbsp;
+                <span style={{ fontSize: "15px" }}>Wallet</span>
               </span>
             </NavLink>
           </li>
@@ -122,9 +123,9 @@ const Sidebar = () => {
           >
             <NavLink to="/student/profile" className="navItem">
               <span className="flex items-center">
-                <DescriptionOutlinedIcon sx={{ fontSize: '20px' }} />{" "}
+                <DescriptionOutlinedIcon sx={{ fontSize: "20px" }} />{" "}
                 &nbsp;&nbsp;&nbsp;
-                <span>Profile</span>
+                <span style={{ fontSize: "15px" }}>Profile</span>
               </span>
             </NavLink>
           </li>
@@ -134,9 +135,9 @@ const Sidebar = () => {
           >
             <NavLink to="/student/courses" className="navItem">
               <span className="flex items-center">
-                <ListAltOutlinedIcon  sx={{ fontSize: '20px' }} />
+                <ListAltOutlinedIcon sx={{ fontSize: "20px" }} />
                 &nbsp;&nbsp;&nbsp;
-                <span>Course Offered</span>
+                <span style={{ fontSize: "15px" }}>Course Offered</span>
               </span>
             </NavLink>
           </li>
@@ -146,9 +147,9 @@ const Sidebar = () => {
           >
             <NavLink to="/login" className="navItem" onClick={handleLogout}>
               <span className="flex items-center">
-                <LogoutIcon sx={{ fontSize: '20px' }}  />
+                <LogoutIcon sx={{ fontSize: "20px" }} />
                 &nbsp;&nbsp;&nbsp;
-                <span>Logout</span>
+                <span style={{ fontSize: "15px" }}>Logout</span>
               </span>
             </NavLink>
           </li>

@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import image1 from "../../assets/resource/about-four-img-1.jpg";
+import image1 from "../../assets/group.jpg";
 import image2 from "../../assets/resource/about-four-img-2.jpg";
 import Navbar from "../Navigation/Navbar";
 import Footer from "../home/footer/Footer";
@@ -19,20 +19,20 @@ const AboutUs = () => {
       <section className="about-four">
         <div className="container">
           <div className="row">
-            <div className="col-xl-6">
+            <div className="col-xl-6"  style={{padding:'50px'}}>
               <div className="about-four__left">
                 <div className="about-four__img-box">
                   <div className="about-four__img">
                     <img src={image1} alt="" className="about-image" />
                   </div>
                   <div className="about-four__img-two">
-                    <img src={image2} alt="" />
+                    <img src={image1} alt="" className="about-image"  />
                   </div>
                   <div className="about-four__border"></div>
                 </div>
               </div>
             </div>
-            <div className="col-xl-6">
+            <div className="col-xl-6" style={{paddingTop:'30px'}}>
               <div className="about-four__right">
                 <div className="section-title text-left">
                   <span className="section-title__tagline">
@@ -93,12 +93,12 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
-      <section className="faq-one faq-two">
+      {/* <section className="faq-one faq-two">
         <div className="faq-one-shape-1"></div>
         <div className="faq-one-bg"></div>
         <div className="container">
-          <div className="row">
-            <div className="col-xl-6 col-lg-6">
+          <div className="row" style={{padding:'20px'}}>
+            <div className="col-xl-6">
               <div className="faq-one__left">
                 <div className="section-title text-left">
                   <span className="section-title__tagline">
@@ -116,7 +116,7 @@ const AboutUs = () => {
                   ideas distinctively underwhelm enterprise. Compellingly
                   plagiarize value-added sources with inexpensive schemas.
                 </p>
-                <a href="#" className="thm-btn faq-one__btn">
+                <a href="#" className="thm-btn faq-one__btn" style={{marginBottom:'30px'}}>
                   Learn how to get help
                 </a>
               </div>
@@ -232,7 +232,7 @@ const AboutUs = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       <Footer />
     </>
   );

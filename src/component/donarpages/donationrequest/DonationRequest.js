@@ -101,7 +101,7 @@ useEffect(() => {
               <div class="flex justify-between items-center h-full">
                 <div class="flex items-center md:space-x-4 space-x-4 rtl:space-x-reverse vertical-box">
                   <a
-                    href="index.html"
+                    href="#"
                     class="mobile-logo xl:hidden inline-block"
                   >
                     {/* <img
@@ -347,9 +347,9 @@ useEffect(() => {
           {/* <!-- END: Header --> */}
           {/* <!-- END: Header --> */}
           <div
-            class="content-wrapper transition-all duration-150 xl:ltr:ml-[248px]"
+            class="content-wrapper transition-all duration-150 xl:ltr:ml-[248px] layout-container"
             id="content_wrapper"
-            style={{ backgroundColor: "#F1F5F9" }}
+           
           >
             <div class="page-content">
               <div id="content_layout">

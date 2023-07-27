@@ -4134,6 +4134,7 @@
     background-color: var(--oxpins-extra);
     padding: 120px 0 160px;
     z-index: 1;
+    width:100%;
   }
   
   .faq-one-shape-1 {
@@ -4155,11 +4156,12 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 807px;
+    width: 100%;
     height: 626px;
     opacity: 0.08;
     z-index: -1;
     background-image: url('../../assets/resource/faq-one-bg.png');
+    background-repeat: no-repeat;
   }
   
   .faq-one__left {
@@ -10605,6 +10607,7 @@
     display: block;
     padding: 120px 0 0;
     background: #E3F9FF;
+    width:100%;
   }
   
   .about-four__left {
@@ -10631,8 +10634,8 @@
   
   .about-four__img-two {
     position: absolute;
-    bottom: -160px;
-    right: -140px;
+    bottom: -170px;
+    right: -170px;
     z-index: 1;
   }
   
@@ -10657,6 +10660,9 @@
   
   .about-four .about-image {
     max-width: none; /* Override the max-width property */
+    height:300px;
+    width:400px;
+    margin-top: 20px;
   }
   
   .about-four__right {
@@ -11179,7 +11185,39 @@
   }
   
   
+  @media  (max-width: 414px) {
+    .about-four__img-two{
+      display: none;
+    }
+    .about-four__border{
+    display: none;
+    }
+    .about-four__img{
+      width:300px;
+      margin:auto;
+      align-items: center;
+      display: flex;
+    }
+    .about-image{
+      width:300px !important;
+      margin:auto;
+      align-items: center;
+      display: flex;
+    }
+   
+    .about-four__right{
+      display: grid;
+      margin: auto;
+      justify-content: center;
+    }
+    .about-four__text{
+      
+      margin: auto;
+      justify-content: center;
+      text-align: justify;
+    }
   
+  }
   
   
   

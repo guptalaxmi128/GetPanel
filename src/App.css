@@ -1,3 +1,7 @@
+@import url("assets/css/bootstrap.min.css");
+ @import url("assets/css/responsive.css");
+
+
 @import url("https://fonts.googleapis.com/css?family=Poppins:100;200;300;400;500;600;700;800;900&amp;display=swap");
 /*
 ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com
@@ -6,6 +10,7 @@
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
 */
+
 *,
 ::before,
 ::after {
@@ -566,14 +571,14 @@ video {
   cursor: pointer;
 }
 .form-control:focus{
-  box-shadow: 0 0 0 1px rgb(37, 99, 235);
+  box-shadow: 0 0 0 1px rgb(235, 166, 37);
 }
 .form-control::file-selector-button{
   padding: 0.375rem 0.75rem;
   margin: -0.375rem -0.75rem;
   margin-inline-end: 0.75rem;
   color: #212529;
-  background-color: #e9ecef;
+  background-color: #efeee9;
   pointer-events: none;
   border-color: inherit;
   border-style: solid;
@@ -611,7 +616,7 @@ video {
   background-size: 16px 12px;
 }
 .form-select:focus{
-  box-shadow: 0 0 0 1px rgb(37, 99, 235);
+  box-shadow: 0 0 0 1px rgb(235, 156, 37);
 }
 .form-select[multiple]{
   padding-right: 0.75rem;
@@ -6274,6 +6279,7 @@ textarea.form-control.is-invalid{
 }
 .font-Inter{
   font-family: Poppins, sans-serif;
+  font-size: 14px;
 }
 .font-sans{
   font-family: Poppins, sans-serif;
@@ -6478,6 +6484,7 @@ textarea.form-control.is-invalid{
 .text-slate-600{
   --tw-text-opacity: 1;
   color: rgb(71 85 105 / var(--tw-text-opacity));
+  font-size: 14px;
 }
 .text-success-500{
   --tw-text-opacity: 1;
@@ -8607,7 +8614,7 @@ ToolTip And PopOver
   display: block;
   width: 100%;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 0.8rem;
   font-weight: 500;
   text-transform: capitalize;
   line-height: 1.5rem;
@@ -14517,6 +14524,53 @@ ul.custom-list ul li{
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.layout-container{
+  width:auto;
+  background-color: #F1F5F9;
+}
+ @media  (max-width: 540px) {
+  .auth-box-3{
+    width:310px;
+  }
+  .text-center{
+    font-size: 12px;
+  }
+  .layout-container{
+    width:600px;
+  }
+  /* .app-header{
+    width:600px;
+  } */
+}
+/* 
+@media  (max-width: 768px) {
+  .layout-container{
+    width:700px;
+  }
+  .app-header{
+    width:700px;
+  }
+} */
+
+
+
+
+@media (min-width: 414px) {
+  .sidebar {
+    display: none; 
+  }
+}
+
+/* Styles for positioning the Sidebar on the right side */
+#sidebarContainer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 248px;
+  z-index: 9999;
 }
 
 

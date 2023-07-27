@@ -3,8 +3,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const signUpApi = createApi({
   reducerPath: "signUpApi",
   baseQuery: fetchBaseQuery({
-    // baseUrl: "http://localhost:5000/api/", 
-    baseUrl: "https://global-education-t.onrender.com/api/", 
+    baseUrl: "http://localhost:5000/api/", 
+    // baseUrl: "https://global-education-t.onrender.com/api/", 
     prepareHeaders: (headers) => {
       const authToken = localStorage.getItem("authToken");
       if (authToken) {

@@ -3,6 +3,8 @@ import decryptEas from "./components/decryptEas";
 
 const getepayPortal = (data, config) => {
   const JsonData = JSON.stringify(data);
+  // console.log(JsonData)
+  // console.log(config)
 
   var ciphertext = encryptEas(
     JsonData,
@@ -26,7 +28,7 @@ const getepayPortal = (data, config) => {
     body: raw,
     redirect: "follow",
   };
-
+  //  console.log (config["Getepay Url"])
   fetch(config["Getepay Url"], requestOptions)
     .then((response) => response.text())
     .then((result) => {
@@ -38,6 +40,7 @@ const getepayPortal = (data, config) => {
         config["Getepay IV"]
       );
       dataitem = JSON.parse(dataitem);
+      // console.log(dataitem)
       window.location.href = dataitem.paymentUrl;
     })
     .catch((error) => console.log("error", error));

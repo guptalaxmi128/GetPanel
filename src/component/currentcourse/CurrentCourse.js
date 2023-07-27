@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import SearchIcon from "@mui/icons-material/Search";
+import MenuIcon from "@mui/icons-material/Menu";
 import Sidebar from "../sidebar/Sidebar";
 import edit from "../../assets/edit.png";
 import {
@@ -36,6 +37,16 @@ const CurrentCourse = () => {
   //   setSelectedCurrentFile(file);
   // };
 
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
+
+
+  const toggleSidebar = () => {
+    setSidebarVisible(!isSidebarVisible);
+  };
+
+ 
+ 
+ 
   //for select multiple images
   const handleCurrentFileChange = (event) => {
     const files = event.target.files;
@@ -715,10 +726,10 @@ const CurrentCourse = () => {
 
   return (
     <>
-      <Sidebar />
+    
       <div
         className="flex flex-col justify-between min-h-screen"
-        style={{ marginLeft: "248px" }}
+        // style={{ marginLeft: "248px" }}
       >
         <div>
           {/* <!-- BEGIN: Header --> */}
@@ -730,16 +741,22 @@ const CurrentCourse = () => {
                   <a
                     href="index.html"
                     className="mobile-logo xl:hidden inline-block"
-                  ></a>
-                  <button className="smallDeviceMenuController open-sdiebar-controller hidden xl:hidden md:inline-block">
-                    {/* <iconify-icon
-                      className="leading-none bg-transparent relative text-xl top-[2px] text-slate-900 dark:text-white"
-                      icon="heroicons-outline:menu-alt-3"
-                    ></iconify-icon> */}
-                    {/* <MenuIcon /> */}
+                  >
+                      <img
+                      // src="assets/images/logo/logo-c.svg"
+                      className="black_logo"
+                      alt="logo"
+                    />
+                  </a>
+                  <button className="smallDeviceMenuController open-sdiebar-controller   xl:hidden md:inline-block">
+                    <MenuIcon  onClick={toggleSidebar}/>
+                    {isSidebarVisible && <div id="sidebarContainer"><Sidebar /></div>}
                   </button>
-                  <button className="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0 hidden rtl:rotate-180">
-                    <iconify-icon icon="ph:arrow-right-bold"></iconify-icon>
+                 
+                  <button className="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0  rtl:rotate-180">
+                    {/* <iconify-icon icon="ph:arrow-right-bold"></iconify-icon> */} 
+                    {/* <MenuIcon className="sidebar" onClick={toggleMobileMenu}/> */}
+                    {/* {isMobileMenuVisible && <div><Sidebar /></div>} */}
                   </button>
                   <button
                     className="flex items-center xl:text-sm text-lg xl:text-slate-400 text-slate-800 dark:text-slate-300 focus:outline-none focus:shadow-none px-1 space-x-3
@@ -752,7 +769,7 @@ const CurrentCourse = () => {
                   </button>
                 </div>
                 {/* <!-- end vertcial --> */}
-                <div className="items-center space-x-4 rtl:space-x-reverse horizental-box">
+                {/* <div className="items-center space-x-4 rtl:space-x-reverse horizental-box">
                   <a href="index.html" className="leading-0">
                     <span className="xl:inline-block hidden">
                       <img
@@ -784,6 +801,7 @@ const CurrentCourse = () => {
                       className="leading-none bg-transparent relative text-xl top-[2px] text-slate-900 dark:text-white"
                       icon="heroicons-outline:menu-alt-3"
                     ></iconify-icon>
+                       <MenuIcon />
                   </button>
                   <button
                     className="items-center xl:text-sm text-lg xl:text-slate-400 text-slate-800 dark:text-slate-300 focus:outline-none focus:shadow-none px-1 space-x-3
@@ -794,7 +812,7 @@ const CurrentCourse = () => {
                     <SearchIcon />
                     <span className="xl:inline-block hidden">Search...</span>
                   </button>
-                </div>
+                </div> */}
                 {/* <!-- end horizental --> */}
 
                 {/* <!-- end top menu --> */}
@@ -836,11 +854,13 @@ const CurrentCourse = () => {
           {/* <!-- END: Header --> */}
 
           <div
-            class="content-wrapper transition-all duration-150 xl:ltr:ml-[248px]"
+            className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px]"
             id="content_wrapper"
             style={{ backgroundColor: "#F1F5F9" }}
+         
+            
           >
-            <div class="page-content">
+            <div className="page-content">
               <div id="content_layout">
                 {/* current course detail begin*/}
 
@@ -933,7 +953,7 @@ const CurrentCourse = () => {
                           </div>
 
                           <div>
-                            <label for="default-picker" class="form-label">
+                            <label for="default-picker" className="form-label">
                               Start Date
                             </label>
                             <div className="relative form-control">
@@ -941,7 +961,7 @@ const CurrentCourse = () => {
                             </div>
                           </div>
                           <div>
-                            <label for="default-picker" class="form-label">
+                            <label for="default-picker" className="form-label">
                               Expected Complete Date
                             </label>
                             <div className="relative form-control">
@@ -1187,7 +1207,7 @@ const CurrentCourse = () => {
                             </div>
 
                             <div>
-                              <label for="default-picker" class="form-label">
+                              <label for="default-picker" className="form-label">
                                 Start Date
                               </label>
                               <Flatpickr
@@ -1206,7 +1226,7 @@ const CurrentCourse = () => {
                               />
                             </div>
                             <div>
-                              <label for="default-picker" class="form-label">
+                              <label for="default-picker" className="form-label">
                                 Expected Complete Date
                               </label>
                               <Flatpickr
@@ -1454,7 +1474,7 @@ const CurrentCourse = () => {
                             </div>
 
                             <div>
-                              <label for="default-picker" class="form-label">
+                              <label for="default-picker" className="form-label">
                                 Start Date
                               </label>
                               <div className="relative form-control">
@@ -1462,7 +1482,7 @@ const CurrentCourse = () => {
                               </div>
                             </div>
                             <div>
-                              <label for="default-picker" class="form-label">
+                              <label for="default-picker" className="form-label">
                                 Complete Date
                               </label>
                               <div className="relative form-control">
@@ -1659,7 +1679,7 @@ const CurrentCourse = () => {
                               </div>
 
                               <div>
-                                <label for="default-picker" class="form-label">
+                                <label for="default-picker" className="form-label">
                                   Start Date
                                 </label>
                                 <Flatpickr
@@ -1675,7 +1695,7 @@ const CurrentCourse = () => {
                                 />
                               </div>
                               <div>
-                                <label for="default-picker" class="form-label">
+                                <label for="default-picker" className="form-label">
                                   Complete Date
                                 </label>
                                 <Flatpickr
@@ -1882,7 +1902,7 @@ const CurrentCourse = () => {
                             </div>
 
                             <div>
-                              <label for="default-picker" class="form-label">
+                              <label for="default-picker" className="form-label">
                                 Start Date
                               </label>
                               <div className="relative form-control">
@@ -1890,7 +1910,7 @@ const CurrentCourse = () => {
                               </div>
                             </div>
                             <div>
-                              <label for="default-picker" class="form-label">
+                              <label for="default-picker" className="form-label">
                                 Complete Date
                               </label>
                               <div className="relative form-control">
@@ -2089,7 +2109,7 @@ const CurrentCourse = () => {
                               </div>
 
                               <div>
-                                <label for="default-picker" class="form-label">
+                                <label for="default-picker" className="form-label">
                                   Start Date
                                 </label>
                                 <Flatpickr
@@ -2105,7 +2125,7 @@ const CurrentCourse = () => {
                                 />
                               </div>
                               <div>
-                                <label for="default-picker" class="form-label">
+                                <label for="default-picker" className="form-label">
                                   Complete Date
                                 </label>
                                 <Flatpickr
@@ -2310,7 +2330,7 @@ const CurrentCourse = () => {
                             </div>
 
                             <div>
-                              <label for="default-picker" class="form-label">
+                              <label for="default-picker" className="form-label">
                                 Start Date
                               </label>
                               <div className="relative form-control">
@@ -2318,7 +2338,7 @@ const CurrentCourse = () => {
                               </div>
                             </div>
                             <div>
-                              <label for="default-picker" class="form-label">
+                              <label for="default-picker" className="form-label">
                                 Complete Date
                               </label>
                               <div className="relative form-control">
@@ -2537,7 +2557,7 @@ const CurrentCourse = () => {
                               </div>
 
                               <div>
-                                <label for="default-picker" class="form-label">
+                                <label for="default-picker" className="form-label">
                                   Start Date
                                 </label>
                                 <Flatpickr
@@ -2553,7 +2573,7 @@ const CurrentCourse = () => {
                                 />
                               </div>
                               <div>
-                                <label for="default-picker" class="form-label">
+                                <label for="default-picker" className="form-label">
                                   Complete Date
                                 </label>
                                 <Flatpickr
@@ -2760,7 +2780,7 @@ const CurrentCourse = () => {
                             </div>
 
                             <div>
-                              <label for="default-picker" class="form-label">
+                              <label for="default-picker" className="form-label">
                                 Start Date
                               </label>
                               <div className="relative form-control">
@@ -2768,7 +2788,7 @@ const CurrentCourse = () => {
                               </div>
                             </div>
                             <div>
-                              <label for="default-picker" class="form-label">
+                              <label for="default-picker" className="form-label">
                                 Complete Date
                               </label>
                               <div className="relative form-control">
@@ -2975,7 +2995,7 @@ const CurrentCourse = () => {
                               </div>
 
                               <div>
-                                <label for="default-picker" class="form-label">
+                                <label for="default-picker" className="form-label">
                                   Start Date
                                 </label>
                                 <Flatpickr
@@ -2991,7 +3011,7 @@ const CurrentCourse = () => {
                                 />
                               </div>
                               <div>
-                                <label for="default-picker" class="form-label">
+                                <label for="default-picker" className="form-label">
                                   Complete Date
                                 </label>
                                 <Flatpickr

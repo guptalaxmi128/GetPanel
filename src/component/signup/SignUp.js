@@ -280,7 +280,7 @@ const SignUp = () => {
                         />
                       </span>{" "}
                       &nbsp;
-                      <span className="text-slate-500 dark:text-slate-400 text-sm leading-6">
+                      <span className="text-slate-500 dark:text-slate-400 text-sm leading-6" style={{fontSize:'12px'}}>
                         You accept our Terms and Conditions and Privacy Policy
                       </span>
                     </label>
@@ -318,6 +318,7 @@ const SignUp = () => {
                 <button
                   className="btn btn-dark block w-full text-center"
                   type="button"
+                  style={{fontSize:'14px'}}
                   onClick={(e) => handleSubmit(e)}
                 >
                   Create An Account
@@ -325,11 +326,12 @@ const SignUp = () => {
               </form>
               {/* <!-- END: Login Form --> */}
               <div className="max-w-[242px] mx-auto mt-8 w-full"></div>
-              <div className="mx-auto font-normal text-slate-500 dark:text-slate-400 2xl:mt-12 mt-6 uppercase text-sm text-center">
+              <div className="mx-auto font-normal text-slate-500 dark:text-slate-400 2xl:mt-12 mt-6 uppercase text-sm text-center"  style={{fontSize:'12px'}}>
                 Already registered? &nbsp;
                 <Link
                   to={"/login"}
                   className="text-slate-900 dark:text-white font-medium hover:underline"
+                  style={{fontSize:'12px'}}
                 >
                   Sign In
                 </Link>

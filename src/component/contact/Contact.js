@@ -15,7 +15,7 @@ const Contact = () => {
   return (
     <>
       <Navbar />
-      <section className="contact-info-section bg-color-1 centred">
+      <section className="contact-info-section bg-color-1 centred" style={{marginTop:'30px'}}>
         <div className="auto-container">
           <div className="row ">
             <div className="col-lg-4 col-md-6 col-sm-12 info-column">
@@ -26,9 +26,7 @@ const Contact = () => {
                   </div>
                   <h3>Phone Number</h3>
                   <p>
-                    {/* Emergency Cases <br /> */}
-                    <a href="#"> +919540478632</a> 
-                    {/* (24/7) */}
+                    <a href="#" style={{fontSize:'14px'}}> +91 9355541415</a> 
                   </p>
                 </div>
               </div>
@@ -41,9 +39,9 @@ const Contact = () => {
                   </div>
                   <h3>Email Address</h3>
                   <p>
-                    <a href="#">secretary@globaleducationtrust.org</a>
+                    <a href="#" style={{fontSize:'14px'}}>secretary@globaleducationtrust.org</a>
                     <br />
-                    <a href="#">www.globaleducationtrust.org</a>
+                    <a href="#"  style={{fontSize:'14px'}}>www.globaleducationtrust.org</a>
                   </p>
                 </div>
               </div>
@@ -55,7 +53,7 @@ const Contact = () => {
                     <LocationOnOutlinedIcon style={{ fontSize: "38px" }} />
                   </div>
                   <h3>Our Location</h3>
-                  <p>
+                  <p style={{fontSize:'14px'}}>
                   #K-60, GF, RHS, JUNGPURA EXT., <br />
                   NEW DELHI-110014
                   </p>
@@ -76,7 +74,7 @@ const Contact = () => {
                   aenean orci egestas arcu interdum nisl magna sit duis
                   vestibulum pellentesque eget.
                 </p>
-                <ul className="social-links clearfix">
+                <ul className="social-links clearfix" style={{marginBottom:'30px'}}>
                   <li>
                     <a href="#">
                       <img

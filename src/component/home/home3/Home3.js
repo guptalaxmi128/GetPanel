@@ -15,7 +15,7 @@ function Home3() {
         </div>
       </div>
       <div className="cardContainer">
-        <div className="card-1" style={{ marginLeft: '25px' }}>
+        <div className="card-1" >
           <img className="card-img" src={team} alt="Card" />
           <div className="card-body">
             <p className="card-text1">

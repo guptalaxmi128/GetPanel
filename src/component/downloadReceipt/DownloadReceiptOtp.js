@@ -3,13 +3,14 @@ import backgroundImg from "../../assets/page-bg.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import html2pdf from "html2pdf.js";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useLocation,
+  //  useNavigate 
+} from "react-router-dom";
 import { usePublicUserReceiptMutation } from "../../services/signUpApi";
-import sign from "../../assets/sign.png";
 
 const DownloadReceiptOtp = () => {
   const location = useLocation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { mobileNumber, email } = location.state || {};
   console.log("Get Otp Page", email);
   console.log("Get Otp mobileNumber", mobileNumber);
@@ -17,7 +18,7 @@ const DownloadReceiptOtp = () => {
   const [mobileNumberOtp, setMobileNumberOtp] = useState("");
   const [isClicked, setIsClicked] = useState("");
   const [showComponent, setShowComponent] = useState("");
-  const [data,setData]=useState('');
+  const [data, setData] = useState("");
 
   const [otpError, setOtpError] = useState("");
   const [emailOtpError, setEmailOtpError] = useState("");
@@ -30,9 +31,9 @@ const DownloadReceiptOtp = () => {
     setMobileNumberOtp("");
   };
 
-   const handleDownloadPDF = () => {
+  const handleDownloadPDF = () => {
     // const element = document.getElementById("ticket-component");
-     const element = document.getElementById("component-to-download");
+    const element = document.getElementById("component-to-download");
     html2pdf()
       .set({
         html2canvas: { scale: 2 },
@@ -53,8 +54,8 @@ const DownloadReceiptOtp = () => {
     const formattedDay = day < 10 ? `0${day}` : day;
     const formattedMonth = month < 10 ? `0${month}` : month;
 
-    return `${formattedDay}/${formattedMonth}/${year}`;
-}
+    return `${formattedDay}.${formattedMonth}.${year}`;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -143,20 +144,20 @@ const DownloadReceiptOtp = () => {
             <div
               className="auth-box-3"
               style={{
-                paddingTop: "2.5rem",
-                paddingBottom: "2.5rem",
+                paddingTop: "1rem",
+                paddingBottom: "1rem",
                 width: "380px",
-                height: "200px",
+                height: "180px",
               }}
             >
-              <div className="text-center 2xl:mb-10 mb-5">
+              <div className="text-center 2xl:mb-10 ">
                 <h4
                   className="font-medium"
                   style={{ fontSize: "16px", fontWeight: 600 }}
                 >
                   Download Receipt
                 </h4>
-              
+
                 {/* <div
                   className="text-slate-500 dark:text-slate-400 text-base"
                   style={{ fontSize: "14px" }}
@@ -275,226 +276,333 @@ const DownloadReceiptOtp = () => {
               {/* <Paper elevation={3} sx={{ width: "70%", height: "auto" }}> */}
               {showComponent && (
                 <>
-                 {data.map((item,index)=>{
-                    return(
-                        <div id="component-to-download">
-                    <div style={{ padding: "10px" }} key={item.id}>
-                      <div className="lg:w-1/2 w-full flex flex-col items-center justify-center">
-                        <div
-                          className="auth-box-3"
-                          style={{
-                            border: "2px solid #000",
-                            padding: "0px",
-                            width: "800px",
-                          }}
-                        >
-                          <div
-                            className="text-center "
-                            style={{ padding: "0px" }}
-                          >
-                            <h5
-                              className="font-medium"
-                              style={{
-                                fontSize: "17px",
-                                fontWeight: 600,
-                                background: "#F38701",
-                                color: "white",
-                                padding: "1rem",
-                              }}
-                            >
-                              GLOBAL EDUCATION TRUST
-                            </h5>
+                  {data.map((item, index) => {
+                    return (
+                      <div id="component-to-download">
+                        <div style={{ padding: "10px" }} key={item.id}>
+                          <div className="lg:w-1/2 w-full flex flex-col items-center justify-center">
                             <div
-                              className="text-slate-500 dark:text-slate-400 text-base"
-                              style={{
-                                fontSize: "14px",
-                                background: "#f9b67f",
-                                padding: "1rem",
-                                color: "#000",
-                              }}
-                            >
-                              K-60, GROUND FLOOR, JUNGPURA EXT.
-                              <br />
-                              New Delhi. 110014
-                            </div>
-                          </div>
-                          <div
-                            style={{
-                              fontSize: "14px",
-                              display: "flex",
-                              padding: "5px",
-                            }}
-                          >
-                            <p >Phone No:&nbsp;  {item.mobileNumber}</p>
-                            <p style={{ marginLeft: "80px" }}>Email Id:&nbsp;{item.email}</p>
-                          </div>
-                          <p style={{ fontSize: "14px", paddingLeft: "5px" }}>
-                            PAN No: &nbsp;{item.pan}
-                          </p>
-                          <hr className="hrOverride" />
-                          <h5
-                            className="font-medium text-center"
-                            style={{
-                              fontSize: "17px",
-                              fontWeight: 600,
-                              color: "#000",
-                              padding: "0.5rem",
-                            }}
-                          >
-                            Received With Thanks From:
-                          </h5>
-                          <hr className="hrOverride" />
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              marginBottom: "2.5rem",
-                            }}
-                          >
-                            <div
-                              style={{
-                                width: "180px",
-                                height: "130px",
-                                fontSize: "14px",
-                                background: "#f9b67f",
-                                padding: "0.8rem",
-                                color: "#000",
-                                border: "2px solid #000",
-                              }}
-                            >
-                              <p style={{ color: "#000", fontWeight: 600 }}>
-                                Date : {formatDate(item.createdAt)}
-                              </p>
-                              <p style={{ color: "#000", fontWeight: 600 }}>
-                                Receipt No : &nbsp; {item.merchantTransactionId}
-                              </p>
-                            </div>
-                            <div
-                              style={{
-                                width: "320px",
-                                height: "130px",
-                                fontSize: "14px",
-                                background: "#f9b67f",
-                                padding: "0.8rem",
-                                color: "#000",
-                                border: "2px solid #000",
-                              }}
-                            >
-                              <p style={{ color: "#000", fontWeight: 600 }}>
-                                Sender Name : &nbsp; {item.name}
-                              </p>
-                              <p style={{ color: "#000", fontWeight: 600 }}>
-                                Address : &nbsp;{item.address}
-                              </p>
-                              <p style={{ color: "#000", fontWeight: 600 }}>
-                                Phone No :&nbsp; {item.mobileNumber}
-                              </p>
-                              <p style={{ color: "#000", fontWeight: 600 }}>
-                                Email Id :&nbsp; {item.email}
-                              </p>
-                            </div>
-                          </div>
-                          <div style={{ display: "flex" }}>
-                            <div
-                              className="text-slate-500 dark:text-slate-400 text-base"
-                              style={{
-                                fontSize: "14px",
-                                background: "#f9b67f",
-                                padding: "1rem",
-                                color: "#000",
-                                width: "180px",
-                                height: "40px",
-                                fontWeight: 600,
-                              }}
-                            >
-                              Received Amount
-                            </div>
-                            <div
+                              className="auth-box-3"
                               style={{
                                 border: "2px solid #000",
-                                width: "340px",
-                                height: "100px",
-                                marginBottom: "2.5rem",
-                              }}
-                            > <p style={{padding:'10px'}}> ₹{item.donationAmount}</p></div>
-                          </div>
-                          <div style={{ display: "flex" }}>
-                            <div
-                              className="text-slate-500 dark:text-slate-400 text-base"
-                              style={{
-                                fontSize: "14px",
-                                background: "#f9b67f",
-                                padding: "1rem",
-                                color: "#000",
-                                width: "180px",
-                                height: "40px",
-                                fontWeight: 600,
+                                padding: "0px",
+                                width: "900px",
                               }}
                             >
-                              Any Banking Details
-                            </div>
-                            <div
-                              style={{
-                                border: "2px solid #000",
-                                width: "340px",
-                                height: "100px",
-                                marginBottom: "2.5rem",
-                              }}
-                            ></div>
-                          </div>
-                          <div style={{ display: "flex" }}>
-                            <div
-                              className="text-slate-500 dark:text-slate-400 text-base"
-                              style={{
-                                fontSize: "14px",
-                                background: "#f9b67f",
-                                padding: "1rem",
-                                color: "#000",
-                                width: "260px",
-                                height: "100px",
-                                fontWeight: 600,
-                                border: "2px solid #000",
-                                textAlign: "center",
-                              }}
-                            >
-                              Receiver Signature
-                              <img src={sign} alt="sign" width={100} height={40} style={{marginTop:'5px'}} />
-                            </div>
+                              <div
+                                className="text-center "
+                                style={{ padding: "0px" }}
+                              >
+                                <h5
+                                  className="font-medium"
+                                  style={{
+                                    fontSize: "18px",
+                                    fontWeight: 600,
+                                    background: "#c5590f",
+                                    color: "white",
+                                    padding: "0.5rem",
+                                    height: "35px",
+                                  }}
+                                >
+                                  GLOBAL EDUCATION TRUST
+                                </h5>
+                                <div
+                                  className="text-slate-500 dark:text-slate-400 text-base"
+                                  style={{
+                                    fontSize: "14px",
+                                    background: "#f8cbac",
+                                    // padding: "1rem",
+                                    color: "#000",
+                                    height: "40px",
+                                  }}
+                                >
+                                  K-60, GROUND FLOOR, JUNGPURA EXT.
+                                  <br />
+                                  <div
+                                    style={{
+                                      fontSize: "14px",
+                                      background: "#fae4d9",
+                                      // padding: "1rem",
+                                      color: "#000",
+                                      height: "25px",
+                                    }}
+                                  >
+                                    New Delhi. 110014
+                                  </div>
+                                </div>
+                              </div>
+                              <div
+                                style={{
+                                  fontSize: "13px",
+                                  display: "flex",
+                                  padding: "5px",
+                                }}
+                              >
+                                <p style={{ fontWeight: 600, color: "#000" }}>
+                                  Phone No: +91 9540478632
+                                </p>
+                                <p
+                                  style={{
+                                    marginLeft: "35px",
+                                    fontWeight: 600,
+                                    color: "#000",
+                                  }}
+                                >
+                                  Email Id: support@globaleducationtrust.org
+                                </p>
+                              </div>
+                              <p
+                                style={{
+                                  fontSize: "14px",
+                                  paddingLeft: "5px",
+                                  background: "#fed76e",
+                                  border: "2px solid black",
+                                  height: "28px",
+                                  width: "180px",
+                                  fontWeight: 600,
+                                  color: "#000",
+                                }}
+                              >
+                                PAN No: &nbsp;AAETG0691D
+                              </p>
+                              <p
+                                style={{
+                                  color: "#000",
+                                  fontWeight: 500,
+                                  padding: "0.5rem",
+                                  height: "40px",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                80 G : Registration no and date:
+                                AAETG0691DF2021001 Dt. 29.03.2022
+                              </p>
+                              <hr className="hrOverride" />
+                              <h5
+                                className="font-medium text-center"
+                                style={{
+                                  fontSize: "17px",
+                                  fontWeight: 600,
+                                  color: "#000",
+                                  padding: "0.5rem",
+                                }}
+                              >
+                                Received With Thanks From:
+                              </h5>
+                              <hr className="hrOverride" />
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  marginBottom: "2.5rem",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    width: "180px",
+                                    height: "140px",
+                                    fontSize: "14px",
+                                    // background: "#f9b67f",
+                                    textAlign: "center",
+                                    color: "#000",
+                                    border: "2px solid #000",
+                                  }}
+                                >
+                                  <p
+                                    style={{
+                                      color: "#000",
+                                      fontWeight: 600,
+                                      height: "40px",
+                                      background: "#faceb1",
+                                      width: "176px",
+                                      padding: "0.5rem",
+                                    }}
+                                  >
+                                    Date : {formatDate(item.createdAt)}
+                                  </p>
+                                  <p
+                                    style={{
+                                      color: "#000",
+                                      fontWeight: 600,
+                                      background: "#e1f0d9",
+                                      width: "176px",
+                                      padding: "0.5rem",
+                                      height: "96px",
+                                    }}
+                                  >
+                                    Receipt No : &nbsp;{" "}
+                                    {item.merchantTransactionId}
+                                  </p>
+                                </div>
+                                <div
+                                  style={{
+                                    width: "320px",
+                                    height: "140px",
+                                    fontSize: "14px",
+                                    background: "#fff2cd",
+                                    padding: "1rem",
+                                    color: "#000",
+                                    border: "2px solid #000",
+                                  }}
+                                >
+                                  {/* <p style={{ color: "#000", fontWeight: 600 ,textAlign:'center',textDecoration:'underline'}}>
+                                 Donar Details
+                              </p> */}
+                                  <p style={{ color: "#000", fontWeight: 600 }}>
+                                    Name : &nbsp; {item.name}
+                                  </p>
+                                  <p style={{ color: "#000", fontWeight: 600 }}>
+                                    Address : &nbsp;{item.address}
+                                  </p>
+                                  <p style={{ color: "#000", fontWeight: 600 }}>
+                                    Phone No :&nbsp; {item.mobileNumber}
+                                  </p>
+                                  {item && item.pan && (
+                                    <p
+                                      style={{ color: "#000", fontWeight: 600 }}
+                                    >
+                                      PAN No: {item.pan}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                              <div style={{ display: "flex" }}>
+                                <div
+                                  className="text-slate-500 dark:text-slate-400 text-base"
+                                  style={{
+                                    fontSize: "14px",
+                                    background: "#fed76e",
+                                    padding: "0.5rem",
+                                    color: "#000",
+                                    width: "180px",
+                                    height: "40px",
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  Received Amount:
+                                </div>
+                                <div
+                                  style={{
+                                    // border: "2px solid #000",
+                                    width: "340px",
+                                    height: "100px",
+                                    marginBottom: "2.5rem",
+                                  }}
+                                >
+                                  {" "}
+                                  <p style={{ padding: "8px" }}>
+                                    {" "}
+                                    ₹ {item.donationAmount} /-
+                                  </p>
+                                  <p style={{ padding: "8px" }}>
+                                    {" "}
+                                    {item.donationAmountInWords}
+                                  </p>
+                                </div>
+                              </div>
+                              <div style={{ display: "flex" }}>
+                                <div
+                                  className="text-slate-500 dark:text-slate-400 text-base"
+                                  style={{
+                                    fontSize: "14px",
+                                    background: "#fab284",
+                                    padding: "0.5rem",
+                                    color: "#000",
+                                    width: "180px",
+                                    height: "40px",
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  Any Banking Details:
+                                </div>
+                                <div
+                                  style={{
+                                    // border: "2px solid #000",
+                                    width: "340px",
+                                    height: "100px",
+                                    marginBottom: "2.5rem",
+                                  }}
+                                ></div>
+                              </div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <div
+                                  className="text-slate-500 dark:text-slate-400 text-base"
+                                  style={{
+                                    fontSize: "14px",
+                                    background: "#e2efdb",
+                                    padding: "0.8rem",
+                                    color: "#000",
+                                    width: "230px",
+                                    height: "120px",
+                                    fontWeight: 600,
+                                    border: "2px solid #000",
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  Receiver Signature
+                                  <p
+                                    style={{
+                                      color: "#000",
+                                      fontWeight: 600,
+                                      fontSize: "10px",
+                                    }}
+                                  >
+                                    This is computer generated document hence
+                                    does not require signature.
+                                  </p>
+                                </div>
 
-                            <div
-                              className="text-slate-500 dark:text-slate-400 text-base"
-                              style={{
-                                fontSize: "14px",
-                                background: "#f9b67f",
-                                padding: "1rem",
-                                color: "#000",
-                                width: "260px",
-                                height: "100px",
-                                fontWeight: 600,
-                                border: "2px solid #000",
-                                textAlign: "center",
-                              }}
-                            >
-                              Donar Signature
+                                <div
+                                  className="text-slate-500 dark:text-slate-400 text-base"
+                                  style={{
+                                    fontSize: "14px",
+                                    background: "#fce5d7",
+                                    padding: "0.8rem",
+                                    color: "#000",
+                                    width: "230px",
+                                    height: "120px",
+                                    fontWeight: 600,
+                                    border: "2px solid #000",
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  Donar Signature
+                                </div>
+                              </div>
+                              <h6
+                                className="font-medium text-center"
+                                style={{
+                                  fontSize: "14px",
+                                  fontWeight: 600,
+                                  padding: "1rem",
+                                }}
+                              >
+                                Qualify Dedcution U/s 80 G of I.T Act 1961 Vide
+                                Unique Registration no AAETG0691DF2021001
+                                <br />
+                                Dated:29.03.2022 Valid from AY. 2022-23 Onwards.
+                              </h6>
+                              <h5
+                                className="font-medium text-center"
+                                style={{
+                                  fontSize: "17px",
+                                  fontWeight: 600,
+                                  padding: "1rem",
+                                }}
+                              >
+                                Thank you so much for your generous support :)
+                              </h5>
                             </div>
                           </div>
-                          <h5
-                            className="font-medium text-center"
-                            style={{
-                              fontSize: "17px",
-                              fontWeight: 600,
-                              padding: "1rem",
-                            }}
-                          >
-                            Thank you so much for your support !
-                          </h5>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                    )
-                 })}
-                 
+                    );
+                  })}
                 </>
               )}
               <div
@@ -520,7 +628,7 @@ const DownloadReceiptOtp = () => {
                       borderRadius: "10px",
                       cursor: "pointer",
                     }}
-                       onClick={handleDownloadPDF}
+                    onClick={handleDownloadPDF}
                   >
                     Download Receipt
                   </button>

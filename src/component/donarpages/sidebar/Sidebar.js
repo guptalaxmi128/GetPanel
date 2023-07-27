@@ -73,10 +73,10 @@ const Sidebar = () => {
             className={activeItem === 0 ? "active" : ""}
             onClick={() => handleItemClick(0)}
           >
-            <NavLink to="/donar/home" className="navItem">
+            <NavLink to="/donar/home" className="navItem" style={{textDecoration:'none'}}>
               <span className="flex items-center">
                 <HomeRoundedIcon sx={{ fontSize: '20px' }}  /> &nbsp; &nbsp;
-                <span>Dashboard</span>
+                <span style={{ fontSize: "15px" }}>Dashboard</span>
               </span>
             </NavLink>
           </li>
@@ -85,11 +85,11 @@ const Sidebar = () => {
             className={activeItem === 1 ? "active" : ""}
             onClick={() => handleItemClick(1)}
           >
-            <NavLink to="/donar/donation-request" className="navItem">
+            <NavLink to="/donar/donation-request" className="navItem" style={{textDecoration:'none'}}>
               <span className="flex items-center">
                 <ListAltOutlinedIcon sx={{ fontSize: '20px' }}  />
                 &nbsp; &nbsp;
-                <span>Donation Request</span>
+                <span style={{ fontSize: "15px" }}>Donation Request</span>
               </span>
             </NavLink>
           </li>
@@ -97,10 +97,10 @@ const Sidebar = () => {
             className={activeItem === 2 ? "active" : ""}
             onClick={() => handleItemClick(2)}
           >
-            <NavLink to="/donar/donated" className="navItem">
+            <NavLink to="/donar/donated" className="navItem" style={{textDecoration:'none'}}>
               <span className="flex items-center">
                 <GroupSharpIcon sx={{ fontSize: '20px' }}  /> &nbsp; &nbsp;
-                <span>Donated</span>
+                <span style={{ fontSize: "15px" }}>Donated</span>
               </span>
             </NavLink>
           </li>
@@ -108,10 +108,10 @@ const Sidebar = () => {
             className={activeItem === 3 ? "active" : ""}
             onClick={() => handleItemClick(3)}
           >
-            <NavLink to="/donar/profile" className="navItem">
+            <NavLink to="/donar/profile" className="navItem" style={{textDecoration:'none'}}>
               <span className="flex items-center">
                 <DescriptionOutlinedIcon sx={{ fontSize: '20px' }}  /> &nbsp;&nbsp;&nbsp;
-                <span>Profile</span>
+                <span style={{ fontSize: "15px" }}>Profile</span>
               </span>
             </NavLink>
           </li>
@@ -120,11 +120,11 @@ const Sidebar = () => {
             className={activeItem === 4 ? "active" : ""}
             onClick={() => handleItemClick(4)}
           >
-            <NavLink to="/login" className="navItem" onClick={handleLogout}>
+            <NavLink to="/login" className="navItem" onClick={handleLogout} style={{textDecoration:'none'}}>
               <span className="flex items-center">
                 <LogoutIcon  sx={{ fontSize: '20px' }} />
                 &nbsp;&nbsp;&nbsp;
-                <span>Logout</span>
+                <span style={{ fontSize: "15px" }}>Logout</span>
               </span>
             </NavLink>
           </li>

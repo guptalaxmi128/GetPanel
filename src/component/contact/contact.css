@@ -124,7 +124,7 @@ body {
   justify-content: space-between;
 }
 
-/* .info-block-one {
+.info-block-one {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -133,7 +133,7 @@ body {
 .info-column {
   flex: 0 0 33.33%; 
   padding: 10px; 
-} */
+}
 
 
 
@@ -8302,4 +8302,13 @@ div#mCSB_1_container{
 .contact-section .form-inner form .form-group input:focus,
 .contact-section .form-inner form .form-group textarea:focus{
 
+}
+
+@media  (max-width: 414px) {
+  /* .info-block-one{
+    width:300px;
+  } */
+  .contact-section  {
+    margin-bottom: 320px;
+  }
 }

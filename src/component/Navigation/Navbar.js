@@ -1,329 +1,447 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import {
-  AppBar,
-  Box,
-  Divider,
-  Drawer,
-  Typography,
-  List,
-  ListItem,
-  ListItemButton,
-  Toolbar,
-  ListItemText,
-  IconButton,
-  Button,
-  Badge,
-} from '@mui/material';
-import PropTypes from 'prop-types';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Link, NavLink } from 'react-router-dom';
-import { theme } from "../../../src/themes";
-import logo from '../../assets/images/logo.png';
-// import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+// import React from 'react';
+// import {
+//   AppBar,
+//   Box,
+//   Divider,
+//   Drawer,
+//   Typography,
+//   List,
+//   ListItem,
+//   Toolbar,
+//   ListItemText,
+//   IconButton,
 
-// import NavbarHeader from "./NavbarHeader/NavbarHeader";
-import NavbarLogoSection from './NavbarLogoSection/NavbarLogoSection';
-// import { useDispatch, useSelector } from "react-redux";
-// import { getAllProducts } from "../../actions/product";
-// import { getAllOrdersByUser } from "../../actions/order";
-// import Navbar from '../navbar/Navbar';
-import Logo from '../logo/Logo';
-import Modal from '../donateform/DonateForm';
-import '../Navigation/Navbar.css';
-import DonateForm from '../donateformnew/DonateForm';
+// } from '@mui/material';
 
-const drawerWidth = 240;
-const navItems = [
-  {
-    name: 'Home',
-    path: '#',
-  },
-  {
-    name: 'About',
-    path: 'about',
-  },
-  {
-    name: 'Team',
-    path: 'team',
-  },
-  // {
-  //   name: 'News',
-  //   path: '#',
-  // },
-  {
-    name: 'Contact Us',
-    path: 'contact',
-  },
+// import MenuIcon from '@mui/icons-material/Menu';
+// import { Link, NavLink } from 'react-router-dom';
+// import { theme } from "../../../src/themes";
+// import logo from '../../assets/images/logo.png';
 
+// import Logo from '../logo/Logo';
+// import '../Navigation/Navbar.css';
+
+// const drawerWidth = 240;
+// const navItems = [
 //   {
-//     name: 'Login',
-//     path: 'login',
+//     name: 'Home',
+//     path: '#',
 //   },
-];
+//   {
+//     name: 'About',
+//     path: 'about',
+//   },
+//   {
+//     name: 'Team',
+//     path: 'team',
+//   },
+//   {
+//     name: 'Contact Us',
+//     path: 'contact',
+//   },
 
-function DrawerAppBar(props) {
-  const [showModal, setShowModal] = useState(false);
-  const toggleModal = useCallback(() => {
-    setShowModal(!showModal);
-  }, [showModal]);
-  //   const userId = (JSON.parse(localStorage.getItem("profile"))) ? (JSON.parse(localStorage.getItem("profile"))).data : null;
-  //   const cartItems = useSelector((state) => state.cart.cart);
+// ];
 
-  //   const dispatch = useDispatch();
+// function DrawerAppBar(props) {
 
-  //   useEffect(() => {
-  //     const getproductsData = async () => {
-  //       dispatch(getAllProducts());
-  //       dispatch(getAllOrdersByUser(userId));
-  //     };
-  //     getproductsData();
-  //   }, [dispatch]);
+//   const navLinkStyles = ({ isActive }) => {
+//     return {
+//       mt: 3,
+//       height: '37px',
+//       paddingLeft: '10px',
+//       paddingRight: '10px',
+//       alignItems: 'center',
+//       textDecoration: 'none',
+//       color: isActive ? theme.palette.primary.dark : theme.palette.text.dark,
+//     };
+//   };
 
-  const navLinkStyles = ({ isActive }) => {
-    return {
-      mt: 3,
-      height: '37px',
-      //   border: "1px solid" + theme.palette.background.default,
-      paddingLeft: '10px',
-      paddingRight: '10px',
-      alignItems: 'center',
-      textDecoration: 'none',
-      color: isActive ? theme.palette.primary.dark : theme.palette.text.dark,
-      // backgroundColor: isActive ? theme.palette.secondary.main : theme.palette.background.main,
-    };
-  };
+//   const respNavLinkStyles = ({ isActive }) => {
+//     return {
+//       textDecoration: 'none',
+//       color: isActive ? theme.palette.primary.main : theme.palette.text.main,
+//     };
+//   };
 
-  const iconNavLinkStyles = ({ isActive }) => {
-    return {
-      height: '37px',
-      //   border: "1px solid" + theme.palette.background.default,
-      paddingLeft: '10px',
-      paddingRight: '10px',
-      alignItems: 'center',
-      textDecoration: 'none',
-    //   color: isActive ? theme.palette.primary.main : theme.palette.text.default,
-      // backgroundColor: isActive
-      //   ? theme.palette.secondary.main
-      //   : theme.palette.background.main,
-    };
-  };
+//   const { window } = props;
+//   const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  const respNavLinkStyles = ({ isActive }) => {
-    return {
-      textDecoration: 'none',
-      color: isActive ? theme.palette.primary.main : theme.palette.text.main,
-    };
-  };
+//   const handleDrawerToggle = () => {
+//     setMobileOpen(!mobileOpen);
+//   };
 
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+//   const drawer = (
+//     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'start' }}>
+//       <Box
+//         sx={{
+//           mt: 1,
+//           display: 'flex',
+//           flexDirection: 'row',
+//           alignItems: 'center',
+//         }}
+//       >
+//         <img src={logo} alt="logo" height={40} style={{ marginLeft: '5px' }} />
+//         <Typography sx={{ pl: 1, fontWeight: 600, fontSize: '16px' }}>
+//           <span style={{ color: '#177C34' }}>G</span>lobal <span style={{ color: '#177C34' }}>E</span>ducation{' '}
+//           <span style={{ color: '#177C34' }}>T</span>rust
+//         </Typography>
+//       </Box>
+//       <Divider />
+//       <List>
+//         {navItems.map((item, index) => (
+//           <div key={index}>
+//             <NavLink to={`/${item.path}`} style={respNavLinkStyles}>
+//               <ListItem key={index}>
+//                 <ListItemText>
+//                   <Typography variant="h6"
+//                    >
+//                     {item.name}
+//                   </Typography>
+//                 </ListItemText>
+//               </ListItem>
+//             </NavLink>
+//             <Divider
+//              sx={{ width: '100%', backgroundColor: theme.palette.text.dark }}
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+//              />
+//           </div>
+//         ))}
+//         <NavLink to={"/login"}>
+//         <button
+//           className="login-home-button"
+//           style={{ width: '80px', height: '40px', marginLeft: '10px'}}
+//         >
+//           Login
+//         </button>
+//         </NavLink>
+//         <NavLink to={"/donate-now"}>
+//         <button
+//           className="login-home-button"
+//           style={{ width: '120px', height: '40px', marginLeft: '10px' }}
+//         >
+//           Donate Now
+//         </button>
+//         </NavLink>
+//       </List>
+//     </Box>
+//   );
 
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'start' }}>
-      <Box
-        sx={{
-          mt: 1,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
-      >
-        <img src={logo} alt="logo" height={40} style={{ marginLeft: '5px' }} />
-        <Typography sx={{ pl: 1, fontWeight: 600, fontSize: '16px' }}>
-          <span style={{ color: '#177C34' }}>G</span>lobal <span style={{ color: '#177C34' }}>E</span>ducation{' '}
-          <span style={{ color: '#177C34' }}>T</span>rust
-        </Typography>
-      </Box>
-      <Divider />
-      <List>
-        {navItems.map((item, index) => (
-          <div key={index}>
-            <NavLink to={`/${item.path}`} style={respNavLinkStyles}>
-              <ListItem key={index}>
-                <ListItemText>
-                  <Typography variant="h6"
-                //    sx={{ fontWeight: theme.typography.fontWeightMedium }}
-                   >
-                    {item.name}
-                  </Typography>
-                </ListItemText>
-              </ListItem>
-            </NavLink>
-            <Divider
-             sx={{ width: '100%', backgroundColor: theme.palette.text.dark }} 
+//   const container = window !== undefined ? () => window().document.body : undefined;
 
-             />
-          </div>
-        ))}
-        <NavLink to={"/login"}>
-        <button
-          className="login-home-button"
-          style={{ width: '80px', height: '40px', marginLeft: '10px'}}
-        //   onClick={toggleModal}
-        >
-          Login
-        </button>
-        </NavLink>
-        <NavLink to={"/donate-now"}>
-        <button
-          className="login-home-button"
-          style={{ width: '120px', height: '40px', marginLeft: '10px' }}
-          // onClick={toggleModal}
-        >
-          Donate Now
-        </button>
-        </NavLink>
-      </List>
-    </Box>
-  );
+//   return (
+//     <>
+//       <Box sx={{ display: 'flex' }}>
+//         <AppBar position="relative" elevation={0}>
+//           <Toolbar
+//             sx={{
+//               maxWidth: { xs: '100%' },
+//               width: '100%',
+//               m: 'auto',
+//               display: 'flex',
+//               flexDirection: 'row',
+//               justifyContent: 'space-between',
+//               backgroundColor: theme.palette.primary.main,
+//               height:'120px'
+//             }}
+//             disableGutters
+//           >
+//             <div className="logo">
+//               <Logo />
+//             </div>
+//             <Box
+//               sx={{
+//                 mt: 2,
+//                 display: { xs: 'flex', md: 'none' },
+//                 flexDirection: 'row',
+//                 aligntItems: 'center',
+//                 width: '100%',
+//                 justifyContent: 'flex-end',
+//               }}
+//             >
+//               <IconButton
+//                 color="inherit"
+//                 aria-label="open drawer"
+//                 edge="start"
+//                 onClick={handleDrawerToggle}
+//                 sx={{ display: { md: 'none' }, ml: { xs: 1, md: 0 } ,mb:5}}
+//               >
+//                 <MenuIcon color="secondary"
+//                 sx={{ backgroundColor: theme.palette.primary.main }}
 
-  const container = window !== undefined ? () => window().document.body : undefined;
+//                 />
+//               </IconButton>
+//             </Box>
+//             <Box
+//               sx={{
+//                 mt: 2,
+//                 display: {
+//                   xs: 'none',
+//                   md: 'flex',
+//                 },
+//                 flexDirection: 'row',
+//                 alignItems: 'center',
+//                 width: '100%',
+//                 backgroundColor: theme.palette.primary.main,
+//                 height: '35px',
+//                 justifyContent: 'center',
+//               }}
+//             >
+//               <Box
+//                 sx={{
+//                   display: { xs: 'none', md: 'flex' },
+//                   width: '100%',
+//                   maxWidth: '100%',
+//                   alignItems: 'center',
+//                   justifyContent: 'center',
+//                 }}
+//               >
+//                 {navItems.map((item, index) => (
+//                   <NavLink key={index} to={`/${item.path}`} style={navLinkStyles}>
+//                     <Typography  sx={{ lineHeight: '37px', fontWeight: 400,fontSize:'18px',fontFamily:'Poppins' }}>
+//                       {item.name}
+//                     </Typography>
+//                   </NavLink>
+//                 ))}
 
+//                 <div className="login-home">
+//                   <ul>
+//                     <li>
+//                     <NavLink to={"/login"}>
+//                       <button className="login-home-button"
+//                         style={{ width: '75px', height: '40px',alignItems:'center',justifyContent:'center'}}
+//                        >
+//                         Login
+//                       </button>
+//                       </NavLink>
+//                     </li>
+//                     <li>
+//                     <NavLink to={"/donate-now"}>
+//                       <button className="login-home-button"
+//                         style={{ width: '120px', height: '40px',alignItems:'center',justifyContent:'center',marginLeft:'20px'}}
+//                        >
+//                         Donate Now
+//                       </button>
+//                       </NavLink>
+//                     </li>
+//                   </ul>
+//                 </div>
+
+//               </Box>
+//             </Box>
+//           </Toolbar>
+//         </AppBar>
+//         <Box component="nav">
+//           <Drawer
+//             container={container}
+//             variant="temporary"
+//             open={mobileOpen}
+//             onClose={handleDrawerToggle}
+//             ModalProps={{
+//               keepMounted: true, // Better open performance on mobile.
+//             }}
+//             sx={{
+//               display: { xs: 'block', md: 'none' },
+//               '& .MuiDrawer-paper': {
+//                 boxSizing: 'border-box',
+//                 width: drawerWidth,
+//                 // left: '240px',
+//               },
+//             }}
+//           >
+//             {drawer}
+//           </Drawer>
+//         </Box>
+//         <Box component="main" sx={{}} />
+//       </Box>
+//     </>
+//   );
+// }
+
+// export default DrawerAppBar;
+
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
+import logo from "../../../src/assets/images/logo.png";
+import "./Navbar1.css";
+
+const Navbar = () => {
+  const [menu, setMenu] = useState(false);
   return (
     <>
-      <Box sx={{ display: 'flex' }}>
-        <AppBar position="relative" elevation={0}>
-          <Toolbar
-            sx={{
-              maxWidth: { xs: '100%' },
-              width: '100%',
-              m: 'auto',
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              backgroundColor: theme.palette.primary.main,
-              height:'120px'
-            }}
-            disableGutters
-          >
-            <div className="logo">
-              <Logo />
+      <header id="header" className="headroom">
+        <div className="startp-responsive-nav">
+          <div className="container">
+            <div className="startp-responsive-menu">
+              <div className="logo black-logo">
+                <a href="/">
+                  <img src={logo} alt="logo" width="95px" height="75px" />
+                </a>
+              </div>
             </div>
-            <Box
-              sx={{
-                mt: 2,
-                display: { xs: 'flex', md: 'none' },
-                flexDirection: 'row',
-                aligntItems: 'center',
-                width: '100%',
-                justifyContent: 'flex-end',
-              }}
-            >
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ display: { md: 'none' }, ml: { xs: 1, md: 0 } ,mb:5}}
-              >
-                <MenuIcon color="secondary" 
-                sx={{ backgroundColor: theme.palette.primary.main }} 
+          </div>
+        </div>
 
-                />
-              </IconButton>
-            </Box>
-            <Box
-              sx={{
-                mt: 2,
-                display: {
-                  xs: 'none',
-                  md: 'flex',
-                },
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: '100%',
-                backgroundColor: theme.palette.primary.main,
-                height: '35px',
-                justifyContent: 'center',
-              }}
-            >
-              <Box
-                sx={{
-                  display: { xs: 'none', md: 'flex' },
-                  width: '100%',
-                  maxWidth: '1200px',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+        <div className="startp-nav">
+          <div className="container">
+            <nav className="navbar navbar-expand-md navbar-light">
+              <a className="navbar-brand black-logo" href="/">
+                <img src={logo} alt="logo" width={100} height={50} />
+              </a>
+
+              <div
+                className="collapse navbar-collapse mean-menu"
+                id="navbarSupportedContent"
               >
-                {navItems.map((item, index) => (
-                  <NavLink key={index} to={`/${item.path}`} style={navLinkStyles}>
-                    <Typography  sx={{ lineHeight: '37px', fontWeight: 400,fontSize:'18px',fontFamily:'Poppins' }}>
-                      {item.name}
-                    </Typography>
-                  </NavLink>
-                ))}
-               
-                <div className="login-home">
-                  <ul>
-                    <li>
-                    <NavLink to={"/login"}>
-                      <button className="login-home-button"
-                        style={{ width: '75px', height: '40px',alignItems:'center',justifyContent:'center'}}
-                       >
-                        Login
-                      </button>
+                <ul className="navbar-nav nav ml-auto">
+                  <li className="nav-item">
+                    <NavLink exact to="/" className="nav-link">
+                      Home
+                    </NavLink>
+                  </li>
+
+                  <li className="nav-item">
+                    <NavLink to="/about" className="nav-link ">
+                      About
+                    </NavLink>
+                  </li>
+
+                  <li className="nav-item">
+                    <NavLink to="/team" className="nav-link">
+                      Team
+                    </NavLink>
+                  </li>
+
+                  <li className="nav-item">
+                    <NavLink to="/contact" className="nav-link">
+                      Contact Us
+                    </NavLink>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="others-option">
+                <NavLink
+                  to={"/login"}
+                  className="login-home-button"
+                  style={{
+                    width: "75px",
+                    height: "40px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    textDecoration: "none",
+                  }}
+                >
+                  Login
+                </NavLink>
+              </div>
+
+              <div className="others-option">
+                <NavLink
+                  to={"/donate-now"}
+                  className="login-home-button"
+                  style={{
+                    width: "130px",
+                    height: "40px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginLeft: "10px",
+                    textDecoration: "none",
+                  }}
+                >
+                  Donate / Fee
+                </NavLink>
+              </div>
+            </nav>
+          </div>
+        </div>
+
+        <div className="others-option-for-responsive">
+          <div
+            className="container"
+           
+          >
+            <div className="dot-menu">
+              <div className="inner" onClick={() => setMenu(!menu)} >
+                <MenuIcon />
+              </div>
+            </div>
+
+            {menu && (
+              <>
+                <div
+                  className="navbar-collapse mean-menu"
+                  id="navbarSupportedContent"
+                  // style={{ background: "#fff" }}
+                >
+                  <ul className="navbar-nav nav ml-auto">
+                    <li className="nav-item">
+                      <NavLink exact to="/" className="nav-link">
+                        Home
                       </NavLink>
                     </li>
-                    <li>
-                    <NavLink to={"/donate-now"}>
-                      <button className="login-home-button"
-                        style={{ width: '120px', height: '40px',alignItems:'center',justifyContent:'center',marginLeft:'20px'}}
-                        // onClick={toggleModal}
-                       >
-                        Donate Now
-                      </button>
+
+                    <li className="nav-item">
+                      <NavLink to="/about" className="nav-link ">
+                        About{" "}
+                      </NavLink>
+                    </li>
+
+                    <li className="nav-item">
+                      <NavLink to="/team" className="nav-link">
+                        Team
+                      </NavLink>
+                    </li>
+
+                    <li className="nav-item">
+                      <NavLink to="/contact" className="nav-link">
+                        Contact Us
                       </NavLink>
                     </li>
                   </ul>
                 </div>
-               
-              </Box>
-            </Box>
-          </Toolbar>
-        </AppBar>
-        <Box component="nav">
-          <Drawer
-            container={container}
-            variant="temporary"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-            sx={{
-              display: { xs: 'block', md: 'none' },
-              '& .MuiDrawer-paper': {
-                boxSizing: 'border-box',
-                width: drawerWidth,
-                left: '240px',
-              },
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Box>
-        <Box component="main" sx={{}} />
-      </Box>
-      {/* {showModal && <Modal toggle={toggleModal} />} */}
-      {/* {showModal && <DonateForm 
-      //  toggle={toggleModal} 
+                <div className="others-option" 
+                // style={{ background: "#fff" }}
+                >
+                  <NavLink
+                    to={"/login"}
+                    className="login-home-button"
+                    style={{
+                      width: "130px",
+                      height: "40px",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    Login
+                  </NavLink>
+                </div>
 
-       />} */}
+                <div className="others-option" 
+                style={{  paddingBottom:"20px",
+                      backgroundColor:"#fff"}}
+                >
+                  <NavLink
+                    to={"/donate-now"}
+                    className="login-home-button"
+                    style={{
+                      width: "130px",
+                      height: "40px",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    
+                    }}
+                  >
+                    Donate / Fee
+                  </NavLink>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </header>
     </>
   );
-}
+};
 
-// DrawerAppBar.propTypes = {
-//   /**
-//    * Injected by the documentation to work in an iframe.
-//    * You won't need it on your project.
-//    */
-//   window: PropTypes.func,
-// };
-
-export default DrawerAppBar;
+export default Navbar;

@@ -322,17 +322,17 @@ const Account = () => {
 
           {data ? (
             <div
-              class="content-wrapper transition-all duration-150 xl:ltr:ml-[248px]"
+              className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px] layout-container"
               id="content_wrapper"
-              style={{ backgroundColor: "#F1F5F9" }}
+              // style={{ backgroundColor: "#F1F5F9" }}
             >
-              <div class="page-content">
+              <div className="page-content">
                 <div id="content_layout">
-                  <div class="card xl:col-span-2">
-                    <div class="card-body flex flex-col p-6">
-                      <header class="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
-                        <div class="flex-1 flex justify-between">
-                          <div class="card-title text-slate-900 dark:text-white">
+                  <div className="card xl:col-span-2">
+                    <div className="card-body flex flex-col p-6">
+                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                        <div className="flex-1 flex justify-between">
+                          <div className="card-title text-slate-900 dark:text-white">
                             {" "}
                             College/ School/ Institute Account Details
                           </div>
@@ -469,11 +469,11 @@ const Account = () => {
                           </div>
                         </>
                       )}
-                      <div class="card-text h-full">
-                        <div class="grid md:grid-cols-2 gap-6">
+                      <div className="card-text h-full layout-container">
+                        <div className="grid md:grid-cols-2 gap-6">
                           {accountName && (
-                            <div class="input-area">
-                              <label htmlFor="name" class="form-label">
+                            <div className="input-area">
+                              <label htmlFor="name" className="form-label">
                                 Name on Account
                               </label>
                               <div className="relative form-control">
@@ -483,10 +483,10 @@ const Account = () => {
                           )}
 
                           {accountNumber && (
-                            <div class="input-area">
+                            <div className="input-area">
                               <label
                                 htmlFor="account_number"
-                                class="form-label"
+                                className="form-label"
                               >
                                 Account Number
                               </label>
@@ -497,8 +497,8 @@ const Account = () => {
                           )}
 
                           {branch && (
-                            <div class="input-area">
-                              <label htmlFor="branch" class="form-label">
+                            <div className="input-area">
+                              <label htmlFor="branch" className="form-label">
                                 Branch
                               </label>
                               <div className="relative form-control">
@@ -508,8 +508,8 @@ const Account = () => {
                           )}
 
                           {IFSCCode && (
-                            <div class="input-area">
-                              <label htmlFor="ifsc_code" class="form-label">
+                            <div className="input-area">
+                              <label htmlFor="ifsc_code" className="form-label">
                                 IFSC Code
                               </label>
                               <div className="relative form-control">
@@ -546,10 +546,10 @@ const Account = () => {
                             }}
                           />
                         </div> */}
-                        <div class="grid md:grid-cols-2 gap-6">
+                        <div className="grid md:grid-cols-2 gap-6">
                           {UPIId && (
-                            <div class="input-area">
-                              <label htmlFor="upi" class="form-label">
+                            <div className="input-area">
+                              <label htmlFor="upi" className="form-label">
                                 UPI Id
                               </label>
                               <div className="relative form-control">
@@ -577,36 +577,36 @@ const Account = () => {
             </div>
           ) : (
             <div
-              class="content-wrapper transition-all duration-150 xl:ltr:ml-[248px]"
+              className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px] layout-container"
               id="content_wrapper"
-              style={{ backgroundColor: "#F1F5F9" }}
+              // style={{ backgroundColor: "#F1F5F9" }}
             >
-              <div class="page-content">
+              <div className="page-content">
                 <div id="content_layout">
-                  <div class="card xl:col-span-2">
-                    <div class="card-body flex flex-col p-6">
-                      <header class="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
-                        <div class="flex-1">
-                          <div class="card-title text-slate-900 dark:text-white" style={{fontSize:'18px'}}>
+                  <div className="card xl:col-span-2">
+                    <div className="card-body flex flex-col p-6">
+                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                        <div className="flex-1">
+                          <div className="card-title text-slate-900 dark:text-white" style={{fontSize:'18px'}}>
                             {" "}
                             College/ School/ Institute Account Details
                           </div>
                         </div>
                       </header>
-                      <div class="card-text h-full">
-                        <form class="space-y-4" id="multipleValidation">
-                          <div class="grid md:grid-cols-2 gap-6">
-                            <div class="input-area">
-                              <label htmlFor="name" class="form-label">
+                      <div className="card-text h-full">
+                        <form className="space-y-4" id="multipleValidation">
+                          <div className="grid md:grid-cols-2 gap-6">
+                            <div className="input-area">
+                              <label htmlFor="name" className="form-label">
                                 Name on Account
                               </label>
-                              <div class="relative">
+                              <div className="relative">
                                 <input
                                   style={{fontSize:'12px'}}
                                   id="name"
                                   type="text"
                                   name="name"
-                                  class="form-control"
+                                  className="form-control"
                                   placeholder="Enter your Name"
                                   required="required"
                                   value={accountName}
@@ -616,20 +616,20 @@ const Account = () => {
                                 />
                               </div>
                             </div>
-                            <div class="input-area">
+                            <div className="input-area">
                               <label
                                 htmlFor="account_number"
-                                class="form-label"
+                                className="form-label"
                               >
                                 Account Number
                               </label>
-                              <div class="relative">
+                              <div className="relative">
                                 <input
                                   style={{fontSize:'12px'}}
                                   id="account_number"
                                   type="number"
                                   name="account_number"
-                                  class="form-control"
+                                  className="form-control"
                                   placeholder="Enter Your Account Number"
                                   required="required"
                                   value={accountNumber}
@@ -667,17 +667,17 @@ const Account = () => {
                                 </div>
                               )}
                             </div>
-                            <div class="input-area">
-                              <label htmlFor="branch" class="form-label">
+                            <div className="input-area">
+                              <label htmlFor="branch" className="form-label">
                                 Branch
                               </label>
-                              <div class="relative">
+                              <div className="relative">
                                 <input
                                   style={{fontSize:'12px'}}
                                   id="branch"
                                   type="text"
                                   name="branch"
-                                  class="form-control"
+                                  className="form-control"
                                   placeholder="Branch"
                                   required="required"
                                   value={branch}
@@ -685,17 +685,17 @@ const Account = () => {
                                 />
                               </div>
                             </div>
-                            <div class="input-area">
-                              <label htmlFor="ifsc_code" class="form-label">
+                            <div className="input-area">
+                              <label htmlFor="ifsc_code" className="form-label">
                                 IFSC Code
                               </label>
-                              <div class="relative">
+                              <div className="relative">
                                 <input
                                   style={{fontSize:'12px'}}
                                   id="ifsc_code"
                                   type="text"
                                   name="ifsc_code"
-                                  class="form-control"
+                                  className="form-control"
                                   placeholder="IFSCCode"
                                   required="required"
                                   value={IFSCCode}
@@ -732,18 +732,18 @@ const Account = () => {
                               }}
                             />
                           </div>
-                          <div class="grid md:grid-cols-2 gap-6">
-                            <div class="input-area">
-                              <label htmlFor="upi" class="form-label">
+                          <div className="grid md:grid-cols-2 gap-6">
+                            <div className="input-area">
+                              <label htmlFor="upi" className="form-label">
                                 UPI Id
                               </label>
-                              <div class="relative">
+                              <div className="relative">
                                 <input
                                   style={{fontSize:'12px'}}
                                   id="upi"
                                   type="text"
                                   name="upi"
-                                  class="form-control"
+                                  className="form-control"
                                   placeholder="Enter UPI Id"
                                   required="required"
                                   value={UPIId}

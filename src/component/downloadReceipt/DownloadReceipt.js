@@ -108,10 +108,10 @@ const DownloadReceipt = (props) => {
         <div className="lg:w-1/2 w-full flex flex-col items-center justify-center">
           <div
             className="auth-box-3"
-            style={{ paddingTop: "2.5rem", paddingBottom: "2.5rem" }}
+            style={{ paddingTop: "1rem", paddingBottom: "1rem" }}
           >
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <div className="text-center 2xl:mb-10 mb-5" style={{ flex: 1 }}>
+              <div className="text-center 2xl:mb-10" style={{ flex: 1 }}>
                 <h4
                   className="font-medium"
                   style={{ fontSize: "16px", fontWeight: 600 }}

@@ -48,11 +48,13 @@ const DonateForm = () => {
   const transactionId = new Date().getTime();
 
   const data = {
-    mid: "971288",
+    // mid: "971288",
+    mid:108,
     amount: amount,
     merchantTransactionId: transactionId,
     transactionDate: transactionDate,
-    terminalId: "Getepay.merchant131530@icici",
+    // terminalId: "Getepay.merchant131530@icici", //old
+    terminalId:"Getepay.merchant61062@icici",
     udf1: name,
     udf2: companyName,
     udf3: mobileNumber,
@@ -64,8 +66,8 @@ const DonateForm = () => {
     udf9: "",
     udf10: "",
 
-    ru: "https://global-education-t.onrender.com/api/public/returnUrl",
-    // ru: "http://localhost:5000/api/public/returnUrl",
+    // ru: "https://global-education-t.onrender.com/api/public/returnUrl",
+    ru: "http://localhost:5000/api/public/returnUrl",
     callbackUrl:
       "https://global-education-t.onrender.com/api/public/callbackUrl",
     currency: "INR",
@@ -74,7 +76,8 @@ const DonateForm = () => {
     txnType: "single",
     productType: "IPG",
     txnNote: "Test Txn",
-    vpa: "Getepay.merchant131530@icici",
+    // vpa: "Getepay.merchant131530@icici",
+    vpa:"Getepay.merchant61062@icici"
   };
 
   const validateFields = () => {
@@ -145,6 +148,9 @@ const DonateForm = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    // if(e){
+    //   e.preventDefault();
+    // }
 
     if (validateFields()) {
       getepayPortal(data, Config);
@@ -153,20 +159,22 @@ const DonateForm = () => {
 
   return (
     <>
-      {/* <div className="overlay"> */}
+      
       <Navbar />
-      <div style={{ background: "#e3f9ff" }}>
-        <div style={{ display: "flex" }}>
+      
+      <div style={{ background: "#e3f9ff" }} className="headroom" id="donate">
+        <div style={{ display: "flex"}}>
           <div
             className="lg:w-1/2 w-full flex flex-col items-center justify-center"
-            style={{ paddingTop: "30px", paddingBottom: "30px" }}
+            style={{ paddingTop: "30px", paddingBottom: "30px"}}
           >
             <div
               className="auth-box-3"
               style={{
-                paddingTop: "2.5rem",
-                paddingBottom: "2.5rem",
-                //   marginTop:'25px',marginBottom:'25px'
+                paddingTop: "2rem",
+                paddingBottom: "2rem",
+                  marginTop:'120px',
+                // marginBottom:'25px'
               }}
             >
               <div
@@ -408,9 +416,9 @@ const DonateForm = () => {
                 )}
 
                 <button
-                  className="btn btn-dark block w-full text-center"
+                  className="btn-dark block w-full text-center"
+                  style={{height:'40px',fontSize:'16px',borderRadius:'3px'}}
                   type="submit"
-                  // onClick={() => getepayPortal(data, Config)}
                   onClick={handleFormSubmit}
                 >
                   Donate Now
@@ -423,8 +431,9 @@ const DonateForm = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              width:'100%'
             }}
-            className="w-full"
+            
           >
             <button
               className="block text-center"
@@ -445,7 +454,7 @@ const DonateForm = () => {
       </div>
       <Footer />
       {showModal && <DownloadReceipt  toggle={toggleModal}  />}
-      {/* </div> */}
+    
     </>
   );
 };
