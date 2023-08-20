@@ -1,62 +1,63 @@
 import React, { useState, useEffect } from "react";
-import SearchIcon from "@mui/icons-material/Search";
-import { Link } from "react-router-dom";
-import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import LogoutIcon from "@mui/icons-material/Logout";
+import { Search,Menu} from "react-feather";
 import { FaStar, FaBookmark, FaFileAlt, FaUserFriends } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import Sidebar from "../sidebar/Sidebar";
 import user from "../../assets/user.png";
-import {
-  useGetProfileQuery,
-  useGetNotificationQuery,
-} from "../../services/signUpApi";
+import logo from "../../assets/images/logo.png";
 import course1 from "../../assets/images/course/classic-lms-01.jpg";
 import course2 from "../../assets/images/course/classic-lms-02.jpg";
 import course3 from "../../assets/images/course/classic-lms-03.jpg";
 import StudentNotification from "../studentNotification/StudentNotification";
 
 const CourseOffered = () => {
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
+ 
+
+  const toggleSidebar = () => {
+    setSidebarVisible(!isSidebarVisible);
+  };
   return (
     <>
-      <Sidebar />
+        <div className="sidebar-wrapper group w-0  xl:w-[248px] xl:block hidden md:hidden sm:hidden"><Sidebar /></div>
       <div
         className="flex flex-col justify-between min-h-screen"
-        style={{ marginLeft: "248px" }}
+        // style={{ marginLeft: "248px" }}
       >
         <div>
           {/* <!-- BEGIN: Header --> */}
           {/* <!-- BEGIN: Header --> */}
           <div className="z-[9]" id="app_header">
-            <div className="app-header z-[999] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700">
+            <div className="app-header z-[999] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700  ml-0 ml-248px">
               <div className="flex justify-between items-center h-full">
-                <div className="flex items-center md:space-x-4 space-x-4 rtl:space-x-reverse vertical-box">
-                  <a
-                    href="index.html"
+              <div className="flex items-center md:space-x-4 space-x-4 rtl:space-x-reverse vertical-box">
+                <a
+                    href="#"
                     className="mobile-logo xl:hidden inline-block"
                   >
-                    {/* <img
-                      src="assets/images/logo/logo-c.svg"
-                      className="black_logo"
-                      alt="logo"
-                    />
                     <img
-                      src="assets/images/logo/logo-c-white.svg"
+                      src={logo}
                       className="white_logo"
                       alt="logo"
-                    /> */}
+                      width={50}
+                      height={30}
+                    />
                   </a>
                   <button className="smallDeviceMenuController open-sdiebar-controller hidden xl:hidden md:inline-block">
-                    {/* <iconify-icon
-                      className="leading-none bg-transparent relative text-xl top-[2px] text-slate-900 dark:text-white"
-                      icon="heroicons-outline:menu-alt-3"
-                    ></iconify-icon> */}
-                    {/* <MenuIcon /> */}
+                    <Menu onClick={toggleSidebar} />
+                    {isSidebarVisible && (
+                   
+                        <Sidebar toggle={toggleSidebar} />
+                   
+                    )}
                   </button>
-                  <button className="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0 hidden rtl:rotate-180">
-                    <iconify-icon icon="ph:arrow-right-bold"></iconify-icon>
+                  <button className="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0 rtl:rotate-180 md:hidden">
+                    <Menu onClick={toggleSidebar} />
+                    {isSidebarVisible && (
+                    
+                        <Sidebar toggle={toggleSidebar} />
+                    
+                    )}
                   </button>
                   <button
                     className="flex items-center xl:text-sm text-lg xl:text-slate-400 text-slate-800 dark:text-slate-300 focus:outline-none focus:shadow-none px-1 space-x-3
@@ -64,7 +65,7 @@ const CourseOffered = () => {
                     data-bs-toggle="modal"
                     data-bs-target="#searchModal"
                   >
-                    <SearchIcon />
+                    <Search  />
                     <span className="xl:inline-block hidden">Search...</span>
                   </button>
                 </div>
@@ -108,7 +109,7 @@ const CourseOffered = () => {
                     data-bs-toggle="modal"
                     data-bs-target="#searchModal"
                   >
-                    <SearchIcon />
+                    <Search  />
                     <span className="xl:inline-block hidden">Search...</span>
                   </button>
                 </div>
@@ -135,7 +136,7 @@ const CourseOffered = () => {
                 <form>
                   <div className="relative">
                     <button className="absolute left-0 top-1/2 -translate-y-1/2 w-9 h-full text-xl dark:text-slate-300 flex items-center justify-center">
-                      <SearchIcon />
+                      <Search />
                     </button>
                     <input
                       type="text"
@@ -153,7 +154,7 @@ const CourseOffered = () => {
           {/* <!-- END: Header --> */}
 
           <div
-            class="content-wrapper transition-all duration-150 xl:ltr:ml-[248px]"
+            class="content-wrapper transition-all duration-150 xl:ltr:ml-[248px]  ml-0 ml-248px"
             id="content_wrapper"
             style={{ backgroundColor: "#F1F5F9" }}
           >

@@ -101,6 +101,7 @@
     z-index: 1; */
     align-items: flex-start; 
     z-index: 9999; 
+    height:auto;
   
   }
   
@@ -115,10 +116,10 @@
 
   @media (max-width: 768px) {
     /* Styles for screens wider than 768px */
-    div[style*="display: flex"] {
+    /* div[style*="display: flex"] { // this will comment for course offered card
       flex-direction: column;
-      /* width:100%; */
-    }
+      width:100%;
+    } */
   
     /* div[style*="display: flex"] > div:first-child {
       flex: 1;

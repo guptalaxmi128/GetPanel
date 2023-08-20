@@ -1,19 +1,30 @@
-import React, { useState, useEffect } from "react";
-import SearchIcon from "@mui/icons-material/Search";
-import LogoutIcon from "@mui/icons-material/Logout";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { Menu, Search, Plus } from "react-feather";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "../sidebar/Sidebar";
-import user from "../../assets/images/user/user-1.jpg";
 import close from "../../assets/close.png";
+import logo from "../../assets/images/logo.png";
 import edit from "../../assets/edit.png";
+import { Dialog, DialogContent } from "@mui/material";
+import { Document, Page, pdfjs } from "react-pdf";
 import {
+  useAddFeesReceiptMutation,
+  useAddGapDocumentMutation,
   useAddRaiseFundCourseMutation,
+  useAddverifyOTPForUpdateRaiseFundMutation,
+  useDeleteRaiseFundDocumentMutation,
   useGetGapYearQuery,
+  useGetOTPForUpdateRaiseFundQuery,
   useGetProfileQuery,
 } from "../../services/signUpApi";
+import StudentNotification from "../studentNotification/StudentNotification";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const RaiseFund = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [boardOrUniversityName, setBoardOrUniversityName] = useState("");
@@ -30,6 +41,9 @@ const RaiseFund = () => {
   const [gapDocument, setGapDocument] = useState([]);
   const [currentCourseId, setCurrentCourseId] = useState("");
   const [fullName, setFullName] = useState("");
+  const [verifyOtp, setVerifyOtp] = useState("");
+  const [id, setId] = useState("");
+  const closeIconRef = useRef(null);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [gapJustificationError, setGapJustificationError] = useState("");
@@ -42,21 +56,36 @@ const RaiseFund = () => {
   );
   const [showAlert, setShowAlert] = useState(false);
   const [showAlertModal, setShowAlertModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [selectedImage, setSelectedImage] = useState("");
+  const [openPdf, setOpenPdf] = useState("");
+  const [openFileType, setOpenFileType] = useState("");
+
+  // const localHost = "http://localhost:5000";
+   const localHost="https://global-education-t.onrender.com"
+
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarVisible(!isSidebarVisible);
+  };
 
   const { data, isSuccess } = useGetGapYearQuery();
   console.log("Raise Fund", data);
 
   useEffect(() => {
-    if (data && isSuccess) {
+    if (data && isSuccess && data.data) {
       setFullName(data.data.studentName);
       setCourseName(data.data.courseName);
       setCurrentCourse(data.data.currentCourse); //modified currentCourse
       setBoardOrUniversityName(data.data.boardOrUniversityName);
       setSchoolOrCollageName(data.data.schoolOrCollageName);
       setGapInEducation(data.data.gapInEducation);
-      // setDocument(data.data.document);
+      // setDocument(data.data.document.document_FileName);
       setDurationType(data.data.durationType);
       setCurrentCourseId(data.data.currentCourseId);
+      setId(data.data.id);
     }
   }, [data, isSuccess]);
 
@@ -179,11 +208,15 @@ const RaiseFund = () => {
         });
       }
       const res = await addRaiseFundCourse(formData);
-      setShowAlert(true);
+      // setShowAlert(true);
       console.log(res);
       if (res.data.success) {
-        setShowAlert(!showAlert);
-        setShowAlertModal(true);
+        // setShowAlert(!showAlert);
+        // setShowAlertModal(true);
+        toast.success(` Your contribution is ₹ ${yourContribution}
+        and your requirement is ₹${requiredAmount}.
+        You cannot change it in future.`);
+        toast.success(res.data.message);
         clearTextInput();
       }
     } catch (error) {
@@ -203,31 +236,155 @@ const RaiseFund = () => {
     setGapDocument(null);
   };
 
-  //  console.log(document);
+  const { data: sendRequest, isSuccess: sendRequestIsSuccess } =
+    useGetOTPForUpdateRaiseFundQuery(id);
+
+  const handleRequest = () => {
+    if (sendRequestIsSuccess) {
+      if (sendRequest.success) {
+        // Successful request
+        toast.success(sendRequest.message);
+        setShowEditModal(false);
+      } else {
+        // Failed request
+        toast.error(sendRequest.message);
+      }
+    }
+  };
+
+  // console.log(message);
+  const [addverifyOTPForUpdateRaiseFund] =
+    useAddverifyOTPForUpdateRaiseFundMutation();
+
+  const handleEditVerifyOtp = async (e) => {
+    e.preventDefault();
+    const formData = {
+      otp: verifyOtp,
+      raiseFundId: id,
+    };
+    console.log(formData);
+
+    try {
+      const res = await addverifyOTPForUpdateRaiseFund(formData);
+      console.log(res);
+
+      if (res.data.success) {
+        toast.success(res.data.message);
+        setVerifyOtp("");
+         await new Promise(resolve => setTimeout(resolve, 1000));
+        navigate("/student/edit-raise-fund");
+      }
+    } catch (error) {
+      // Handle error
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        closeIconRef.current &&
+        !closeIconRef.current.contains(event.target)
+      ) {
+        setShowEditModal(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  const handleImageClick = (fileName) => {
+    const extension = fileName.split(".").pop();
+    setOpenPdf(null);
+    setSelectedImage(null);
+
+    if (extension === "pdf") {
+      setOpenPdf(fileName);
+      setOpenFileType("pdf");
+    } else {
+      setSelectedImage(fileName);
+      setOpenFileType("image");
+    }
+
+    setOpenPopup(true);
+  };
+
+  const [deleteRaiseFundDocument] = useDeleteRaiseFundDocumentMutation();
+
+  const deleteDocument = async (documentId) => {
+    try {
+      const res = await deleteRaiseFundDocument(documentId);
+      console.log(res);
+      if (res.data.success) {
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting document:", error);
+    }
+  };
+
+  const [addFeesReceipt] = useAddFeesReceiptMutation();
+
+  const handleUploadImage = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append("raiseFundId", id);
+    const files = event.target.files;
+    for (let i = 0; i < files.length; i++) {
+      formData.append("feeReceipt", files[i]);
+    }
+    const res = await addFeesReceipt(formData);
+    console.log(res);
+    if (res.data.success) {
+      toast.success(res.data.message);
+    }
+  };
+
+  const [addMoreGapDocument]=useAddGapDocumentMutation();
+
+  const handleGapImage = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append("raiseFundId", id);
+    const files = event.target.files;
+    for (let i = 0; i < files.length; i++) {
+      formData.append("feeReceipt", files[i]);
+    }
+    const res = await addMoreGapDocument(formData);
+    console.log(res);
+    if (res.data.success) {
+      toast.success(res.data.message);
+    }
+  };
+
   return (
     <>
-      <Sidebar />
-      <div
-        className="flex flex-col justify-between min-h-screen"
-        style={{ marginLeft: "248px" }}
-      >
+      <div className="sidebar-wrapper group w-0  xl:w-[248px] xl:block hidden md:hidden sm:hidden">
+        <Sidebar />
+      </div>
+      <div className="flex flex-col justify-between min-h-screen">
         <div>
           {/* <!-- BEGIN: Header --> */}
           {/* <!-- BEGIN: Header --> */}
           <div className="z-[9]" id="app_header">
-            <div className="app-header z-[999] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700">
+            <div className="app-header z-[999] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700 ml-0 ml-248px">
               <div className="flex justify-between items-center h-full">
                 <div className="flex items-center md:space-x-4 space-x-4 rtl:space-x-reverse vertical-box">
-                  <a
-                    href="index.html"
-                    className="mobile-logo xl:hidden inline-block"
-                  >
-                    {/* <img
-                      src="assets/images/logo/logo-c.svg"
-                      className="black_logo"
-                      alt="logo"
-                    />
+                  <a href="#" className="mobile-logo xl:hidden inline-block">
                     <img
+                      src={logo}
+                      className="white_logo"
+                      alt="logo"
+                      width={50}
+                      height={30}
+                    />
+                    {/* <img
                       src="assets/images/logo/logo-c-white.svg"
                       className="white_logo"
                       alt="logo"
@@ -238,10 +395,13 @@ const RaiseFund = () => {
                       className="leading-none bg-transparent relative text-xl top-[2px] text-slate-900 dark:text-white"
                       icon="heroicons-outline:menu-alt-3"
                     ></iconify-icon> */}
-                    {/* <MenuIcon /> */}
+                    <Menu onClick={toggleSidebar} />
+                    {isSidebarVisible && <Sidebar toggle={toggleSidebar} />}
                   </button>
-                  <button className="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0 hidden rtl:rotate-180">
-                    <iconify-icon icon="ph:arrow-right-bold"></iconify-icon>
+                  <button className="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0 rtl:rotate-180 md:hidden">
+                    {/* <iconify-icon icon="ph:arrow-right-bold"></iconify-icon> */}
+                    <Menu onClick={toggleSidebar} />
+                    {isSidebarVisible && <Sidebar toggle={toggleSidebar} />}
                   </button>
                   <button
                     className="flex items-center xl:text-sm text-lg xl:text-slate-400 text-slate-800 dark:text-slate-300 focus:outline-none focus:shadow-none px-1 space-x-3
@@ -249,7 +409,7 @@ const RaiseFund = () => {
                     data-bs-toggle="modal"
                     data-bs-target="#searchModal"
                   >
-                    <SearchIcon />
+                    <Search />
                     <span className="xl:inline-block hidden">Search...</span>
                   </button>
                 </div>
@@ -293,282 +453,14 @@ const RaiseFund = () => {
                     data-bs-toggle="modal"
                     data-bs-target="#searchModal"
                   >
-                    <SearchIcon />
+                    <Search />
                     <span className="xl:inline-block hidden">Search...</span>
                   </button>
                 </div>
                 {/* <!-- end horizental --> */}
 
-                <div className="main-menu">
-                  <ul>
-                    <li
-                      className="
-             menu-item-has-children 
-              "
-                    >
-                      {/* <!--  Single menu --> */}
-
-                      {/* <!-- has dropdown --> */}
-
-                      {/* <a href="javascript:void()">
-                        <div className="flex flex-1 items-center space-x-[6px] rtl:space-x-reverse">
-                          <span className="icon-box">
-                            <iconify-icon icon="heroicons-outline:home">
-                              {" "}
-                            </iconify-icon>
-                          </span>
-                          <div className="text-box">Dashboard</div>
-                        </div>
-                        <div className="flex-none text-sm ltr:ml-3 rtl:mr-3 leading-[1] relative top-1">
-                          <iconify-icon icon="heroicons-outline:chevron-down">
-                            {" "}
-                          </iconify-icon>
-                        </div>
-                      </a> */}
-                    </li>
-                  </ul>
-                </div>
                 {/* <!-- end top menu --> */}
-                <div className="nav-tools flex items-center lg:space-x-5 space-x-3 rtl:space-x-reverse leading-0">
-                  {/* <!-- BEGIN: Notification Dropdown --> */}
-                  {/* <!-- Notifications Dropdown area --> */}
-                  <div className="relative md:block hidden">
-                    <button
-                      className="lg:h-[32px] lg:w-[32px] lg:bg-slate-50 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer
-      rounded-full text-[20px] flex flex-col items-center justify-center"
-                      //   type="button"
-                      //   data-bs-toggle="dropdown"
-                      //   aria-expanded="false"
-                    >
-                      {/* <iconify-icon
-                        className="animate-tada text-slate-800 dark:text-white text-xl"
-                        icon="heroicons-outline:bell"
-                      ></iconify-icon> */}
-                      <NotificationsIcon />
-                      <span
-                        className="absolute -right-1 lg:top-0 -top-[6px] h-4 w-4 bg-red-500 text-[8px] font-semibold flex flex-col items-center
-        justify-center rounded-full text-white z-[99]"
-                      >
-                        4
-                      </span>
-                    </button>
-                    {/* <!-- Notifications Dropdown --> */}
-                    <div
-                      className="dropdown-menu z-10 hidden bg-white divide-y divide-slate-100 dark:divide-slate-900 shadow w-[335px]
-      dark:bg-slate-800 border dark:border-slate-900 !top-[23px] rounded-md overflow-hidden lrt:origin-top-right rtl:origin-top-left"
-                    >
-                      <div className="flex items-center justify-between py-4 px-4">
-                        <h3 className="text-sm font-Inter font-medium text-slate-700 dark:text-white">
-                          Notifications
-                        </h3>
-                        <a
-                          className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white"
-                          href="#"
-                        >
-                          See All
-                        </a>
-                      </div>
-                      <div
-                        className="divide-y divide-slate-100 dark:divide-slate-900"
-                        role="none"
-                      >
-                        <div className="bg-slate-100 dark:bg-slate-700 dark:bg-opacity-70 text-slate-800 block w-full px-4 py-2 text-sm relative">
-                          <div className="flex ltr:text-left rtl:text-right">
-                            <div className="flex-none ltr:mr-3 rtl:ml-3">
-                              <div className="h-8 w-8 bg-white rounded-full">
-                                <img
-                                  src={user}
-                                  alt="user"
-                                  className="border-white block w-full h-full object-cover rounded-full border"
-                                />
-                              </div>
-                            </div>
-                            <div className="flex-1">
-                              <a
-                                href="#"
-                                className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-1 before:w-full before:h-full before:absolute
-                before:top-0 before:left-0"
-                              >
-                                Your order is placed
-                              </a>
-                              <div className="text-slate-500 dark:text-slate-200 text-xs leading-4">
-                                Amet minim mollit non deser unt ullamco est sit
-                                aliqua.
-                              </div>
-                              <div className="text-slate-400 dark:text-slate-400 text-xs mt-1">
-                                3 min ago
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-slate-600 dark:text-slate-300 block w-full px-4 py-2 text-sm">
-                          <div className="flex ltr:text-left rtl:text-right relative">
-                            <div className="flex-none ltr:mr-3 rtl:ml-3">
-                              <div className="h-8 w-8 bg-white rounded-full">
-                                <img
-                                  src={user}
-                                  alt="user"
-                                  className="border-transparent block w-full h-full object-cover rounded-full border"
-                                />
-                              </div>
-                            </div>
-                            <div className="flex-1">
-                              <a
-                                href="#"
-                                className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-1 before:w-full before:h-full before:absolute
-                before:top-0 before:left-0"
-                              >
-                                Congratulations Darlene 🎉
-                              </a>
-                              <div className="text-slate-600 dark:text-slate-300 text-xs leading-4">
-                                Won the monthly best seller badge
-                              </div>
-                              3 min ago
-                            </div>
-                          </div>
-                          <div className="flex-0">
-                            <span className="h-[10px] w-[10px] bg-danger-500 border border-white dark:border-slate-400 rounded-full inline-block"></span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-slate-600 dark:text-slate-300 block w-full px-4 py-2 text-sm">
-                        <div className="flex ltr:text-left rtl:text-right relative">
-                          <div className="flex-none ltr:mr-3 rtl:ml-3">
-                            <div className="h-8 w-8 bg-white rounded-full">
-                              <img
-                                src={user}
-                                alt="user"
-                                className="border-transparent block w-full h-full object-cover rounded-full border"
-                              />
-                            </div>
-                          </div>
-                          <div className="flex-1">
-                            <a
-                              href="#"
-                              className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-1 before:w-full before:h-full before:absolute
-              before:top-0 before:left-0"
-                            >
-                              Revised Order 👋
-                            </a>
-                            <div className="text-slate-600 dark:text-slate-300 text-xs leading-4">
-                              Won the monthly best seller badge
-                            </div>
-                            <div className="text-slate-400 dark:text-slate-400 text-xs mt-1">
-                              3 min ago
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-slate-600 dark:text-slate-300 block w-full px-4 py-2 text-sm">
-                        <div className="flex ltr:text-left rtl:text-right relative">
-                          <div className="flex-none ltr:mr-3 rtl:ml-3">
-                            <div className="h-8 w-8 bg-white rounded-full">
-                              <img
-                                src={user}
-                                alt="user"
-                                className="border-transparent block w-full h-full object-cover rounded-full border"
-                              />
-                            </div>
-                          </div>
-                          <div className="flex-1">
-                            <a
-                              href="#"
-                              className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-1 before:w-full before:h-full before:absolute
-              before:top-0 before:left-0"
-                            >
-                              Brooklyn Simmons
-                            </a>
-                            <div className="text-slate-600 dark:text-slate-300 text-xs leading-4">
-                              Added you to Top Secret Project group...
-                            </div>
-                            <div className="text-slate-400 dark:text-slate-400 text-xs mt-1">
-                              3 min ago
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* <!-- END: Notification Dropdown --> */}
-
-                  {/* <!-- BEGIN: Profile Dropdown --> */}
-                  {/* <!-- Profile DropDown Area --> */}
-                  <div className="md:block hidden w-full">
-                    <button
-                      className="text-slate-800 dark:text-white focus:ring-0 focus:outline-none font-medium rounded-lg text-sm text-center
-      inline-flex items-center"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <div
-                        className="lg:h-8 lg:w-8 h-7 w-7 rounded-full flex-1 ltr:mr-[10px] rtl:ml-[10px]"
-                        style={{ marginRight: 10 }}
-                      >
-                        <img
-                          src={user}
-                          alt="user"
-                          className="block w-full h-full object-cover rounded-full"
-                        />
-                      </div>
-                      <span className="flex-none text-slate-600 dark:text-white text-sm font-normal items-center lg:flex hidden overflow-hidden text-ellipsis whitespace-nowrap">
-                        {name}
-                      </span>
-                      {/*   <svg
-                        className="w-[16px] h-[16px] dark:text-white hidden lg:inline-block text-base inline-block ml-[10px] rtl:mr-[10px]"
-                        aria-hidden="true"
-                        fill="none"
-                        stroke="currentColor"
-                        viewbox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                       <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 9l-7 7-7-7"
-                        ></path> 
-  
-                      </svg> */}
-
-                      <KeyboardArrowDownIcon onClick={toggleDropdown} />
-                    </button>
-                    {/* <!-- Dropdown menu --> */}
-                    {isDropdownOpen && (
-                      <div
-                        className="dropdown-menu z-10  bg-white divide-y divide-slate-100 shadow w-44 dark:bg-slate-800 border dark:border-slate-700 top-[23px] rounded-md
-      overflow-hidden absolute
-      "
-                      >
-                        <ul className="py-1 text-sm text-slate-800 dark:text-slate-200">
-                          <li>
-                            <a
-                              href="#"
-                              className="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-600 dark:hover:text-white font-inter text-sm text-slate-600
-            dark:text-white font-normal"
-                            >
-                              {/* <iconify-icon
-                              icon="heroicons-outline:login"
-                              className="relative top-[2px] text-lg ltr:mr-1 rtl:ml-1"
-                            ></iconify-icon> */}
-                              <LogoutIcon style={{ fontSize: "medium" }} />{" "}
-                              &nbsp;
-                              <span className="font-Inter">Logout</span>
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                  {/* <!-- END: Header --> */}
-                  <button className="smallDeviceMenuController md:hidden block leading-0">
-                    <iconify-icon
-                      className="cursor-pointer text-slate-900 dark:text-white text-2xl"
-                      icon="heroicons-outline:menu-alt-3"
-                    ></iconify-icon>
-                  </button>
-                  {/* <!-- end mobile menu --> */}
-                </div>
+                <StudentNotification />
                 {/* <!-- end nav tools --> */}
               </div>
             </div>
@@ -587,7 +479,7 @@ const RaiseFund = () => {
                 <form>
                   <div className="relative">
                     <button className="absolute left-0 top-1/2 -translate-y-1/2 w-9 h-full text-xl dark:text-slate-300 flex items-center justify-center">
-                      <SearchIcon />
+                      <Search />
                     </button>
                     <input
                       type="text"
@@ -603,146 +495,242 @@ const RaiseFund = () => {
           {/* <!-- END: Search Modal --> */}
           {/* <!-- END: Header --> */}
           {/* <!-- END: Header --> */}
-
-          <div
-            className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px]"
-            id="content_wrapper"
-            style={{ backgroundColor: "#F1F5F9" }}
-          >
-            <div className="page-content">
-              <div id="content_layout">
-                <div className="card xl:col-span-2">
-                  <div className="card-body flex flex-col p-6">
-                    <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
-                      <div className="flex-1 flex justify-between">
-                        <div className="card-title text-slate-900 dark:text-white">
-                          {" "}
-                          Raise Fund for your Education
-                        </div>
-                        <div className="flex">
-                          <img
-                            src={edit}
-                            alt="edit"
-                            style={{ width: "17px", height: "17px" }}
-                          />{" "}
-                          &nbsp;
-                          <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">
-                            Edit
+          {data && data.data.extraFees ? (
+            <>
+              <div
+                className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px]  ml-0 ml-248px"
+                id="content_wrapper"
+                style={{ backgroundColor: "#F1F5F9" }}
+              >
+                <div className="page-content">
+                  <div id="content_layout">
+                    <div className="card xl:col-span-2">
+                      <div className="card-body flex flex-col p-6">
+                        <header className="flex mb-3 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
+                          <div className="flex-1 flex justify-between">
+                            <div className="card-title text-slate-900 dark:text-white">
+                              {" "}
+                              Raise Fund for your Education
+                            </div>
+                            <div className="flex">
+                              <img
+                                src={edit}
+                                alt="edit"
+                                style={{ width: "17px", height: "17px" }}
+                              />{" "}
+                              &nbsp;
+                              <div
+                                className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white cursor-pointer"
+                                onClick={() => setShowEditModal(!showEditModal)}
+                              >
+                                Edit
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    </header>
-                    {data && data.data.extraFees ? (
-                      <div className="card-text h-full">
-                        <form
-                          className="space-y-4"
-                          //   id="multipleValidation"
-                        >
-                          <div className="grid md:grid-cols-2 gap-6">
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Full Name
-                              </label>
-                              <div
-                                className="relative form-control"
-                                style={{ fontSize: "13px" }}
-                              >
-                                {fullName}
-                              </div>
-                            </div>
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Current Course
-                              </label>
-                              <div
-                                className="relative form-control"
-                                style={{ fontSize: "13px" }}
-                              >
-                                {currentCourse}
-                              </div>
-                            </div>
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Qualification
-                              </label>
-                              <div
-                                className="relative form-control"
-                                style={{ fontSize: "13px" }}
-                              >
-                                {data.data.qualification}
-                              </div>
-                            </div>
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Board / University Name
-                              </label>
-                              <div
-                                className="relative form-control"
-                                style={{ fontSize: "13px" }}
-                              >
-                                {boardOrUniversityName}
-                              </div>
-                            </div>
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                School / College Name
-                              </label>
-                              <div
-                                className="relative form-control"
-                                style={{ fontSize: "13px" }}
-                              >
-                                {schoolOrCollageName}
-                              </div>
-                            </div>
+                        </header>
+                        {showEditModal && (
+                          <>
+                            <div className="alert-modal">
+                              <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+                                <div
+                                  className="bg-white rounded-md p-6 "
+                                  style={{ width: "auto", height: "auto" }}
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "space-between",
+                                    }}
+                                  >
+                                    <div
+                                      className="text-lg font-bold mb-3 text-center"
+                                      style={{ flex: 1 }}
+                                    >
+                                      Update Request For Raise Fund
+                                    </div>
+                                    <img
+                                      src={close}
+                                      style={{
+                                        width: "20px",
+                                        height: "20px",
+                                        cursor: "pointer",
+                                        marginBottom: "20px",
+                                      }}
+                                      alt="close"
+                                      // ref={closeIconRef}
+                                      onClick={() => setShowEditModal(false)}
+                                    />
+                                  </div>
+                                  {/* <div className="grid md:grid-cols-2 gap-6 m-auto" > */}
+                                  <div className="input-area ">
+                                    <label
+                                      htmlFor="verifyOtp"
+                                      className="form-label"
+                                    >
+                                      Enter OTP
+                                    </label>
+                                    <div className="relative">
+                                      <input
+                                        id="verifyOtp"
+                                        type="number"
+                                        name="verifyOtp"
+                                        className="form-control"
+                                        placeholder="Enter OTP"
+                                        value={verifyOtp}
+                                        onChange={(e) =>
+                                          setVerifyOtp(e.target.value)
+                                        }
+                                      />
+                                    </div>
+                                    <div
+                                      className="text-slate-600 text-xs leading-4"
+                                      style={{
+                                        fontSize: "10px",
+                                        margin: "8px",
+                                      }}
+                                    >
+                                      {" "}
+                                      Don't have OTP.{" "}
+                                      <span
+                                        onClick={handleRequest}
+                                        style={{
+                                          color: "blue",
+                                          cursor: "pointer",
+                                        }}
+                                      >
+                                        Click here
+                                      </span>{" "}
+                                      to send a request to the admin to edit
+                                      your account details.
+                                    </div>
 
-                            {/* <div className="input-area relative">
+                                    <button
+                                      className="btn btn-dark block w-full text-center mt-3"
+                                      onClick={handleEditVerifyOtp}
+                                    >
+                                      Submit
+                                    </button>
+                                  </div>
+
+                                  {/* </div> */}
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        )}
+
+                        <div className="card-text h-full">
+                          {/* <form
+                            className="space-y-4"
+                            //   id="multipleValidation"
+                          >
+                            <div className="grid md:grid-cols-2 gap-6">
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Full Name
+                                </label>
+                                <div
+                                  className="relative form-control"
+                                  style={{ fontSize: "13px" }}
+                                >
+                                  {fullName}
+                                </div>
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Current Course
+                                </label>
+                                <div
+                                  className="relative form-control"
+                                  style={{ fontSize: "13px" }}
+                                >
+                                  {currentCourse}
+                                </div>
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Qualification
+                                </label>
+                                <div
+                                  className="relative form-control"
+                                  style={{ fontSize: "13px" }}
+                                >
+                                  {data.data.qualification}
+                                </div>
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Board / University Name
+                                </label>
+                                <div
+                                  className="relative form-control"
+                                  style={{ fontSize: "13px" }}
+                                >
+                                  {boardOrUniversityName}
+                                </div>
+                              </div>
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  School / College Name
+                                </label>
+                                <div
+                                  className="relative form-control"
+                                  style={{ fontSize: "13px" }}
+                                >
+                                  {schoolOrCollageName}
+                                </div>
+                              </div>
+
+                              {/* <div className="input-area relative">
                             <label for="fileInput" className="form-label">
                               Fee Receipt Upload 
                             </label>
                           
                             
-                          </div> */}
+                          </div> 
 
-                            {/* <div className="grid md:grid-cols-2 gap-6"> */}
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Course Name
-                              </label>
-                              <div
-                                className="relative form-control"
-                                style={{ fontSize: "13px" }}
-                              >
-                                {courseName}
+                           
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Course Name
+                                </label>
+                                <div
+                                  className="relative form-control"
+                                  style={{ fontSize: "13px" }}
+                                >
+                                  {courseName}
+                                </div>
                               </div>
-                            </div>
-                            <div className="input-area relative">
-                              <label
-                                for="largeInput"
-                                className="form-label"
-                                style={{ fontSize: "13px" }}
-                              >
-                                Gap in Education
-                              </label>
-                              <div className="relative form-control">
-                                {gapInEducation}
+                              <div className="input-area relative">
+                                <label
+                                  for="largeInput"
+                                  className="form-label"
+                                  style={{ fontSize: "13px" }}
+                                >
+                                  Gap in Education
+                                </label>
+                                <div className="relative form-control">
+                                  {gapInEducation}
+                                </div>
                               </div>
-                            </div>
-                            <div className="input-area">
-                              <label
-                                htmlFor="durationtype"
-                                className="form-label"
-                              >
-                                Duration Type
-                              </label>
-                              <div
-                                className="relative form-control"
-                                style={{ fontSize: "13px" }}
-                              >
-                                {durationType}
+                              <div className="input-area">
+                                <label
+                                  htmlFor="durationtype"
+                                  className="form-label"
+                                >
+                                  Duration Type
+                                </label>
+                                <div
+                                  className="relative form-control"
+                                  style={{ fontSize: "13px" }}
+                                >
+                                  {durationType}
+                                </div>
                               </div>
-                            </div>
-                            {/* <div class="input-area">
-                            <label for="description" class="form-label">
+                              {/* <div className="input-area">
+                            <label for="description" className="form-label">
                               Could you please provide some insight into the
                               reasons or circumstances that led to the gap in
                               your education?
@@ -752,74 +740,511 @@ const RaiseFund = () => {
                               </div>
                              
                           </div> */}
-                            {/* <div className="input-area relative">
+                          {/* <div className="input-area relative">
                             <label for="fileInput" className="form-label">
                               Certificate Upload (Could you please upload the
                               document or file that provides information about
                               your education gap?)
                             </label>
-                          </div> */}
+                          </div> 
 
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Course Fees
-                              </label>
-                              <div
-                                className="relative form-control"
-                                style={{ fontSize: "13px" }}
-                              >
-                                {data.data.courseFees}
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Course Fees
+                                </label>
+                                <div
+                                  className="relative form-control"
+                                  style={{ fontSize: "13px" }}
+                                >
+                                  {data.data.courseFees}
+                                </div>
                               </div>
-                            </div>
 
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Your Contribution
-                              </label>
-                              <div
-                                className="relative form-control"
-                                style={{ fontSize: "13px" }}
-                              >
-                                {data.data.yourContribution}
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Your Contribution
+                                </label>
+                                <div
+                                  className="relative form-control"
+                                  style={{ fontSize: "13px" }}
+                                >
+                                  {data.data.yourContribution}
+                                </div>
                               </div>
-                            </div>
 
-                            <div className="input-area relative">
-                              <label for="largeInput" className="form-label">
-                                Your Requirements
-                              </label>
-                              <div
-                                className="relative form-control"
-                                style={{ fontSize: "13px" }}
-                              >
-                                {data.data.yourRequirements}
+                              <div className="input-area relative">
+                                <label for="largeInput" className="form-label">
+                                  Your Requirements
+                                </label>
+                                <div
+                                  className="relative form-control"
+                                  style={{ fontSize: "13px" }}
+                                >
+                                  {data.data.yourRequirements}
+                                </div>
                               </div>
-                            </div>
 
-                            <div className="input-area">
-                              <label htmlFor="extraFees" className="form-label">
-                                Extra Fees (if any)
-                              </label>
-                              <div
-                                className="relative form-control"
-                                style={{ fontSize: "13px" }}
-                              >
-                                {data.data.extraFees}
+                              <div className="input-area">
+                                <label
+                                  htmlFor="extraFees"
+                                  className="form-label"
+                                >
+                                  Extra Fees (if any)
+                                </label>
+                                <div
+                                  className="relative form-control"
+                                  style={{ fontSize: "13px" }}
+                                >
+                                  {data.data.extraFees}
+                                </div>
                               </div>
-                            </div>
-                            {/* <div class="input-area">
-                            <label for="description" class="form-label">
+                              {/* <div className="input-area">
+                            <label for="description" className="form-label">
                               Why do you required Financial
                               Assessment/Additional Help{" "}
                             </label>
                             <div className="relative form-control">
                                 {data.data.financialHelp}
                               </div>
-                          </div> */}
+                          </div> 
+                            </div>
+                          </form> */}
+
+                          <div className="card-body p-6">
+                            <div className="grid md:grid-cols-3 gap-6">
+                              <div className="flex mb-2">
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  FullName :
+                                </div>{" "}
+                                &nbsp;&nbsp;
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  {fullName}
+                                </div>
+                              </div>
+
+                              <div className="flex mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  Current Course :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  {currentCourse}
+                                </div>
+                              </div>
+
+                              <div className="flex mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  Qualification :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  {data.data.qualification}
+                                </div>
+                              </div>
+
+                              <div className="flex mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  Board / University Name :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  {boardOrUniversityName}
+                                </div>
+                              </div>
+
+                              <div className="flex mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  School / College Name :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  {schoolOrCollageName}
+                                </div>
+                              </div>
+
+                              <div className="flex mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  Course Name :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  {courseName}
+                                </div>
+                              </div>
+
+                              <div className="flex mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  Gap In Education :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  {gapInEducation}
+                                </div>
+                              </div>
+
+                              <div className="flex mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  Duration Type :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  {durationType}
+                                </div>
+                              </div>
+
+                              <div className="flex mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  Course Fees :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  ₹{data.data.courseFees}
+                                </div>
+                              </div>
+
+                              <div className="flex mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  Your Contribution :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  ₹{data.data.yourContribution}
+                                </div>
+                              </div>
+
+                              <div className="flex mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  Your Requirement :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  ₹ {data.data.yourRequirements}
+                                </div>
+                              </div>
+
+                              <div className="flex mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  Extra Fees (if any) :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div
+                                  className="text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px" }}
+                                >
+                                  {data.data.extraFees}
+                                </div>
+                              </div>
+
+                              <div className="flex-1 mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "14px", color: "#000" }}
+                                >
+                                  Fees Receipt :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div className="flex">
+                                {data.data.document &&
+                                  data.data.document.map((doc, docIndex) => (
+                                    doc.document === "feeReceipt" && (
+                                    <>
+                                      <div className="flex">
+                                        <div
+                                          key={docIndex}
+                                          onClick={() =>
+                                            handleImageClick(
+                                              doc?.document_FileName
+                                            )
+                                          }
+                                          style={{ position: "relative" }}
+                                        >
+                                          <img
+                                            src={`${localHost}/studentFile/${doc?.document_FileName}`}
+                                            alt={doc?.document_Name}
+                                            style={{
+                                              width: "100px",
+                                              height: "100px",
+                                              cursor: "pointer",
+                                              border: "1px dotted gray",
+                                              borderRadius: "5px",
+                                            }}
+                                          />
+                                          <button
+                                            onClick={() =>
+                                              deleteDocument(doc.id)
+                                            }
+                                            style={{
+                                              position: "absolute",
+                                              top: 3,
+                                              right: 2,
+                                              color: "black",
+                                              border: "none",
+                                              cursor: "pointer",
+                                            }}
+                                          >
+                                            <img
+                                              src={close}
+                                              style={{
+                                                width: "20px",
+                                                height: "20px",
+                                                cursor: "pointer",
+                                              }}
+                                              alt="close"
+                                            />
+                                          </button>
+                                        </div>
+                                        &nbsp;
+                                      </div>
+                                    </>)
+                                  ))}
+                                <div
+                                  style={{
+                                    width: "100px",
+                                    height: "100px",
+                                    borderRadius: "5px",
+                                    border: "1px dotted gray",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  <label htmlFor="fileInput">
+                                    <Plus size={20} color="black" />
+                                  </label>
+                                  <input
+                                    id="fileInput"
+                                    type="file"
+                                    accept="image/*,.pdf"
+                                    style={{ display: "none" }}
+                                    onChange={handleUploadImage}
+                                    multiple
+                                  />
+                                </div>
+                                </div>
+                              </div>
+                              <Dialog
+                                open={openPopup}
+                                onClose={() => setOpenPopup(false)}
+                              >
+                                <DialogContent>
+                                  {openFileType === "pdf" && openPdf && (
+                                    <Document
+                                      file={`${localHost}/studentFile/${openPdf}`}
+                                      options={{
+                                        workerSrc:
+                                          pdfjs.GlobalWorkerOptions.workerSrc,
+                                      }}
+                                    >
+                                      <Page pageNumber={1} />
+                                    </Document>
+                                  )}
+                                  {openFileType === "image" &&
+                                    selectedImage && (
+                                      <img
+                                        src={`${localHost}/studentFile/${selectedImage}`}
+                                        alt="document"
+                                        style={{
+                                          width: "100%",
+                                          height: "auto",
+                                        }}
+                                      />
+                                    )}
+                                  {!openFileType && (
+                                    <div>No file selected.</div>
+                                  )}
+                                </DialogContent>
+                              </Dialog>
+
+                             {gapInEducation>0 && <div className="flex-1 mb-2">
+                                <div
+                                  className=" text-xs text-slate-500 dark:text-slate-300 "
+                                  style={{ fontSize: "18px", color: "#000" }}
+                                >
+                                  Gap Document :
+                                </div>
+                                &nbsp;&nbsp;
+                                <div className="flex">
+                                {data.data.document &&
+                                  data.data.document.map((doc, docIndex) => (
+                                    doc.document === "gapDocument" && (
+                                    <>
+                                      <div className="flex">
+                                        <div
+                                          key={docIndex}
+                                          onClick={() =>
+                                            handleImageClick(
+                                              doc?.document_FileName
+                                            )
+                                          }
+                                          style={{ position: "relative" }}
+                                        >
+                                          <img
+                                            src={`${localHost}/studentFile/${doc?.document_FileName}`}
+                                            alt={doc?.document_Name}
+                                            style={{
+                                              width: "100px",
+                                              height: "100px",
+                                              cursor: "pointer",
+                                              border: "1px dotted gray",
+                                              borderRadius: "5px",
+                                            }}
+                                          />
+                                          <button
+                                            onClick={() =>
+                                              deleteDocument(doc.id)
+                                            }
+                                            style={{
+                                              position: "absolute",
+                                              top: 3,
+                                              right: 2,
+                                              color: "black",
+                                              border: "none",
+                                              cursor: "pointer",
+                                            }}
+                                          >
+                                            <img
+                                              src={close}
+                                              style={{
+                                                width: "20px",
+                                                height: "20px",
+                                                cursor: "pointer",
+                                              }}
+                                              alt="close"
+                                            />
+                                          </button>
+                                        </div>
+                                        &nbsp;
+                                      </div>
+                                    </>
+          )))}
+                                <div
+                                  style={{
+                                    width: "100px",
+                                    height: "100px",
+                                    borderRadius: "5px",
+                                    border: "1px dotted gray",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  <label htmlFor="fileInput">
+                                    <Plus size={20} color="black" />
+                                  </label>
+                                  <input
+                                    id="fileInput"
+                                    type="file"
+                                    accept="image/*,.pdf"
+                                    style={{ display: "none" }}
+                                    onClick={handleGapImage}
+                                    multiple
+                                  />
+                                </div>
+                                </div>
+                              </div>}
+                             
+
+                            </div>
                           </div>
-                        </form>
+                        </div>
                       </div>
-                    ) : (
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div
+              className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px] ml-0 ml-248px"
+              id="content_wrapper"
+              style={{ backgroundColor: "#F1F5F9" }}
+            >
+              <div className="page-content">
+                <div id="content_layout">
+                  <div className="card xl:col-span-2">
+                    <div className="card-body flex flex-col p-6">
+                      <header className="flex mb-3 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
+                        <div className="flex-1">
+                          <div
+                            className="card-title text-slate-900 dark:text-white"
+                            style={{ fontSize: "18px" }}
+                          >
+                            {" "}
+                            Raise Fund for your Education
+                          </div>
+                        </div>
+                      </header>
                       <div className="card-text h-full">
                         <form
                           className="space-y-4"
@@ -982,43 +1407,52 @@ const RaiseFund = () => {
                                 </option>
                               </select>
                             </div>
-                            <div class="input-area">
-                              <label for="description" class="form-label">
-                                Could you please provide some insight into the
-                                reasons or circumstances that led to the gap in
-                                your education?
-                              </label>
-                              <textarea
-                                style={{ fontSize: "13px" }}
-                                id="description"
-                                rows="5"
-                                class="form-control"
-                                placeholder="Your Answer"
-                                value={gapJustification}
-                                onChange={handleGapJustificationChange}
-                              />
-                              {gapJustificationError && (
-                                <p style={{ fontSize: "12px", color: "red" }}>
-                                  {gapJustificationError}
-                                </p>
-                              )}
-                            </div>
-                            <div className="input-area relative">
-                              <label for="fileInput" className="form-label">
-                                Certificate Upload (Could you please upload the
-                                document or file that provides information about
-                                your education gap?)
-                              </label>
-                              <input
-                                style={{ fontSize: "13px" }}
-                                type="file"
-                                id="fileInput"
-                                className="form-control"
-                                multiple
-                                accept="image/*,.pdf"
-                                onChange={handleFileChange}
-                              />
-                            </div>
+                            {gapInEducation > 0 && (
+                              <>
+                                <div className="input-area">
+                                  <label
+                                    for="description"
+                                    className="form-label"
+                                  >
+                                    Could you please provide some insight into
+                                    the reasons or circumstances that led to the
+                                    gap in your education?
+                                  </label>
+                                  <textarea
+                                    style={{ fontSize: "13px" }}
+                                    id="description"
+                                    rows="5"
+                                    className="form-control"
+                                    placeholder="Your Answer"
+                                    value={gapJustification}
+                                    onChange={handleGapJustificationChange}
+                                  />
+                                  {gapJustificationError && (
+                                    <p
+                                      style={{ fontSize: "12px", color: "red" }}
+                                    >
+                                      {gapJustificationError}
+                                    </p>
+                                  )}
+                                </div>
+                                <div className="input-area relative">
+                                  <label for="fileInput" className="form-label">
+                                    Certificate Upload (Could you please upload
+                                    the document or file that provides
+                                    information about your education gap?)
+                                  </label>
+                                  <input
+                                    style={{ fontSize: "13px" }}
+                                    type="file"
+                                    id="fileInput"
+                                    className="form-control"
+                                    multiple
+                                    accept="image/*,.pdf"
+                                    onChange={handleFileChange}
+                                  />
+                                </div>
+                              </>
+                            )}
 
                             <div className="input-area relative">
                               <label for="largeInput" className="form-label">
@@ -1107,8 +1541,8 @@ const RaiseFund = () => {
                                 </option>
                               </select>
                             </div>
-                            <div class="input-area">
-                              <label for="description" class="form-label">
+                            <div className="input-area">
+                              <label for="description" className="form-label">
                                 Why do you required Financial
                                 Assessment/Additional Help{" "}
                               </label>
@@ -1116,7 +1550,7 @@ const RaiseFund = () => {
                                 style={{ fontSize: "13px" }}
                                 id="description"
                                 rows="5"
-                                class="form-control"
+                                className="form-control"
                                 placeholder="Your Answer"
                                 value={financialHelp}
                                 onChange={handleFinancialHelpChange}
@@ -1136,7 +1570,7 @@ const RaiseFund = () => {
                             >
                               Submit
                             </button>
-                            {showAlert && (
+                            {/* {showAlert && (
                               <div className="alert-modal">
                                 <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
                                   <div className="bg-white rounded-md p-6">
@@ -1154,7 +1588,7 @@ const RaiseFund = () => {
                                       className="mr-3"
                                     >
                                       Edit
-                                    </button> */}
+                                    </button> 
                                       <button
                                         onClick={() => setShowAlert(false)}
                                       >
@@ -1164,13 +1598,18 @@ const RaiseFund = () => {
                                   </div>
                                 </div>
                               </div>
-                            )}
+                            )} */}
                           </div>
                         </form>
                       </div>
-                    )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
-                    {showAlertModal && (
+          {/* {showAlertModal && (
                       <>
                         <div className="alert-modal">
                           <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
@@ -1204,14 +1643,11 @@ const RaiseFund = () => {
                           </div>
                         </div>
                       </>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+                    )} */}
         </div>
       </div>
+
+      <ToastContainer />
     </>
   );
 };

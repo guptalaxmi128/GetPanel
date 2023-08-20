@@ -1,5 +1,6 @@
  export const Config = {
-    "Getepay Terminal Id": "Getepay.adaasd51021@icici",
+   //  "Getepay Terminal Id": "Getepay.adaasd51021@icici",
+   "Getepay Terminal Id": "Getepay.merchant131530@icici",
     "Getepay Key": "JoYPd+qso9s7T+Ebj8pi4Wl8i+AHLv+5UNJxA3JkDgY=",
     "Getepay IV": "hlnuyA9b4YxDq6oJSZFl8g==",
     "Getepay Url":

@@ -118,12 +118,9 @@ const DownloadReceipt = (props) => {
                 >
                   Download Receipt
                 </h4>
-                {/* <div className="text-slate-500 dark:text-slate-400 text-base" style={{fontSize:'14px'}}>
-                  Sign in to your account to start using GET
-                </div> */}
               </div>
               <div onClick={toggle} >
-                <img src={close} alt="close" width={20} height={20} style={{ marginBottom: "25px",cursor:'pointer' }} />
+                <img src={close} alt="close"  style={{ marginBottom: "25px",cursor:'pointer',width:'20px',height:'20px' }} />
               </div>
             </div>
             {/* <!-- BEGIN: Login Form --> */}

@@ -99,7 +99,7 @@ const Login = () => {
           }
         } catch (error) {
           console.log(error);
-          setMessage(error.message);
+          setMessage(error.data.message);
         } finally {
           setIsLoading(false);
         }
@@ -118,7 +118,7 @@ const Login = () => {
           }
         } catch (error) {
           console.log(error);
-          setMessage(error.message);
+          setMessage(error.data.message);
         } finally {
           setIsLoading(false);
         }

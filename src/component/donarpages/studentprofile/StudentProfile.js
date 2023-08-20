@@ -1,414 +1,305 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import CreateRoundedIcon from "@mui/icons-material/CreateRounded";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import SearchIcon from "@mui/icons-material/Search";
-import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import LogoutIcon from "@mui/icons-material/Logout";
+import MenuIcon from "@mui/icons-material/Menu";
 import Sidebar from "../sidebar/Sidebar";
 import user from "../../../assets/images/user/user-1.jpg";
-// import qrCode from "../../assets/qrCode.png";
-
-import { useGetDonarStudentProfileQuery, useGetAcceptRaiseFundQuery, } from "../../../services/signUpApi";
+import logo from "../../../assets/images/logo.png";
+import close from "../../../assets/close.png";
+import getepayPortal from "../../../Getepay_pg_react/Getepay_pg_react/index";
+import { Config } from "../../../Getepay_pg_react/Getepay_pg_react/config";
+import {
+  useGetDonarStudentProfileQuery,
+  useGetAcceptRaiseFundQuery,
+  useGetQRCodeForDonationRequestQuery,
+  useGetCoursesForDonarQuery,
+  useGetDonarQuery,
+  useAddDonationDetailsInDonarMutation,
+  useGetRaiseFundForDonarQuery,
+} from "../../../services/signUpApi";
+import DonarNotification from "../donarNotification/DonarNotification";
 
 const StudentProfile = () => {
-  const [id,setId]=useState('')
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { studentUID } = useParams();
+  console.log(studentUID);
+  const [showModal, setShowModal] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [qRCode, setQRCode] = useState("");
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const [donarId, setDonarId] = useState("");
+  const [donarEmail, setDonarEmail] = useState("");
+  const [studentName, setStudentName] = useState("");
+  const [id, setId] = useState("");
+  const [currentCourse, setCurrentCourse] = useState("");
+  const [requiredAmount, setRequiredAmount] = useState("");
+  const [raisedAmount, setRaisedAmount] = useState("");
+  const [tableData, setTableData] = useState([]);
+  const [profileImage, setProfileImage] = useState(null);
+  const [panNumber,setPanNumber]=useState('');
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  // const localHost = "http://localhost:5000";
+  const localHost="https://global-education-t.onrender.com"
+
+  const toggleSidebar = () => {
+    setSidebarVisible(!isSidebarVisible);
   };
 
-  const { data: acceptRaiseFund, isSuccess: acceptRaiseFundIsSuccess } =
-    useGetAcceptRaiseFundQuery();
-    // console.log(acceptRaiseFund)
+  const { data: donarData, isSuccess: donarDataIsSuccess } = useGetDonarQuery();
+  useEffect(() => {
+    if (donarDataIsSuccess && donarData && donarData.data) {
+      setDonarId(donarData.data.id);
+      setDonarEmail(donarData.data.email);
+    }
+  }, [donarData, donarDataIsSuccess]);
 
-    useEffect(() => {
-        if (acceptRaiseFundIsSuccess && acceptRaiseFund && acceptRaiseFund.data && acceptRaiseFund.data.length > 0) {
-            const ids = acceptRaiseFund.data.map(item => item.studentUID); 
-            setId(ids[0]);
-        }
-      }, [acceptRaiseFundIsSuccess, acceptRaiseFund]);
+  // i m getting the studentUID as an array but i want only string so i use useParams hook
 
-      const {data,isSuccess} =useGetDonarStudentProfileQuery(id);
+  // const [id, setId] = useState("");
+  // const { data: acceptRaiseFund, isSuccess: acceptRaiseFundIsSuccess } =
+  //   useGetAcceptRaiseFundQuery();
+  // console.log(acceptRaiseFund)
 
-    //   console.log(data);
+  // useEffect(() => {
+  //   if (
+  //     acceptRaiseFundIsSuccess &&
+  //     acceptRaiseFund &&
+  //     acceptRaiseFund.data &&
+  //     acceptRaiseFund.data.length > 0
+  //   ) {
+  //     const ids = acceptRaiseFund.data.map((item) => item.studentUID);
+  //     setId(ids[0]);
+  //   }
+  // }, [acceptRaiseFundIsSuccess, acceptRaiseFund]);
+
+  const { data: qRCodeData, isSuccess: qRCodeIsSuccess } =
+    useGetQRCodeForDonationRequestQuery(studentUID);
+  // console.log(qRCode);
+
+  useEffect(() => {
+    if (qRCodeData && qRCodeIsSuccess) {
+      setQRCode(qRCodeData.data.qRCode);
+    }
+  }, [qRCodeData, qRCodeIsSuccess]);
+
+  const { data: dataProfile, isSuccess: dataProfileIsSuccess } =
+    useGetDonarStudentProfileQuery(studentUID);
+  // console.log(dataProfile);
+
+  useEffect(() => {
+    if (dataProfile && dataProfileIsSuccess) {
+      setStudentName(dataProfile.data.name);
+      const firstProfileImage =
+        dataProfile?.data.studentProfileImage.profileImage_FileName;
+      if (firstProfileImage) {
+        setProfileImage(firstProfileImage);
+      }
+    }
+  }, [dataProfile, dataProfileIsSuccess]);
+
+  const { data: courseData, isSuccess: courseIsSuccess } =
+    useGetCoursesForDonarQuery(studentUID);
+  // console.log(courseData);
+
+  useEffect(() => {
+    if (courseData && courseIsSuccess && courseData.data) {
+      setTableData(courseData.data);
+      const onGoingStudent = courseData.data.find(
+        (student) => student.onGoing === true
+      );
+      console.log(onGoingStudent);
+      if (onGoingStudent) {
+        setId(onGoingStudent.id);
+        setCurrentCourse(onGoingStudent.courseLevel);
+      }
+    }
+  }, [courseData, courseIsSuccess]);
+
+  const { data: raiseFund, isSuccess: raiseFundIsSuccess } =
+    useGetRaiseFundForDonarQuery(studentUID);
+
+  useEffect(() => {
+    if (raiseFund && raiseFundIsSuccess && raiseFund.data) {
+      setId(raiseFund.data.id);
+      setRequiredAmount(raiseFund.data.requireFundForDonar);
+      setRaisedAmount(raiseFund.data.raisedFundInPercent);
+    }
+  }, [raiseFund, raiseFundIsSuccess]);
+
+  // console.log(donarId);
+
+  const currentTime = new Date();
+  const date = new Date(currentTime.getTime() + 330 * 60000).toUTCString();
+  const transactionDate = `${date.slice(0, 3)} ${date.slice(
+    8,
+    11
+  )} ${date.slice(5, 7)} ${date.slice(17, 25)} IST ${date.slice(12, 16)}`;
+  const transactionId = new Date().getTime();
+
+  const data = {
+    mid: "971288",
+    amount: amount,
+    merchantTransactionId: transactionId,
+    transactionDate: transactionDate,
+    terminalId: "Getepay.merchant131530@icici",
+    udf1: donarId,
+    udf2: donarEmail,
+    udf3: "",
+    udf4: "",
+    udf5: "",
+    udf6: "",
+    udf7: "",
+    udf8: "",
+    udf9: "",
+    udf10: "",
+    ru: "https://global-education-t.onrender.com/api/donar/returnUrl",
+    // ru: "http://localhost:5000/api/donar/returnUrl",
+    callbackUrl:
+      "https://global-education-t.onrender.com/api/donar/callbackUrl",
+    currency: "INR",
+    paymentMode: "ALL",
+    bankId: "",
+    txnType: "single",
+    productType: "IPG",
+    txnNote: "Test Txn",
+    vpa: "Getepay.merchant131530@icici",
+  };
+
+  const [addDonationDetails] = useAddDonationDetailsInDonarMutation();
+
+  const sendDataToDatabase = async (
+    studentName,
+    studentUID,
+    studentRaiseFundCourseId
+  ) => {
+    const donationData = {
+      amount,
+      donarId,
+      studentName,
+      studentUID,
+      merchantTransactionId: transactionId,
+      studentRaiseFundCourseId,
+      panNumber
+    };
+
+    const res = await addDonationDetails(donationData);
+    console.log(res);
+
+    getepayPortal(
+      data,
+      Config,
+      studentName,
+      studentUID,
+      studentRaiseFundCourseId,
+      panNumber
+    );
+  };
+
+  function convertToInteger(input) {
+    const numericValue = Number(input);
+
+    if (isNaN(numericValue)) {
+      throw new Error("Input is not a valid number.");
+    }
+
+    return Math.floor(numericValue);
+  }
+
+  function getYearFromDate(dateStr) {
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    return year;
+  }
+
+  const sortedCourses = [...tableData].sort((a, b) => {
+    if (a.onGoing !== b.onGoing) {
+      return a.onGoing ? -1 : 1;
+    }
+
+    // if (a.onGoing && b.onGoing) {
+    //   if (a.courseLevel === tableData.currentLevel) return -1;
+    //   if (b.courseLevel === tableData.currentLevel) return 1;
+    // }
+
+    const courseLevelOrder = {
+      "High School": 0,
+      Intermediate: 1,
+      Graduation: 2,
+      "Post Graduation": 3,
+      Certification: 4,
+    };
+
+    const courseLevelComparison =
+      courseLevelOrder[a.courseLevel] - courseLevelOrder[b.courseLevel];
+    if (courseLevelComparison !== 0) {
+      return courseLevelComparison;
+    }
+
+    return a.level - b.level;
+  });
+
   return (
     <>
-      <Sidebar />
-      <div
-        className="flex flex-col justify-between min-h-screen"
-        style={{ marginLeft: "248px" }}
-      >
+      <div className="sidebar-wrapper group w-0  xl:w-[248px] xl:block hidden md:hidden sm:hidden">
+        <Sidebar />
+      </div>
+      <div className="flex flex-col justify-between min-h-screen">
         <div>
           {/* <!-- BEGIN: Header --> */}
           {/* <!-- BEGIN: Header --> */}
           <div className="z-[9]" id="app_header">
-            <div className="app-header z-[999] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700">
+            <div className="app-header z-[999] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700 ml-0 ml-248px">
               <div className="flex justify-between items-center h-full">
                 <div className="flex items-center md:space-x-4 space-x-4 rtl:space-x-reverse vertical-box">
-                  <a
-                    href="index.html"
-                    className="mobile-logo xl:hidden inline-block"
-                  >
-                    {/* <img
-                      src="assets/images/logo/logo-c.svg"
-                      className="black_logo"
-                      alt="logo"
-                    />
+                  <a href="#" className="mobile-logo xl:hidden inline-block">
                     <img
-                      src="assets/images/logo/logo-c-white.svg"
+                      src={logo}
                       className="white_logo"
                       alt="logo"
-                    /> */}
+                      width={50}
+                      height={30}
+                    />
                   </a>
                   <button className="smallDeviceMenuController open-sdiebar-controller hidden xl:hidden md:inline-block">
-                    {/* <iconify-icon
-                      className="leading-none bg-transparent relative text-xl top-[2px] text-slate-900 dark:text-white"
-                      icon="heroicons-outline:menu-alt-3"
-                    ></iconify-icon> */}
-                    {/* <MenuIcon /> */}
+                    <MenuIcon onClick={toggleSidebar} />
+                    {isSidebarVisible && <Sidebar toggle={toggleSidebar} />}
                   </button>
-                  <button className="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0 hidden rtl:rotate-180">
-                    <iconify-icon icon="ph:arrow-right-bold"></iconify-icon>
-                  </button>
-                  <button
-                    className="flex items-center xl:text-sm text-lg xl:text-slate-400 text-slate-800 dark:text-slate-300 focus:outline-none focus:shadow-none px-1 space-x-3
-        rtl:space-x-reverse search-modal"
-                    data-bs-toggle="modal"
-                    data-bs-target="#searchModal"
-                  >
-                    <SearchIcon />
-                    <span className="xl:inline-block hidden">Search...</span>
+                  <button className="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0 rtl:rotate-180 md:hidden">
+                    <MenuIcon onClick={toggleSidebar} />
+                    {isSidebarVisible && <Sidebar toggle={toggleSidebar} />}
                   </button>
                 </div>
                 {/* <!-- end vertcial --> */}
-                <div className="items-center space-x-4 rtl:space-x-reverse horizental-box">
-                  <a href="index.html" className="leading-0">
-                    <span className="xl:inline-block hidden">
-                      <img
-                        src="assets/images/logo/logo.svg"
-                        className="black_logo "
-                        alt="logo"
-                      />
-                      <img
-                        src="assets/images/logo/logo-white.svg"
-                        className="white_logo"
-                        alt="logo"
-                      />
-                    </span>
-                    <span className="xl:hidden inline-block">
-                      <img
-                        src="assets/images/logo/logo-c.svg"
-                        className="black_logo "
-                        alt="logo"
-                      />
-                      <img
-                        src="assets/images/logo/logo-c-white.svg"
-                        className="white_logo "
-                        alt="logo"
-                      />
-                    </span>
-                  </a>
-                  <button className="smallDeviceMenuController open-sdiebar-controller hidden md:inline-block xl:hidden">
-                    <iconify-icon
-                      className="leading-none bg-transparent relative text-xl top-[2px] text-slate-900 dark:text-white"
-                      icon="heroicons-outline:menu-alt-3"
-                    ></iconify-icon>
-                  </button>
-                  <button
-                    className="items-center xl:text-sm text-lg xl:text-slate-400 text-slate-800 dark:text-slate-300 focus:outline-none focus:shadow-none px-1 space-x-3
-        rtl:space-x-reverse search-modal inline-flex xl:hidden"
-                    data-bs-toggle="modal"
-                    data-bs-target="#searchModal"
-                  >
-                    <SearchIcon />
-                    <span className="xl:inline-block hidden">Search...</span>
-                  </button>
-                </div>
-                {/* <!-- end horizental --> */}
-
-              
-                {/* <!-- end top menu --> */}
-                <div className="nav-tools flex items-center lg:space-x-5 space-x-3 rtl:space-x-reverse leading-0">
-                  {/* <!-- BEGIN: Notification Dropdown --> */}
-                  {/* <!-- Notifications Dropdown area --> */}
-                  <div className="relative md:block hidden">
-                    <button
-                      className="lg:h-[32px] lg:w-[32px] lg:bg-slate-50 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer
-      rounded-full text-[20px] flex flex-col items-center justify-center"
-                    
-                    >
-                    
-                      <NotificationsIcon />
-                      <span
-                        className="absolute -right-1 lg:top-0 -top-[6px] h-4 w-4 bg-red-500 text-[8px] font-semibold flex flex-col items-center
-        justify-center rounded-full text-white z-[99]"
-                      >
-                        4
-                      </span>
-                    </button>
-                    {/* <!-- Notifications Dropdown --> */}
-                    <div
-                      className="dropdown-menu z-10 hidden bg-white divide-y divide-slate-100 dark:divide-slate-900 shadow w-[335px]
-      dark:bg-slate-800 border dark:border-slate-900 !top-[23px] rounded-md overflow-hidden lrt:origin-top-right rtl:origin-top-left"
-                    >
-                      <div className="flex items-center justify-between py-4 px-4">
-                        <h3 className="text-sm font-Inter font-medium text-slate-700 dark:text-white">
-                          Notifications
-                        </h3>
-                        <a
-                          className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white"
-                          href="#"
-                        >
-                          See All
-                        </a>
-                      </div>
-                      <div
-                        className="divide-y divide-slate-100 dark:divide-slate-900"
-                        role="none"
-                      >
-                        <div className="bg-slate-100 dark:bg-slate-700 dark:bg-opacity-70 text-slate-800 block w-full px-4 py-2 text-sm relative">
-                          <div className="flex ltr:text-left rtl:text-right">
-                            <div className="flex-none ltr:mr-3 rtl:ml-3">
-                              <div className="h-8 w-8 bg-white rounded-full">
-                                <img
-                                  src={user}
-                                  alt="user"
-                                  className="border-white block w-full h-full object-cover rounded-full border"
-                                />
-                              </div>
-                            </div>
-                            <div className="flex-1">
-                              <a
-                                href="#"
-                                className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-1 before:w-full before:h-full before:absolute
-                before:top-0 before:left-0"
-                              >
-                                Your order is placed
-                              </a>
-                              <div className="text-slate-500 dark:text-slate-200 text-xs leading-4">
-                                Amet minim mollit non deser unt ullamco est sit
-                                aliqua.
-                              </div>
-                              <div className="text-slate-400 dark:text-slate-400 text-xs mt-1">
-                                3 min ago
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-slate-600 dark:text-slate-300 block w-full px-4 py-2 text-sm">
-                          <div className="flex ltr:text-left rtl:text-right relative">
-                            <div className="flex-none ltr:mr-3 rtl:ml-3">
-                              <div className="h-8 w-8 bg-white rounded-full">
-                                <img
-                                  src={user}
-                                  alt="user"
-                                  className="border-transparent block w-full h-full object-cover rounded-full border"
-                                />
-                              </div>
-                            </div>
-                            <div className="flex-1">
-                              <a
-                                href="#"
-                                className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-1 before:w-full before:h-full before:absolute
-                before:top-0 before:left-0"
-                              >
-                                Congratulations Darlene 🎉
-                              </a>
-                              <div className="text-slate-600 dark:text-slate-300 text-xs leading-4">
-                                Won the monthly best seller badge
-                              </div>
-                              3 min ago
-                            </div>
-                          </div>
-                          <div className="flex-0">
-                            <span className="h-[10px] w-[10px] bg-danger-500 border border-white dark:border-slate-400 rounded-full inline-block"></span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-slate-600 dark:text-slate-300 block w-full px-4 py-2 text-sm">
-                        <div className="flex ltr:text-left rtl:text-right relative">
-                          <div className="flex-none ltr:mr-3 rtl:ml-3">
-                            <div className="h-8 w-8 bg-white rounded-full">
-                              <img
-                                src={user}
-                                alt="user"
-                                className="border-transparent block w-full h-full object-cover rounded-full border"
-                              />
-                            </div>
-                          </div>
-                          <div className="flex-1">
-                            <a
-                              href="#"
-                              className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-1 before:w-full before:h-full before:absolute
-              before:top-0 before:left-0"
-                            >
-                              Revised Order 👋
-                            </a>
-                            <div className="text-slate-600 dark:text-slate-300 text-xs leading-4">
-                              Won the monthly best seller badge
-                            </div>
-                            <div className="text-slate-400 dark:text-slate-400 text-xs mt-1">
-                              3 min ago
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-slate-600 dark:text-slate-300 block w-full px-4 py-2 text-sm">
-                        <div className="flex ltr:text-left rtl:text-right relative">
-                          <div className="flex-none ltr:mr-3 rtl:ml-3">
-                            <div className="h-8 w-8 bg-white rounded-full">
-                              <img
-                                src={user}
-                                alt="user"
-                                className="border-transparent block w-full h-full object-cover rounded-full border"
-                              />
-                            </div>
-                          </div>
-                          <div className="flex-1">
-                            <a
-                              href="#"
-                              className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-1 before:w-full before:h-full before:absolute
-              before:top-0 before:left-0"
-                            >
-                              Brooklyn Simmons
-                            </a>
-                            <div className="text-slate-600 dark:text-slate-300 text-xs leading-4">
-                              Added you to Top Secret Project group...
-                            </div>
-                            <div className="text-slate-400 dark:text-slate-400 text-xs mt-1">
-                              3 min ago
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* <!-- END: Notification Dropdown --> */}
-
-                  {/* <!-- BEGIN: Profile Dropdown --> */}
-                  {/* <!-- Profile DropDown Area --> */}
-                  <div className="md:block hidden w-full">
-                    <button
-                      className="text-slate-800 dark:text-white focus:ring-0 focus:outline-none font-medium rounded-lg text-sm text-center
-      inline-flex items-center"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <div
-                        className="lg:h-8 lg:w-8 h-7 w-7 rounded-full flex-1 ltr:mr-[10px] rtl:ml-[10px]"
-                        style={{ marginRight: 10 }}
-                      >
-                        <img
-                          src={user}
-                          alt="user"
-                          className="block w-full h-full object-cover rounded-full"
-                        />
-                      </div>
-                      <span className="flex-none text-slate-600 dark:text-white text-sm font-normal items-center lg:flex hidden overflow-hidden text-ellipsis whitespace-nowrap">
-                        Ram Gupta
-                      </span>
-                    
-
-                      <KeyboardArrowDownIcon onClick={toggleDropdown} />
-                    </button>
-                    {/* <!-- Dropdown menu --> */}
-                    {isDropdownOpen && (
-                      <div
-                        className="dropdown-menu z-10  bg-white divide-y divide-slate-100 shadow w-44 dark:bg-slate-800 border dark:border-slate-700 top-[23px] rounded-md
-      overflow-hidden absolute
-      "
-                      >
-                        <ul className="py-1 text-sm text-slate-800 dark:text-slate-200">
-                          <li>
-                            <a
-                              href="#"
-                              className="block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-600 dark:hover:text-white font-inter text-sm text-slate-600
-            dark:text-white font-normal"
-                            >
-                            
-                              <LogoutIcon style={{ fontSize: "medium" }} />{" "}
-                              &nbsp;
-                              <span className="font-Inter">Logout</span>
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                  {/* <!-- END: Header --> */}
-                  <button className="smallDeviceMenuController md:hidden block leading-0">
-                    <iconify-icon
-                      className="cursor-pointer text-slate-900 dark:text-white text-2xl"
-                      icon="heroicons-outline:menu-alt-3"
-                    ></iconify-icon>
-                  </button>
-                  {/* <!-- end mobile menu --> */}
-                </div>
-                {/* <!-- end nav tools --> */}
+                <DonarNotification />
               </div>
             </div>
           </div>
 
           {/* <!-- BEGIN: Search Modal --> */}
-          <div
-            className="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto inset-0 bg-slate-900/40 backdrop-filter backdrop-blur-sm backdrop-brightness-10"
-            id="searchModal"
-            tabindex="-1"
-            aria-labelledby="searchModalLabel"
-            aria-hidden="true"
-          >
-            <div className="modal-dialog relative w-auto pointer-events-none top-1/4">
-              <div className="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white dark:bg-slate-900 bg-clip-padding rounded-md outline-none text-current">
-                <form>
-                  <div className="relative">
-                    <button className="absolute left-0 top-1/2 -translate-y-1/2 w-9 h-full text-xl dark:text-slate-300 flex items-center justify-center">
-                      <SearchIcon />
-                    </button>
-                    <input
-                      type="text"
-                      className="form-control !py-[14px] !pl-10"
-                      placeholder="Search"
-                      autofocus
-                    />
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+
           {/* <!-- END: Search Modal --> */}
           {/* <!-- END: Header --> */}
           {/* <!-- END: Header --> */}
           <div
-            class="content-wrapper transition-all duration-150 xl:ltr:ml-[248px]"
+            className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px] ml-0 ml-248px "
             id="content_wrapper"
             style={{ backgroundColor: "#F1F5F9" }}
           >
-            <div class="page-content" >
-              <div id="content_layout" >
-                <div className="space-y-5 profile-page"
-                 
-                >
+            <div className="page-content">
+              <div id="content_layout">
+                <div className="space-y-5 profile-page">
                   <div
-                    className="profile-wrap px-[35px] pb-10 md:pt-[84px] pt-10 rounded-lg bg-white dark:bg-slate-800 lg:flex lg:space-y-0
+                    className="profiel-wrap px-[35px] pb-10 md:pt-[84px] pt-10 rounded-lg bg-white dark:bg-slate-800 lg:flex lg:space-y-0
                 space-y-6 justify-between items-end relative z-[1]"
-               
                   >
-                    <div className="bg-slate-900 dark:bg-slate-700 absolute left-0 top-0 md:h-1/2 h-[150px] w-full z-[-1] rounded-t-lg">
-                      {/* <img
-                        // src={qrCode}
+                    <div className="bg-slate-900 dark:bg-slate-700 absolute left-0 top-0 md:h-1/2 h-[150px] w-full z-[-1] rounded-t-lg flex justify-end">
+                      <img
+                        src={qRCode}
                         alt="qrCode-image"
+                        className="bg-white"
                         style={{
-                          width: "100px",
-                          height: "100px",
-                          marginTop: "30px",
-                          marginLeft: "925px",
-                          backgroundColor:'#fff'
+                          margin: "30px",
                         }}
-                      /> */}
+                      />
                     </div>
                     <div className="profile-box flex-none md:text-start text-center">
                       <div className="md:flex items-end md:space-x-6 rtl:space-x-reverse">
@@ -418,38 +309,30 @@ const StudentProfile = () => {
                                 ring-slate-100 relative"
                           >
                             <img
-                              src={user}
+                              src={`${localHost}/studentFile/${profileImage}`}
                               alt=""
                               className="w-full h-full object-cover rounded-full"
                             />
-                            <a
-                              href="profile-setting.html"
-                              className="absolute right-2 h-8 w-8 bg-slate-50 text-slate-600 rounded-full shadow-sm flex flex-col items-center
-                                    justify-center md:top-[140px] top-[100px]"
-                            >
-                              {/* <iconify-icon icon="heroicons:pencil-square"></iconify-icon> */}
-                              <CreateRoundedIcon />
-                            </a>
                           </div>
                         </div>
                         <div className="flex-1">
-                          <div className="text-2xl font-medium text-slate-900 dark:text-slate-200 mb-[3px]">
-                            Ram Gupta
+                          <div className="text-2xl font-medium text-slate-900 dark:text-slate-200 mb-4">
+                            {studentName}
                           </div>
-                          <div className="text-sm font-light text-slate-600 dark:text-slate-400">
+                          {/* <div className="text-sm font-light text-slate-600 dark:text-slate-400">
                             Front End Developer
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     </div>
                     {/* <!-- end profile box --> */}
-                    <div className="profile-info-500 md:flex md:text-start text-center flex-1 max-w-[516px] md:space-y-0 space-y-4">
+                    <div className="profile-info-500 md:flex md:text-start text-center flex-1 md :max-w-[516px] md:space-y-0 space-y-4">
                       <div className="flex-1 ">
                         <div className="text-base text-slate-900 dark:text-slate-300 font-medium mb-1 mt-3 ">
                           Current Course
                         </div>
                         <div className="text-sm text-slate-600 font-light dark:text-slate-300 ">
-                          B.Tech
+                          {currentCourse}
                         </div>
                       </div>
                       {/* <!-- end single --> */}
@@ -458,87 +341,277 @@ const StudentProfile = () => {
                           UID
                         </div>
                         <div className="text-sm text-slate-600 font-light dark:text-slate-300">
-                        GET23051000
+                          {studentUID}
                         </div>
                       </div>
                       <div className="flex-1">
-                      <div
+                        <div
                           className="inline-block px-3 min-w-[120px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500
-        bg-warning-500 mt-3" 
+        bg-warning-500 mt-3 cursor-pointer"
+                          onClick={() => setShowModal(!showModal)}
                         >
                           Donate Now
                         </div>
+                        {showModal && (
+                          <>
+                            <div className="alert-modal">
+                              <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+                                <div className="2xl:col-span-9 lg:col-span-12 col-span-12 mb-5">
+                                  <div
+                                    className="bg-white rounded-md p-6 "
+                                    style={{
+                                      width: "auto",
+                                      height: "auto",
+                                      borderRadius: "5px",
+                                      // padding: "15px",
+                                      position: "relative",
+                                    }}
+                                  >
+                                    <img
+                                      src={close}
+                                      style={{
+                                        width: "20px",
+                                        height: "20px",
+                                        top: "10px",
+                                        right: "10px",
+                                        pointer: "cursor",
+                                        position: "absolute",
+                                      }}
+                                      alt="close"
+                                      onClick={() => setShowModal(false)}
+                                    />
+
+                                    <div className="grid grid-cols-12 gap-6 mt-3">
+                                      <div className="2xl:col-span-9 lg:col-span-12 col-span-12">
+                                        <div className="p-4 card">
+                                          <div className="grid md:grid-cols-2 col-span-1 gap-4 ">
+                                            {/* <!-- BEGIN: Group Chart2 --> */}
+
+                                            <div className="py-[18px] px-4 rounded-[6px] bg-[#E5F9FF] dark:bg-slate-900	 ">
+                                              <div className="flex items-center  rtl:space-x-reverse">
+                                                <div className="flex-none">
+                                                  <div id="wline1"></div>
+                                                </div>
+                                                <div className="flex-1">
+                                                  <div
+                                                    className="text-slate-800 dark:text-slate-300 text-sm mb-1 font-medium flex justify-center items-center"
+                                                    style={{ fontSize: "15px" }}
+                                                  >
+                                                    Required Amount
+                                                  </div>
+                                                  <div className="text-slate-900 dark:text-white text-lg font-medium ">
+                                                    {requiredAmount}
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+
+                                            <div className="py-[18px] px-4 rounded-[6px] bg-[#FFEDE5] dark:bg-slate-900	 ">
+                                              <div className="flex items-center  rtl:space-x-reverse">
+                                                <div className="flex-none">
+                                                  <div id="wline2"></div>
+                                                </div>
+                                                <div className="flex-1">
+                                                  <div
+                                                    className="text-slate-800 dark:text-slate-300 text-sm mb-1 font-medium"
+                                                    style={{ fontSize: "15px" }}
+                                                  >
+                                                    Raised Amount
+                                                  </div>
+                                                  <div className="text-slate-900 dark:text-white text-lg font-medium">
+                                                    {convertToInteger(
+                                                      raisedAmount
+                                                    )}
+                                                    %
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+
+                                            {/* <!-- END: Group Chart2 --> */}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="grid grid-cols-8 gap-6">
+                                      <div className="fromGroup mt-3 justify-center items-center">
+                                        <label className="block capitalize form-label">
+                                          Donate Amount
+                                        </label>
+                                        <div className="relative  ">
+                                          <input
+                                            style={{
+                                              fontSize: "13px",
+                                              width: "100%",
+                                            }}
+                                            type="text"
+                                            name="amount"
+                                            className="form-control"
+                                            placeholder="Enter Amount"
+                                            value={amount}
+                                            onChange={(e) =>
+                                              setAmount(e.target.value)
+                                            }
+                                          />
+                                          {Number(amount) > 49999 && (
+                                            <input
+                                              type="text"
+                                              name="panNumber"
+                                              className="form-control mt-3"
+                                              placeholder="Pan Number"
+                                              value={panNumber}
+                                              onChange={(e) =>
+                                                setPanNumber(e.target.value)
+                                              }
+                                            />
+                                          )}
+                                          <button
+                                            className="btn inline-flex justify-center btn-dark"
+                                            style={{ margin: "10px" }}
+                                            type="button"
+                                            onClick={() =>
+                                              sendDataToDatabase(
+                                                studentName,
+                                                studentUID,
+                                                id
+                                              )
+                                            }
+                                          >
+                                            Pay Now
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
-                    {/* <img src={qrCode} alt="qrCode-image" style={{width:'100px' ,height:'100px',marginTop:'auto'}} /> */}
+
                     {/* <!-- profile info-500 --> */}
                   </div>
                   <div className="grid grid-cols-12 gap-6">
-                    <div className="lg:col-span-4 col-span-12">
-                      <div className="card h-full">
-                        <header className="card-header">
-                          <h4 className="card-title">Info</h4>
-                        </header>
-                        <div className="card-body p-6">
-                          <ul className="list space-y-8">
-                            <li className="flex space-x-3 rtl:space-x-reverse">
-                              <div className="flex-none text-2xl text-slate-600 dark:text-slate-300">
-                                <iconify-icon icon="heroicons:envelope"></iconify-icon>
+                    <div className="2xl:col-span-9 lg:col-span-12 col-span-12">
+                      <div className="p-4 card">
+                        <div className="grid md:grid-cols-2 col-span-1 gap-4 ">
+                          {/* <!-- BEGIN: Group Chart2 --> */}
+
+                          <div className="py-[18px] px-4 rounded-[6px] bg-[#E5F9FF] dark:bg-slate-900	 ">
+                            <div className="flex items-center space-x-6 rtl:space-x-reverse">
+                              <div className="flex-none">
+                                <div id="wline1"></div>
                               </div>
                               <div className="flex-1">
-                                <div className="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
-                                  EMAIL
-                                </div>
-                                <a
-                                  href="mailto:someone@example.com"
-                                  className="text-base text-slate-600 dark:text-slate-50"
+                                <div
+                                  className="text-slate-800 dark:text-slate-300 text-sm mb-1 font-medium"
+                                  style={{ fontSize: "15px" }}
                                 >
-                                  info-example@email.com
-                                </a>
+                                  Required Amount
+                                </div>
+                                <div className="text-slate-900 dark:text-white text-lg font-medium">
+                                  {requiredAmount}
+                                </div>
                               </div>
-                            </li>
-                            {/* <!-- end single list --> */}
-                            <li className="flex space-x-3 rtl:space-x-reverse">
-                              <div className="flex-none text-2xl text-slate-600 dark:text-slate-300">
-                                <iconify-icon icon="heroicons:phone-arrow-up-right"></iconify-icon>
+                            </div>
+                          </div>
+
+                          <div className="py-[18px] px-4 rounded-[6px] bg-[#FFEDE5] dark:bg-slate-900	 ">
+                            <div className="flex items-center space-x-6 rtl:space-x-reverse">
+                              <div className="flex-none">
+                                <div id="wline2"></div>
                               </div>
                               <div className="flex-1">
-                                <div className="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
-                                  PHONE
-                                </div>
-                                <a
-                                  href="#"
-                                  className="text-base text-slate-600 dark:text-slate-50"
+                                <div
+                                  className="text-slate-800 dark:text-slate-300 text-sm mb-1 font-medium"
+                                  style={{ fontSize: "15px" }}
                                 >
-                                  +919540478632
-                                </a>
-                              </div>
-                            </li>
-                            {/* <!-- end single list --> */}
-                            <li className="flex space-x-3 rtl:space-x-reverse">
-                              <div className="flex-none text-2xl text-slate-600 dark:text-slate-300">
-                                <iconify-icon icon="heroicons:map"></iconify-icon>
-                              </div>
-                              <div className="flex-1">
-                                <div className="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
-                                  LOCATION
+                                  Raised Amount
                                 </div>
-                                <div className="text-base text-slate-600 dark:text-slate-50">
-                                  #K-60, GF, RHS, JUNGPURA EXT.,
-                                  <br />
-                                  NEW DELHI - 110014
+                                <div className="text-slate-900 dark:text-white text-lg font-medium">
+                                  {convertToInteger(raisedAmount)}%
                                 </div>
                               </div>
-                            </li>
-                            {/* <!-- end single list --> */}
-                          </ul>
+                            </div>
+                          </div>
+
+                          {/* <!-- END: Group Chart2 --> */}
                         </div>
                       </div>
                     </div>
-                  
+                  </div>
+
+                  <div className=" space-y-5">
+                    <div className="card">
+                      <div className=" px-6 pb-6">
+                        <div className="overflow-x-auto -mx-6 dashcode-data-table">
+                          <span className=" col-span-8  "></span>
+                          <span className="  col-span-4 "></span>
+                          <div className="inline-block min-w-full align-middle">
+                            <div className="overflow-hidden ">
+                              <table
+                                className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700"
+                                id="data-table"
+                              >
+                                <thead className=" border-t border-slate-100 dark:border-slate-800 ">
+                                  <tr>
+                                    <th
+                                      scope="col"
+                                      className=" table-th "
+                                      style={{ color: "#000" }}
+                                    >
+                                      SNo
+                                    </th>
+
+                                    <th
+                                      scope="col"
+                                      className=" table-th "
+                                      style={{ color: "#000" }}
+                                    >
+                                      Course
+                                    </th>
+
+                                    <th
+                                      scope="col"
+                                      className=" table-th "
+                                      style={{ color: "#000" }}
+                                    >
+                                      Year
+                                    </th>
+
+                                    <th
+                                      scope="col"
+                                      className=" table-th "
+                                      style={{ color: "#000" }}
+                                    >
+                                      %
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+                                  {sortedCourses?.map((item, index) => (
+                                    <tr key={item.id}>
+                                      <td className="table-td">{index + 1}</td>
+                                      <td className="table-td">
+                                        {item.courseLevel}
+                                      </td>
+
+                                      <td className="table-td">
+                                        {getYearFromDate(item.endDate)}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-               
               </div>
             </div>
           </div>

@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { NavLink,Link } from 'react-router-dom';
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import GroupSharpIcon from "@mui/icons-material/GroupSharp";
-import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
-import LogoutIcon from '@mui/icons-material/Logout';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { NavLink} from "react-router-dom";
+import { Gift,Home,CheckCircle,User,Power,X } from 'react-feather';
 import logo from "../../../assets/images/logo.png";
 
-const Sidebar = () => {
+const Sidebar = ({toggle}) => {
   const [activeItem, setActiveItem] = useState(0);
 
   const handleItemClick = (index) => {
@@ -16,26 +14,28 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    alert("Donar logout successfully!");
+    localStorage.removeItem("currentUserType");
+    toast.success("Donar logout successfully!")
   };
 
   return (
+    <>
     <div className="sidebar-wrapper group w-0  xl:w-[248px] xl:block">
       <div
         id="bodyOverlay"
         className="w-screen h-screen fixed top-0 bg-slate-900 bg-opacity-50 backdrop-blur-sm z-10 hidden"
       ></div>
       <div className="logo-segment">
-        <NavLink className="flex items-center" to="/">
+        <NavLink 
+        className="flex items-center"
+         to="/">
           <img
             src={logo}
             className="white_logo"
             alt="logo"
-            width={50}
-            height={50}
           />
           <span className="ltr:ml-3 rtl:mr-3 text-xl font-Inter font-bold text-slate-900 dark:text-white">
-          GET
+            GET
           </span>
         </NavLink>
         {/* <!-- Sidebar Type Button --> */}
@@ -52,11 +52,8 @@ const Sidebar = () => {
             icon="material-symbols:circle-outline"
           ></iconify-icon>
         </div>
-        <button className="sidebarCloseIcon text-2xl inline-block md:hidden">
-          <iconify-icon
-            className="text-slate-900 dark:text-slate-200"
-            icon="clarity:window-close-line"
-          ></iconify-icon>
+        <button className="sidebarCloseIcon text-2xl inline-block xl:hidden" onClick={toggle}>
+         <X size={22} />
         </button>
       </div>
       <div
@@ -73,9 +70,13 @@ const Sidebar = () => {
             className={activeItem === 0 ? "active" : ""}
             onClick={() => handleItemClick(0)}
           >
-            <NavLink to="/donar/home" className="navItem" style={{textDecoration:'none'}}>
+            <NavLink
+              to="/donar/home"
+              className="navItem"
+              style={{ textDecoration: "none" }}
+            >
               <span className="flex items-center">
-                <HomeRoundedIcon sx={{ fontSize: '20px' }}  /> &nbsp; &nbsp;
+                <Home size={22} /> &nbsp; &nbsp;
                 <span style={{ fontSize: "15px" }}>Dashboard</span>
               </span>
             </NavLink>
@@ -85,9 +86,13 @@ const Sidebar = () => {
             className={activeItem === 1 ? "active" : ""}
             onClick={() => handleItemClick(1)}
           >
-            <NavLink to="/donar/donation-request" className="navItem" style={{textDecoration:'none'}}>
+            <NavLink
+              to="/donar/donation-request"
+              className="navItem"
+              style={{ textDecoration: "none" }}
+            >
               <span className="flex items-center">
-                <ListAltOutlinedIcon sx={{ fontSize: '20px' }}  />
+                <Gift size={22} />
                 &nbsp; &nbsp;
                 <span style={{ fontSize: "15px" }}>Donation Request</span>
               </span>
@@ -97,9 +102,13 @@ const Sidebar = () => {
             className={activeItem === 2 ? "active" : ""}
             onClick={() => handleItemClick(2)}
           >
-            <NavLink to="/donar/donated" className="navItem" style={{textDecoration:'none'}}>
+            <NavLink
+              to="/donar/donated"
+              className="navItem"
+              style={{ textDecoration: "none" }}
+            >
               <span className="flex items-center">
-                <GroupSharpIcon sx={{ fontSize: '20px' }}  /> &nbsp; &nbsp;
+                <CheckCircle size={22} /> &nbsp; &nbsp;
                 <span style={{ fontSize: "15px" }}>Donated</span>
               </span>
             </NavLink>
@@ -108,30 +117,41 @@ const Sidebar = () => {
             className={activeItem === 3 ? "active" : ""}
             onClick={() => handleItemClick(3)}
           >
-            <NavLink to="/donar/profile" className="navItem" style={{textDecoration:'none'}}>
+            <NavLink
+              to="/donar/profile"
+              className="navItem"
+              style={{ textDecoration: "none" }}
+            >
               <span className="flex items-center">
-                <DescriptionOutlinedIcon sx={{ fontSize: '20px' }}  /> &nbsp;&nbsp;&nbsp;
+                <User size={22} />{" "}
+                &nbsp;&nbsp;&nbsp;
                 <span style={{ fontSize: "15px" }}>Profile</span>
               </span>
             </NavLink>
           </li>
-        
+
           <li
             className={activeItem === 4 ? "active" : ""}
             onClick={() => handleItemClick(4)}
           >
-            <NavLink to="/login" className="navItem" onClick={handleLogout} style={{textDecoration:'none'}}>
+            <NavLink
+              to="/login"
+              className="navItem"
+              onClick={handleLogout}
+              style={{ textDecoration: "none" }}
+            >
               <span className="flex items-center">
-                <LogoutIcon  sx={{ fontSize: '20px' }} />
+                <Power size={22} style={{color:'red'}} />
                 &nbsp;&nbsp;&nbsp;
-                <span style={{ fontSize: "15px" }}>Logout</span>
+                <span style={{ fontSize: "15px",color:'red' }}>Logout</span>
               </span>
             </NavLink>
           </li>
         </ul>
       </div>
     </div>
-    // {/* <!-- End: Sidebar --> */}
+    <ToastContainer />
+  </>
   );
 };
 

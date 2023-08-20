@@ -1,8 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import SearchIcon from "@mui/icons-material/Search";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import { Menu,Search } from 'react-feather';
 import Sidebar from "../sidebar/Sidebar";
 import close from "../../assets/close.png";
 import edit from "../../assets/edit.png";
+import logo from "../../assets/images/logo.png";
+import { Dialog, DialogContent } from "@mui/material";
 import {
   useAddAccountMutation,
   useAddverifyOTPForUpdateAccountMutation,
@@ -12,6 +17,7 @@ import {
 import StudentNotification from "../studentNotification/StudentNotification";
 
 const Account = () => {
+  const navigate=useNavigate();
   const [accountNumber, setAccountNumber] = useState("");
   const [isAccountNumberSet, setIsAccountNumberSet] = useState(false);
   const [accountName, setAccountName] = useState("");
@@ -20,14 +26,26 @@ const Account = () => {
   const [id, setId] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [UPIId, setUPIId] = useState("");
+  const [openPopup, setOpenPopup] = useState(false);
+  const [selectedImage, setSelectedImage] = useState("");
   const [showAlertModal, setShowAlertModal] = useState(false);
+  const closeIconRef=useRef(null);
 
   const [showAlert, setShowAlert] = useState(false);
   const accountNoRef = useRef(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [message, setMessage] = useState("");
   const [showRequest, setShowRequest] = useState(false);
-  const [verifyOtp,setVerifyOtp]=useState('');
+  const [verifyOtp, setVerifyOtp] = useState("");
+
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
+
+  const localHost = "http://localhost:5000";
+  // const localHost="https://global-education-t.onrender.com"
+
+  const toggleSidebar = () => {
+    setSidebarVisible(!isSidebarVisible);
+  };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -43,8 +61,6 @@ const Account = () => {
       setAccountNumber(value);
     }
   };
-
-
 
   const handleEditClick = () => {
     setShowAlert(false);
@@ -64,21 +80,23 @@ const Account = () => {
   //   }
   // };
 
- 
-
   const [addAccount] = useAddAccountMutation();
   const { data, isSuccess } = useGetAccountQuery();
   console.log(data);
 
   useEffect(() => {
-    if (isSuccess && data) {
-      setAccountName(data.accountName);
-      setAccountNumber(data.accountNumber);
-      setBranch(data.branch);
-      setIFSCCode(data.IFSCCode);
-      setUPIId(data.UPIId);
-      setSelectedFile(data.UPIQRCode);
-      setId(data.id);
+    if (isSuccess && data && data.data) {
+      setAccountName(data.data.accountName);
+      setAccountNumber(data.data.accountNumber);
+      setBranch(data.data.branch);
+      setIFSCCode(data.data.IFSCCode);
+      setUPIId(data.data.UPIId);
+      setSelectedFile(data.data.UPIQRCode_Name);
+      setId(data.data.id);
+    }
+    const firstProfileImage = data?.data.UPIQRCode_FileName;
+    if (firstProfileImage) {
+      setSelectedImage(firstProfileImage);
     }
   }, [data, isSuccess]);
 
@@ -87,8 +105,6 @@ const Account = () => {
     filePath && typeof filePath === "string"
       ? filePath.substring(filePath.lastIndexOf("\\") + 1)
       : "";
-
-
 
   const clearTextInput = () => {
     setAccountName("");
@@ -148,12 +164,12 @@ const Account = () => {
     } else if (selectedFile) {
       formData.append("UPIQRCode", selectedFile);
     }
-
+    toast.info('Please recheck your account information as it cannot be changed in the future.');
     console.log(formData);
     const res = await addAccount(formData);
-    if (res.data) {
-      setShowAlert(true);
-      setShowAlertModal(true);
+    if (res.data.success) {
+      // setShowAlert(true);
+      toast.success(res.data.message);
       console.log(res);
       clearTextInput();
     }
@@ -162,69 +178,98 @@ const Account = () => {
   const { data: sendRequest, isSuccess: sendRequestIsSuccess } =
     useGetOTPForUpdateAccountQuery(id);
 
-  const handleRequest = () => {
-    if (sendRequest && sendRequestIsSuccess && sendRequest.success) {
-      setMessage(sendRequest.message);
-      setShowRequest(true);
-      setShowEditModal(false);
-    }
-  };
+    const handleRequest = () => {
+      if (sendRequestIsSuccess) {
+        if (sendRequest.success) {
+          // Successful request
+          toast.success(sendRequest.message);
+          setShowEditModal(false);
+        } else {
+          // Failed request
+          toast.error(sendRequest.message);
+        }
+      }else {
+        toast.error("Request already sent to Global Education Trust!");
+      }
+    };
 
   // console.log(message);
-  const [addverifyOTPForUpdateAccount] =useAddverifyOTPForUpdateAccountMutation();
+  const [addverifyOTPForUpdateAccount] =
+    useAddverifyOTPForUpdateAccountMutation();
 
-  const handleEditVerifyOtp = async (e)=>{
+  const handleEditVerifyOtp = async (e) => {
     e.preventDefault();
     const formData = {
-     otp:verifyOtp,
-     accountDetailId:id
+      otp: verifyOtp,
+      accountDetailId: id,
     };
     console.log(formData);
     const res = await addverifyOTPForUpdateAccount(formData);
-    alert("Otp send successfully!");
+    // alert("Otp send successfully!");
     console.log(res);
-    // clearTextInput();
+    if(res.data.success){
+      toast.success(res.data.message);
+      setVerifyOtp('');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      navigate('/student/edit-account');
+    }
+  
+  };
 
-  }
+  const handleImageClick = () => {
+    setOpenPopup(true);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        closeIconRef.current &&
+        !closeIconRef.current.contains(event.target)
+      ) {
+        setShowEditModal(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
-      <Sidebar />
+      {/* <Sidebar /> */}
+      <div className="sidebar-wrapper group w-0  xl:w-[248px] xl:block hidden md:hidden sm:hidden">
+        <Sidebar />
+      </div>
       <div
         className="flex flex-col justify-between min-h-screen"
-        style={{ marginLeft: "248px" }}
+        // style={{ marginLeft: "248px" }}
       >
         <div>
           {/* <!-- BEGIN: Header --> */}
           {/* <!-- BEGIN: Header --> */}
           <div className="z-[9]" id="app_header">
-            <div className="app-header z-[999] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700">
+            <div className="app-header z-[999] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700 ml-0 ml-248px">
               <div className="flex justify-between items-center h-full">
                 <div className="flex items-center md:space-x-4 space-x-4 rtl:space-x-reverse vertical-box">
-                  <a
-                    // href="index.html"
-                    className="mobile-logo xl:hidden inline-block"
-                  >
-                    {/* <img
-                      src="assets/images/logo/logo-c.svg"
-                      className="black_logo"
-                      alt="logo"
-                    />
+                  <a href="#" className="mobile-logo xl:hidden inline-block">
                     <img
-                      src="assets/images/logo/logo-c-white.svg"
+                      src={logo}
                       className="white_logo"
                       alt="logo"
-                    /> */}
+                      width={50}
+                      height={30}
+                    />
                   </a>
                   <button className="smallDeviceMenuController open-sdiebar-controller hidden xl:hidden md:inline-block">
-                    {/* <iconify-icon
-                      className="leading-none bg-transparent relative text-xl top-[2px] text-slate-900 dark:text-white"
-                      icon="heroicons-outline:menu-alt-3"
-                    ></iconify-icon> */}
-                    {/* <MenuIcon /> */}
+                    <Menu onClick={toggleSidebar} />
+                    {isSidebarVisible && <Sidebar toggle={toggleSidebar} />}
                   </button>
-                  <button className="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0 hidden rtl:rotate-180">
-                    <iconify-icon icon="ph:arrow-right-bold"></iconify-icon>
+                  <button className="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0 rtl:rotate-180 md:hidden">
+                    <Menu onClick={toggleSidebar} />
+                    {isSidebarVisible && <Sidebar toggle={toggleSidebar} />}
                   </button>
                   <button
                     className="flex items-center xl:text-sm text-lg xl:text-slate-400 text-slate-800 dark:text-slate-300 focus:outline-none focus:shadow-none px-1 space-x-3
@@ -232,7 +277,7 @@ const Account = () => {
                     data-bs-toggle="modal"
                     data-bs-target="#searchModal"
                   >
-                    <SearchIcon />
+                    <Search />
                     <span className="xl:inline-block hidden">Search...</span>
                   </button>
                 </div>
@@ -276,15 +321,14 @@ const Account = () => {
                     data-bs-toggle="modal"
                     data-bs-target="#searchModal"
                   >
-                    <SearchIcon />
+                    <Search />
                     <span className="xl:inline-block hidden">Search...</span>
                   </button>
                 </div>
                 {/* <!-- end horizental --> */}
 
-              
                 {/* <!-- end top menu --> */}
-               <StudentNotification />
+                <StudentNotification />
                 {/* <!-- end nav tools --> */}
               </div>
             </div>
@@ -303,7 +347,7 @@ const Account = () => {
                 <form>
                   <div className="relative">
                     <button className="absolute left-0 top-1/2 -translate-y-1/2 w-9 h-full text-xl dark:text-slate-300 flex items-center justify-center">
-                      <SearchIcon />
+                      <Search />
                     </button>
                     <input
                       type="text"
@@ -322,15 +366,15 @@ const Account = () => {
 
           {data ? (
             <div
-              className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px] layout-container"
+              className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px] ml-0 ml-248px"
               id="content_wrapper"
-              // style={{ backgroundColor: "#F1F5F9" }}
+              style={{ backgroundColor: "#F1F5F9" }}
             >
               <div className="page-content">
                 <div id="content_layout">
                   <div className="card xl:col-span-2">
                     <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                      <header className="flex mb-3 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
                         <div className="flex-1 flex justify-between">
                           <div className="card-title text-slate-900 dark:text-white">
                             {" "}
@@ -344,9 +388,10 @@ const Account = () => {
                             />{" "}
                             &nbsp;
                             <div
-                              className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white"
+                              className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white cursor-pointer"
+                              // ref={closeIconRef}
                               onClick={() => setShowEditModal(!showEditModal)}
-                              style={{ cursor: "pointer" }}
+                             
                             >
                               Edit
                             </div>
@@ -354,7 +399,7 @@ const Account = () => {
                         </div>
                       </header>
 
-                      {message && showRequest && (
+                      {/* {message && showRequest && (
                         <div className="alert-modal">
                           <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
                             <div
@@ -364,36 +409,44 @@ const Account = () => {
                                 height: "130px",
                                 borderRadius: "5px",
                                 padding: "20px",
-                                position: "relative"
+                                position: "relative",
                               }}
                             >
-                              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                              <img
-                                src={close}
+                              <div
                                 style={{
-                                  width: "15px",
-                                  height: "15px",
-                                  marginBottom: "10px",
-                                  cursor:'pointer'
+                                  display: "flex",
+                                  justifyContent: "flex-end",
                                 }}
-                                alt="close"
-                                onClick={() => setShowRequest(false)}
-                              />
+                              >
+                                <img
+                                  src={close}
+                                  style={{
+                                    width: "15px",
+                                    height: "15px",
+                                    marginBottom: "10px",
+                                    cursor: "pointer",
+                                  }}
+                                  alt="close"
+                                  onClick={() => setShowRequest(false)}
+                                />
                               </div>
-                              <div className="alert alert-danger light-mode" style={{fontSize:'12px'}}>
+                              <div
+                                className="alert alert-danger light-mode"
+                                style={{ fontSize: "12px" }}
+                              >
                                 {message}
                               </div>
                             </div>
                           </div>
                         </div>
-                      )}
+                      )} */}
                       {showEditModal && (
                         <>
                           <div className="alert-modal">
                             <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
                               <div
                                 className="bg-white rounded-md p-6 "
-                                style={{ width: "450px", height: "190px" }}
+                                style={{ width: "auto", height: "auto" }}
                               >
                                 <div
                                   style={{
@@ -411,10 +464,10 @@ const Account = () => {
                                   <img
                                     src={close}
                                     style={{
-                                      width: "15px",
-                                      height: "15px",
+                                      width: "20px",
+                                      height: "20px",
                                       cursor: "pointer",
-                                      marginBottom: "12px",
+                                      marginBottom: "20px",
                                     }}
                                     alt="close"
                                     onClick={() => setShowEditModal(false)}
@@ -422,7 +475,10 @@ const Account = () => {
                                 </div>
                                 {/* <div className="grid md:grid-cols-2 gap-6 m-auto" > */}
                                 <div className="input-area ">
-                                  <label htmlFor="verifyOtp" className="form-label">
+                                  <label
+                                    htmlFor="verifyOtp"
+                                    className="form-label"
+                                  >
                                     Enter OTP
                                   </label>
                                   <div className="relative">
@@ -433,7 +489,9 @@ const Account = () => {
                                       className="form-control"
                                       placeholder="Enter OTP"
                                       value={verifyOtp}
-                                      onChange={(e)=>setVerifyOtp(e.target.value)}
+                                      onChange={(e) =>
+                                        setVerifyOtp(e.target.value)
+                                      }
                                     />
                                   </div>
                                   <div
@@ -457,7 +515,7 @@ const Account = () => {
 
                                   <button
                                     className="btn btn-dark block w-full text-center mt-3"
-                                   onClick={handleEditVerifyOtp}
+                                    onClick={handleEditVerifyOtp}
                                   >
                                     Submit
                                   </button>
@@ -563,11 +621,27 @@ const Account = () => {
                               <label htmlFor="fileInput" className="form-label">
                                 QR Code
                               </label>
-                              <div className="relative form-control">
+                              <div
+                                className="relative form-control cursor-pointer"
+                                onClick={handleImageClick}
+                              >
                                 {fileName}
                               </div>
                             </div>
                           )}
+
+                          <Dialog
+                            open={openPopup}
+                            onClose={() => setOpenPopup(false)}
+                          >
+                            <DialogContent>
+                              <img
+                                src={`${localHost}/studentFile/${selectedImage}`}
+                                alt="document"
+                                style={{ width: "100%", height: "auto" }}
+                              />
+                            </DialogContent>
+                          </Dialog>
                         </div>
                       </div>
                     </div>
@@ -577,17 +651,20 @@ const Account = () => {
             </div>
           ) : (
             <div
-              className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px] layout-container"
+              className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px] ml-0 ml-248px"
               id="content_wrapper"
-              // style={{ backgroundColor: "#F1F5F9" }}
+              style={{ backgroundColor: "#F1F5F9" }}
             >
               <div className="page-content">
                 <div id="content_layout">
                   <div className="card xl:col-span-2">
                     <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                      <header className="flex mb-3 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
                         <div className="flex-1">
-                          <div className="card-title text-slate-900 dark:text-white" style={{fontSize:'18px'}}>
+                          <div
+                            className="card-title text-slate-900 dark:text-white"
+                            style={{ fontSize: "18px" }}
+                          >
                             {" "}
                             College/ School/ Institute Account Details
                           </div>
@@ -602,7 +679,7 @@ const Account = () => {
                               </label>
                               <div className="relative">
                                 <input
-                                  style={{fontSize:'12px'}}
+                                  style={{ fontSize: "12px" }}
                                   id="name"
                                   type="text"
                                   name="name"
@@ -625,7 +702,7 @@ const Account = () => {
                               </label>
                               <div className="relative">
                                 <input
-                                  style={{fontSize:'12px'}}
+                                  style={{ fontSize: "12px" }}
                                   id="account_number"
                                   type="number"
                                   name="account_number"
@@ -673,7 +750,7 @@ const Account = () => {
                               </label>
                               <div className="relative">
                                 <input
-                                  style={{fontSize:'12px'}}
+                                  style={{ fontSize: "12px" }}
                                   id="branch"
                                   type="text"
                                   name="branch"
@@ -691,7 +768,7 @@ const Account = () => {
                               </label>
                               <div className="relative">
                                 <input
-                                  style={{fontSize:'12px'}}
+                                  style={{ fontSize: "12px" }}
                                   id="ifsc_code"
                                   type="text"
                                   name="ifsc_code"
@@ -721,7 +798,9 @@ const Account = () => {
                                 // marginTop: "10px",
                               }}
                             />
-                            <p style={{fontSize:'12px',marginTop:'3px'}}>OR</p>
+                            <p style={{ fontSize: "12px", marginTop: "3px" }}>
+                              OR
+                            </p>
                             <hr
                               style={{
                                 width: "50%",
@@ -739,7 +818,7 @@ const Account = () => {
                               </label>
                               <div className="relative">
                                 <input
-                                  style={{fontSize:'12px'}}
+                                  style={{ fontSize: "12px" }}
                                   id="upi"
                                   type="text"
                                   name="upi"
@@ -756,7 +835,7 @@ const Account = () => {
                                 QR Code
                               </label>
                               <input
-                                style={{fontSize:'12px'}}
+                                style={{ fontSize: "12px" }}
                                 type="file"
                                 id="fileInput"
                                 className="form-control"
@@ -781,44 +860,9 @@ const Account = () => {
               </div>
             </div>
           )}
-
-          {showAlertModal && (
-            <>
-              <div className="alert-modal">
-                <div className="fixed top-0 left-0 h-screen w-screen bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-                  <div
-                    className="bg-white rounded-md p-6 "
-                    style={{
-                      width: "500px",
-                      height: "150px",
-                      borderRadius: "5px",
-                      padding: "20px",
-                    }}
-                  >
-                    <img
-                      src={close}
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        marginLeft: "445px",
-                        marginTop: "3px",
-                        marginBottom: "5px",
-                        pointer: "cursor",
-                      }}
-                      alt="close"
-                      onClick={() => setShowAlertModal(false)}
-                    />
-                    <div className="alert alert-danger light-mode">
-                      Congratulations 🎉! Your Account Details have been
-                      Successfully Added!
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 };

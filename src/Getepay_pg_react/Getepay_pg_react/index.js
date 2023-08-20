@@ -1,11 +1,13 @@
 import encryptEas from "./components/encryptEas";
 import decryptEas from "./components/decryptEas";
 
-const getepayPortal = (data, config, studentName, studentUID) => {
+const getepayPortal = (data, config, studentName, studentUID,studentRaiseFundCourseId,panNumber) => {
   const updatedData = {
     ...data,
     udf3: studentUID,
     udf4: studentName,
+    udf5:studentRaiseFundCourseId,
+    udf6:panNumber
   };
   const JsonData = JSON.stringify(updatedData);
   // console.log(JsonData);

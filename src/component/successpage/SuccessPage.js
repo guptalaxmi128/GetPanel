@@ -34,7 +34,7 @@ const SuccessPage = () => {
               style={{ paddingTop: "2rem", paddingBottom: "2rem" }}
             >
               <div className="text-center 2xl:mb-10 mb-5">
-                <img src={success} alt="success" width={100} height={50} />
+                <img src={success} alt="success" width={100} height={50} className="justify-center m-auto" />
                 <div
                   className="text-slate-500 dark:text-slate-400 text-base mt-5"
                   style={{ fontSize: "20px" }}
@@ -46,7 +46,7 @@ const SuccessPage = () => {
                 </div>
               </div>
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Link to={"/donate-now"}>
+              <Link to={"/donate"}>
               <button
                   className="text-center "
                  style={{background:'#008000',color:"#fff",width:'250px',height:'50px',borderRadius:'20px',cursor:'pointer'}}
@@ -54,6 +54,9 @@ const SuccessPage = () => {
                   Download Receipt
                 </button>
                 </Link>
+                </div>
+                <div className="mx-auto font-normal text-slate-500 dark:text-slate-400 2xl:mt-12 mt-6 uppercase text-sm text-center" style={{fontWeight:500,color:'red'}}>
+                Your receipt will be download after 48 hours.
                 </div>
                
                 <div className="mx-auto font-normal text-slate-500 dark:text-slate-400 2xl:mt-12 mt-6 text-sm text-center">

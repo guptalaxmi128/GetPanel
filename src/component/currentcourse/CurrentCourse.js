@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-import SearchIcon from "@mui/icons-material/Search";
-import MenuIcon from "@mui/icons-material/Menu";
-import Sidebar from "../sidebar/Sidebar";
-import edit from "../../assets/edit.png";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   useAddCourseMutation,
   useGetCourseQuery,
 } from "../../services/signUpApi";
-import StudentNotification from "../studentNotification/StudentNotification";
+
 
 const CurrentCourse = () => {
   const [currentData, setCurrentData] = useState("");
@@ -37,12 +35,7 @@ const CurrentCourse = () => {
   //   setSelectedCurrentFile(file);
   // };
 
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
-
-
-  const toggleSidebar = () => {
-    setSidebarVisible(!isSidebarVisible);
-  };
+ 
 
  
  
@@ -549,13 +542,18 @@ const CurrentCourse = () => {
         formData.append("courseDocument", file);
       });
       const res = await addCourse(formData);
-      alert("Course details added successfully !");
+      // alert("Course details added successfully !");
       console.log(res);
+      if(res.data.success){
+        toast.success(res.data.message);
+      }
       clearTextInput();
     } catch (error) {
       console.log(error);
     }
   };
+
+  
 
   const clearHighTextInput = () => {
     setHighFullName("");
@@ -590,8 +588,11 @@ const CurrentCourse = () => {
         formData.append("courseDocument", file);
       });
       const res = await addCourse(formData);
-      alert("HighSchool details added successfully !");
+      // alert("HighSchool details added successfully !");
       console.log(res);
+      if(res.data.success){
+        toast.success(res.data.message);
+      }
       clearHighTextInput();
     } catch (error) {
       console.log(error);
@@ -617,8 +618,11 @@ const CurrentCourse = () => {
         formData.append("courseDocument", file);
       });
       const res = await addCourse(formData);
-      alert("Intermediate details added successfully !");
+      // alert("Intermediate details added successfully !");
       console.log(res);
+      if(res.data.success){
+        toast.success(res.data.message);
+      }
       clearInterTextInput();
     } catch (error) {
       console.log(error);
@@ -658,8 +662,11 @@ const CurrentCourse = () => {
         formData.append("courseDocument", file);
       });
       const res = await addCourse(formData);
-      alert("Graduation details added successfully !");
+      // alert("Graduation details added successfully !");
       console.log(res);
+      if(res.data.success){
+        toast.success(res.data.message);
+      }
       clearGraduationTextInput();
     } catch (error) {
       console.log(error);
@@ -702,8 +709,11 @@ const CurrentCourse = () => {
         formData.append("courseDocument", file);
       });
       const res = await addCourse(formData);
-      alert(" Post Graduation details added successfully !");
+      // alert(" Post Graduation details added successfully !");
       console.log(res);
+      if(res.data.success){
+        toast.success(res.data.message);
+      }
       clearPostGraduationTextInput();
     } catch (error) {
       console.log(error);
@@ -726,148 +736,12 @@ const CurrentCourse = () => {
 
   return (
     <>
-    
-      <div
-        className="flex flex-col justify-between min-h-screen"
-        // style={{ marginLeft: "248px" }}
-      >
-        <div>
-          {/* <!-- BEGIN: Header --> */}
-          {/* <!-- BEGIN: Header --> */}
-          <div className="z-[9]" id="app_header">
-            <div className="app-header z-[999] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700">
-              <div className="flex justify-between items-center h-full">
-                <div className="flex items-center md:space-x-4 space-x-4 rtl:space-x-reverse vertical-box">
-                  <a
-                    href="index.html"
-                    className="mobile-logo xl:hidden inline-block"
-                  >
-                      <img
-                      // src="assets/images/logo/logo-c.svg"
-                      className="black_logo"
-                      alt="logo"
-                    />
-                  </a>
-                  <button className="smallDeviceMenuController open-sdiebar-controller   xl:hidden md:inline-block">
-                    <MenuIcon  onClick={toggleSidebar}/>
-                    {isSidebarVisible && <div id="sidebarContainer"><Sidebar /></div>}
-                  </button>
-                 
-                  <button className="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0  rtl:rotate-180">
-                    {/* <iconify-icon icon="ph:arrow-right-bold"></iconify-icon> */} 
-                    {/* <MenuIcon className="sidebar" onClick={toggleMobileMenu}/> */}
-                    {/* {isMobileMenuVisible && <div><Sidebar /></div>} */}
-                  </button>
-                  <button
-                    className="flex items-center xl:text-sm text-lg xl:text-slate-400 text-slate-800 dark:text-slate-300 focus:outline-none focus:shadow-none px-1 space-x-3
-        rtl:space-x-reverse search-modal"
-                    data-bs-toggle="modal"
-                    data-bs-target="#searchModal"
-                  >
-                    <SearchIcon />
-                    <span className="xl:inline-block hidden">Search...</span>
-                  </button>
-                </div>
-                {/* <!-- end vertcial --> */}
-                {/* <div className="items-center space-x-4 rtl:space-x-reverse horizental-box">
-                  <a href="index.html" className="leading-0">
-                    <span className="xl:inline-block hidden">
-                      <img
-                        src="assets/images/logo/logo.svg"
-                        className="black_logo "
-                        alt="logo"
-                      />
-                      <img
-                        src="assets/images/logo/logo-white.svg"
-                        className="white_logo"
-                        alt="logo"
-                      />
-                    </span>
-                    <span className="xl:hidden inline-block">
-                      <img
-                        src="assets/images/logo/logo-c.svg"
-                        className="black_logo "
-                        alt="logo"
-                      />
-                      <img
-                        src="assets/images/logo/logo-c-white.svg"
-                        className="white_logo "
-                        alt="logo"
-                      />
-                    </span>
-                  </a>
-                  <button className="smallDeviceMenuController open-sdiebar-controller hidden md:inline-block xl:hidden">
-                    <iconify-icon
-                      className="leading-none bg-transparent relative text-xl top-[2px] text-slate-900 dark:text-white"
-                      icon="heroicons-outline:menu-alt-3"
-                    ></iconify-icon>
-                       <MenuIcon />
-                  </button>
-                  <button
-                    className="items-center xl:text-sm text-lg xl:text-slate-400 text-slate-800 dark:text-slate-300 focus:outline-none focus:shadow-none px-1 space-x-3
-        rtl:space-x-reverse search-modal inline-flex xl:hidden"
-                    data-bs-toggle="modal"
-                    data-bs-target="#searchModal"
-                  >
-                    <SearchIcon />
-                    <span className="xl:inline-block hidden">Search...</span>
-                  </button>
-                </div> */}
-                {/* <!-- end horizental --> */}
-
-                {/* <!-- end top menu --> */}
-                <StudentNotification />
-                {/* <!-- END: Notification Dropdown --> */}
-                {/* <!-- end nav tools --> */}
-              </div>
-            </div>
-          </div>
-
-          {/* <!-- BEGIN: Search Modal --> */}
-          <div
-            className="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto inset-0 bg-slate-900/40 backdrop-filter backdrop-blur-sm backdrop-brightness-10"
-            id="searchModal"
-            tabindex="-1"
-            aria-labelledby="searchModalLabel"
-            aria-hidden="true"
-          >
-            <div className="modal-dialog relative w-auto pointer-events-none top-1/4">
-              <div className="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white dark:bg-slate-900 bg-clip-padding rounded-md outline-none text-current">
-                <form>
-                  <div className="relative">
-                    <button className="absolute left-0 top-1/2 -translate-y-1/2 w-9 h-full text-xl dark:text-slate-300 flex items-center justify-center">
-                      <SearchIcon />
-                    </button>
-                    <input
-                      type="text"
-                      className="form-control !py-[14px] !pl-10"
-                      placeholder="Search"
-                      autofocus
-                    />
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          {/* <!-- END: Search Modal --> */}
-          {/* <!-- END: Header --> */}
-          {/* <!-- END: Header --> */}
-
-          <div
-            className="content-wrapper transition-all duration-150 xl:ltr:ml-[248px]"
-            id="content_wrapper"
-            style={{ backgroundColor: "#F1F5F9" }}
-         
-            
-          >
-            <div className="page-content">
-              <div id="content_layout">
                 {/* current course detail begin*/}
 
-                {data && currentData && currentData.onGoing === true ? (
+                {/* {data && currentData && currentData.onGoing === true ? (
                   <div className="card xl:col-span-2">
                     <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
                         <div className="flex-1 flex justify-between">
                           <div className="card-title text-slate-900 dark:text-white">
                             Current Course Details
@@ -939,7 +813,7 @@ const CurrentCourse = () => {
                             <div className="relative form-control">
                             
                             </div>
-                          </div> */}
+                          </div> 
                           <div className="input-area">
                             <label
                               for="selectcurrentcourse"
@@ -994,10 +868,10 @@ const CurrentCourse = () => {
                       </div>
                     </div>
                   </div>
-                ) : (
+                ) : ( */}
                   <div className="card xl:col-span-2">
                     <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
                         <div className="flex-1">
                           <div className="card-title text-slate-900 dark:text-white">
                             Current Course Details
@@ -1333,6 +1207,77 @@ const CurrentCourse = () => {
                               </option> */}
                               </select>
                             </div>
+                            <div className="input-area">
+                              <label
+                                htmlFor="typeOfGrade"
+                                className="form-label"
+                              >
+                                 Type Of Grade
+                              </label>
+                              <select
+                                id="currentcoursetype"
+                                className="form-control"
+                                // value={currentCourseType}
+                                // onChange={handleCurrentCourseType}
+                                style={{ fontSize: "12px" }}
+                              >
+                                <option
+                                  value="default"
+                                  className="dark:bg-slate-700"
+                                  selected
+                                >
+                                 Select an Option
+                                </option>
+                                <option
+                                  value="Percentage"
+                                  className="dark:bg-slate-700"
+                                >
+                                  Percentage
+                                </option>
+                                <option
+                                  value="Cgpa"
+                                  className="dark:bg-slate-700"
+                                >
+                                  CGPA
+                                </option>
+                                <option
+                                  value="Sgpa"
+                                  className="dark:bg-slate-700"
+                                >
+                                  SGPA
+                                </option>
+                                {/* <option
+                                value="others"
+                                className="dark:bg-slate-700"
+                              >
+                                Others
+                              </option> */}
+                              </select>
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Obtained Marks
+                              </label>
+                              <input
+                                style={{ fontSize: "12px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Obtained Marks"
+                               
+                              />
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Total Marks
+                              </label>
+                              <input
+                                style={{ fontSize: "12px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Total Marks"
+                               
+                              />
+                            </div>
                             {showOthersFields && (
                               <div className="input-area relative">
                                 <label for="largeInput" className="form-label">
@@ -1380,14 +1325,14 @@ const CurrentCourse = () => {
                       </div>
                     </div>
                   </div>
-                )}
+                {/* )} */}
 
                 {/* Current course detail  end*/}
                 {/* Highschool section Begin */}
-                {data && highSchoolData && highSchoolData.onGoing === false ? (
+                {/* {data && highSchoolData && highSchoolData.onGoing === false ? (
                   <div className="card xl:col-span-2 mt-5">
                     <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
                         <div className="flex-1 flex justify-between">
                           <div className="card-title text-slate-900 dark:text-white">
                             HighSchool
@@ -1460,7 +1405,7 @@ const CurrentCourse = () => {
                             <div className="relative form-control">
                             
                             </div>
-                          </div> */}
+                          </div> 
                             <div className="input-area">
                               <label
                                 for="selectcurrentcourse"
@@ -1516,11 +1461,11 @@ const CurrentCourse = () => {
                       </div>
                     </div>
                   </div>
-                ) : (
-                  showHighSchoolForm && (
+                ) : ( */}
+                 {showHighSchoolForm && (
                     <div className="card xl:col-span-2 mt-5">
                       <div className="card-body flex flex-col p-6">
-                        <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                        <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
                           <div className="flex-1">
                             <div className="card-title text-slate-900 dark:text-white">
                               HighSchool
@@ -1792,6 +1737,77 @@ const CurrentCourse = () => {
                                   </option>
                                 </select>
                               </div>
+                              <div className="input-area">
+                              <label
+                                htmlFor="typeOfGrade"
+                                className="form-label"
+                              >
+                                 Type Of Grade
+                              </label>
+                              <select
+                                id="currentcoursetype"
+                                className="form-control"
+                                // value={currentCourseType}
+                                // onChange={handleCurrentCourseType}
+                                style={{ fontSize: "12px" }}
+                              >
+                                <option
+                                  value="default"
+                                  className="dark:bg-slate-700"
+                                  selected
+                                >
+                                 Select an Option
+                                </option>
+                                <option
+                                  value="Percentage"
+                                  className="dark:bg-slate-700"
+                                >
+                                  Percentage
+                                </option>
+                                <option
+                                  value="Cgpa"
+                                  className="dark:bg-slate-700"
+                                >
+                                  CGPA
+                                </option>
+                                <option
+                                  value="Sgpa"
+                                  className="dark:bg-slate-700"
+                                >
+                                  SGPA
+                                </option>
+                                {/* <option
+                                value="others"
+                                className="dark:bg-slate-700"
+                              >
+                                Others
+                              </option> */}
+                              </select>
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Obtained Marks
+                              </label>
+                              <input
+                                style={{ fontSize: "12px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Obtained Marks"
+                               
+                              />
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Total Marks
+                              </label>
+                              <input
+                                style={{ fontSize: "12px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Total Marks"
+                               
+                              />
+                            </div>
                             </div>
 
                             <button
@@ -1805,17 +1821,17 @@ const CurrentCourse = () => {
                         </div>
                       </div>
                     </div>
-                  )
                 )}
+                {/* )}  */}
 
                 {/* Highschool section end */}
 
                 {/* Intermediate Begin */}
 
-                {data && interData && interData.onGoing === false ? (
+                {/* {data && interData && interData.onGoing === false ? (
                   <div className="card xl:col-span-2 mt-5">
                     <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
                         <div className="flex-1 flex justify-between">
                           <div className="card-title text-slate-900 dark:text-white">
                             Intermediate
@@ -1881,14 +1897,14 @@ const CurrentCourse = () => {
                                 {interData.schoolOrCollageName}
                               </div>
                             </div>
-                            {/* <div className="input-area relative">
+                            <div className="input-area relative">
                             <label for="fileInput" className="form-label">
                               Document Upload
                             </label>
                             <div className="relative form-control">
                             
                             </div>
-                          </div> */}
+                          </div>
                             <div className="input-area">
                               <label
                                 for="selectcurrentcourse"
@@ -1944,11 +1960,12 @@ const CurrentCourse = () => {
                       </div>
                     </div>
                   </div>
-                ) : (
+                ) :  */}
+                {(
                   showIntermediateForm && (
                     <div className="card xl:col-span-2 mt-5">
                       <div className="card-body flex flex-col p-6">
-                        <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                        <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
                           <div className="flex-1">
                             <div className="card-title text-slate-900 dark:text-white">
                               Intermediate
@@ -2222,6 +2239,77 @@ const CurrentCourse = () => {
                                   </option>
                                 </select>
                               </div>
+                              <div className="input-area">
+                              <label
+                                htmlFor="typeOfGrade"
+                                className="form-label"
+                              >
+                                 Type Of Grade
+                              </label>
+                              <select
+                                id="currentcoursetype"
+                                className="form-control"
+                                // value={currentCourseType}
+                                // onChange={handleCurrentCourseType}
+                                style={{ fontSize: "12px" }}
+                              >
+                                <option
+                                  value="default"
+                                  className="dark:bg-slate-700"
+                                  selected
+                                >
+                                 Select an Option
+                                </option>
+                                <option
+                                  value="Percentage"
+                                  className="dark:bg-slate-700"
+                                >
+                                  Percentage
+                                </option>
+                                <option
+                                  value="Cgpa"
+                                  className="dark:bg-slate-700"
+                                >
+                                  CGPA
+                                </option>
+                                <option
+                                  value="Sgpa"
+                                  className="dark:bg-slate-700"
+                                >
+                                  SGPA
+                                </option>
+                                {/* <option
+                                value="others"
+                                className="dark:bg-slate-700"
+                              >
+                                Others
+                              </option> */}
+                              </select>
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Obtained Marks
+                              </label>
+                              <input
+                                style={{ fontSize: "12px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Obtained Marks"
+                               
+                              />
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Total Marks
+                              </label>
+                              <input
+                                style={{ fontSize: "12px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Total Marks"
+                               
+                              />
+                            </div>
                             </div>
 
                             <button
@@ -2240,10 +2328,10 @@ const CurrentCourse = () => {
                 {/* Intermediate End */}
 
                 {/* Graduation Begin */}
-                {data && graduationData && graduationData.onGoing === false ? (
+                {/* {data && graduationData && graduationData.onGoing === false ? (
                   <div className="card xl:col-span-2 mt-5">
                     <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
                         <div className="flex-1 flex justify-between">
                           <div className="card-title text-slate-900 dark:text-white">
                             Graduation
@@ -2316,7 +2404,7 @@ const CurrentCourse = () => {
                             <div className="relative form-control">
                             
                             </div>
-                          </div> */}
+                          </div> 
                             <div className="input-area">
                               <label
                                 for="selectcurrentcourse"
@@ -2372,11 +2460,12 @@ const CurrentCourse = () => {
                       </div>
                     </div>
                   </div>
-                ) : (
+                ) :  */}
+               {(
                   showGraduationForm && (
                     <div className="card xl:col-span-2 mt-5">
                       <div className="card-body flex flex-col p-6">
-                        <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                        <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
                           <div className="flex-1">
                             <div className="card-title text-slate-900 dark:text-white">
                               Graduation
@@ -2670,6 +2759,77 @@ const CurrentCourse = () => {
                                   </option>
                                 </select>
                               </div>
+                              <div className="input-area">
+                              <label
+                                htmlFor="typeOfGrade"
+                                className="form-label"
+                              >
+                                 Type Of Grade
+                              </label>
+                              <select
+                                id="currentcoursetype"
+                                className="form-control"
+                                // value={currentCourseType}
+                                // onChange={handleCurrentCourseType}
+                                style={{ fontSize: "12px" }}
+                              >
+                                <option
+                                  value="default"
+                                  className="dark:bg-slate-700"
+                                  selected
+                                >
+                                 Select an Option
+                                </option>
+                                <option
+                                  value="Percentage"
+                                  className="dark:bg-slate-700"
+                                >
+                                  Percentage
+                                </option>
+                                <option
+                                  value="Cgpa"
+                                  className="dark:bg-slate-700"
+                                >
+                                  CGPA
+                                </option>
+                                <option
+                                  value="Sgpa"
+                                  className="dark:bg-slate-700"
+                                >
+                                  SGPA
+                                </option>
+                                {/* <option
+                                value="others"
+                                className="dark:bg-slate-700"
+                              >
+                                Others
+                              </option> */}
+                              </select>
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Obtained Marks
+                              </label>
+                              <input
+                                style={{ fontSize: "12px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Obtained Marks"
+                               
+                              />
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Total Marks
+                              </label>
+                              <input
+                                style={{ fontSize: "12px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Total Marks"
+                               
+                              />
+                            </div>
                             </div>
 
                             <button
@@ -2688,12 +2848,12 @@ const CurrentCourse = () => {
 
                 {/* Graduation End */}
                 {/* Post Graduation Begin */}
-                {data &&
+                {/* {data &&
                 postGraduationData &&
                 postGraduationData.onGoing === false ? (
                   <div className="card xl:col-span-2 mt-5">
                     <div className="card-body flex flex-col p-6">
-                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                      <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
                         <div className="flex-1 flex justify-between">
                           <div className="card-title text-slate-900 dark:text-white">
                             Post Graduation
@@ -2766,7 +2926,7 @@ const CurrentCourse = () => {
                             <div className="relative form-control">
                             
                             </div>
-                          </div> */}
+                          </div> 
                             <div className="input-area">
                               <label
                                 for="selectcurrentcourse"
@@ -2822,11 +2982,12 @@ const CurrentCourse = () => {
                       </div>
                     </div>
                   </div>
-                ) : (
+                ) :  */}
+                {(
                   showPostGraduationForm && (
                     <div className="card xl:col-span-2 mt-5">
                       <div className="card-body flex flex-col p-6">
-                        <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-5 -mx-6 px-6">
+                        <header className="flex mb-5 items-center border-b border-slate-100 dark:border-slate-700 pb-2 -mx-6 px-6">
                           <div className="flex-1">
                             <div className="card-title text-slate-900 dark:text-white">
                               Post Graduation
@@ -3110,6 +3271,72 @@ const CurrentCourse = () => {
                                   </option>
                                 </select>
                               </div>
+                              <div className="input-area">
+                              <label
+                                htmlFor="typeOfGrade"
+                                className="form-label"
+                              >
+                                 Type Of Grade
+                              </label>
+                              <select
+                                id="currentcoursetype"
+                                className="form-control"
+                                // value={currentCourseType}
+                                // onChange={handleCurrentCourseType}
+                                style={{ fontSize: "12px" }}
+                              >
+                                <option
+                                  value="default"
+                                  className="dark:bg-slate-700"
+                                  selected
+                                >
+                                 Select an Option
+                                </option>
+                                <option
+                                  value="Percentage"
+                                  className="dark:bg-slate-700"
+                                >
+                                  Percentage
+                                </option>
+                                <option
+                                  value="Cgpa"
+                                  className="dark:bg-slate-700"
+                                >
+                                  CGPA
+                                </option>
+                                <option
+                                  value="Sgpa"
+                                  className="dark:bg-slate-700"
+                                >
+                                  SGPA
+                                </option>
+                             
+                              </select>
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Obtained Marks
+                              </label>
+                              <input
+                                style={{ fontSize: "12px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Obtained Marks"
+                               
+                              />
+                            </div>
+                            <div className="input-area relative">
+                              <label for="largeInput" className="form-label">
+                                Total Marks
+                              </label>
+                              <input
+                                style={{ fontSize: "12px" }}
+                                type="text"
+                                className="form-control"
+                                placeholder="Total Marks"
+                               
+                              />
+                            </div>
                             </div>
 
                             <button
@@ -3126,11 +3353,8 @@ const CurrentCourse = () => {
                   )
                 )}
                 {/* Post Graduation End */}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+              
+       <ToastContainer />
     </>
   );
 };

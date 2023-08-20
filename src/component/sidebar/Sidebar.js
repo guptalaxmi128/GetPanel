@@ -1,14 +1,11 @@
 import React, { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import GroupSharpIcon from "@mui/icons-material/GroupSharp";
-import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
-import LogoutIcon from "@mui/icons-material/Logout";
-import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+import { NavLink} from "react-router-dom";
+import { Home, Award,User,CreditCard,Users,Power,BookOpen, X } from 'react-feather';
+import CloseIcon from "@mui/icons-material/Close";
 import logo from "../../assets/images/logo.png";
 
-const Sidebar = () => {
+
+const Sidebar = ({ toggle }) => {
   const [activeItem, setActiveItem] = useState(0);
 
   const handleItemClick = (index) => {
@@ -40,7 +37,7 @@ const Sidebar = () => {
           </span>
         </NavLink>
         {/* <!-- Sidebar Type Button --> */}
-        <div
+        {/* <div
           id="sidebar_type"
           className="cursor-pointer text-slate-900 dark:text-white text-lg"
         >
@@ -52,12 +49,12 @@ const Sidebar = () => {
             className="sidebarDotIcon collapsed-icon text-slate-900 dark:text-slate-200"
             icon="material-symbols:circle-outline"
           ></iconify-icon>
-        </div>
-        <button className="sidebarCloseIcon text-2xl inline-block md:hidden">
-          <iconify-icon
-            className="text-slate-900 dark:text-slate-200"
-            icon="clarity:window-close-line"
-          ></iconify-icon>
+        </div> */}
+        <button
+          className="sidebarCloseIcon text-2xl inline-block xl:hidden"
+          onClick={toggle}
+        >
+          <X size={22} />
         </button>
       </div>
       <div
@@ -76,7 +73,8 @@ const Sidebar = () => {
           >
             <NavLink to="/student/home" className="navItem">
               <span className="flex items-center">
-                <HomeRoundedIcon sx={{ fontSize: "20px" }} /> &nbsp; &nbsp;
+               <Home size={22} />
+                &nbsp; &nbsp;
                 <span style={{ fontSize: "15px" }}>Dashboard</span>
               </span>
             </NavLink>
@@ -88,9 +86,9 @@ const Sidebar = () => {
           >
             <NavLink to="/student/course" className="navItem">
               <span className="flex items-center">
-                <ListAltOutlinedIcon sx={{ fontSize: "20px" }} />
+                <Award size={22} />
                 &nbsp; &nbsp;
-                <span style={{ fontSize: "15px" }}>Current Course</span>
+                <span style={{ fontSize: "15px" }}>Qualification</span>
               </span>
             </NavLink>
           </li>
@@ -100,7 +98,7 @@ const Sidebar = () => {
           >
             <NavLink to="/student/account" className="navItem">
               <span className="flex items-center">
-                <GroupSharpIcon sx={{ fontSize: "20px" }} /> &nbsp; &nbsp;
+                <Users size={22} /> &nbsp; &nbsp;
                 <span style={{ fontSize: "15px" }}>Account Details</span>
               </span>
             </NavLink>
@@ -111,7 +109,7 @@ const Sidebar = () => {
           >
             <NavLink to="/student/wallet" className="navItem">
               <span className="flex items-center">
-                <AccountBalanceWalletOutlinedIcon sx={{ fontSize: "20px" }} />{" "}
+                <CreditCard size={22} />
                 &nbsp; &nbsp;
                 <span style={{ fontSize: "15px" }}>Wallet</span>
               </span>
@@ -123,7 +121,7 @@ const Sidebar = () => {
           >
             <NavLink to="/student/profile" className="navItem">
               <span className="flex items-center">
-                <DescriptionOutlinedIcon sx={{ fontSize: "20px" }} />{" "}
+                <User szie={22} />{" "}
                 &nbsp;&nbsp;&nbsp;
                 <span style={{ fontSize: "15px" }}>Profile</span>
               </span>
@@ -135,7 +133,7 @@ const Sidebar = () => {
           >
             <NavLink to="/student/courses" className="navItem">
               <span className="flex items-center">
-                <ListAltOutlinedIcon sx={{ fontSize: "20px" }} />
+                <BookOpen size={22} />
                 &nbsp;&nbsp;&nbsp;
                 <span style={{ fontSize: "15px" }}>Course Offered</span>
               </span>
@@ -147,9 +145,9 @@ const Sidebar = () => {
           >
             <NavLink to="/login" className="navItem" onClick={handleLogout}>
               <span className="flex items-center">
-                <LogoutIcon sx={{ fontSize: "20px" }} />
+                <Power size={22} style={{color:'red'}} />
                 &nbsp;&nbsp;&nbsp;
-                <span style={{ fontSize: "15px" }}>Logout</span>
+                <span style={{ fontSize: "15px",color:'red' }}>Logout</span>
               </span>
             </NavLink>
           </li>

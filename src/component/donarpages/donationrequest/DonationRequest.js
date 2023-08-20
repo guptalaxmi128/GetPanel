@@ -3,16 +3,19 @@ import PropTypes from "prop-types";
 import { Box, Tabs, Tab, Typography } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
+import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import LogoutIcon from "@mui/icons-material/Logout";
 import user from "../../../assets/images/user/user-1.jpg";
+import logo from "../../../assets/images/logo.png";
 import Sidebar from "../sidebar/Sidebar";
 import All from "./all/All";
 import Today from "./today/Today";
 import {
      useGetAcceptRaiseFundQuery, 
     useGetDonarQuery ,useGetDonarNotificationQuery } from "../../../services/signUpApi";
+import DonarNotification from "../donarNotification/DonarNotification";
 
 const DonationRequest = () => {
   const [value, setValue] = useState(0);
@@ -47,7 +50,7 @@ const DonationRequest = () => {
   const { data: donarNotification, isSuccess: donarIsSuccess } =
   useGetDonarNotificationQuery();
 
-// console.log(studentNotification);
+console.log(donarNotification);
 // console.log("data", notification);
 
 useEffect(() => {
@@ -55,6 +58,13 @@ useEffect(() => {
     setNotification(donarNotification.data);
   }
 }, [donarNotification, donarIsSuccess]);
+
+const [isSidebarVisible, setSidebarVisible] = useState(false);
+ 
+
+const toggleSidebar = () => {
+  setSidebarVisible(!isSidebarVisible);
+};
 
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -88,42 +98,45 @@ useEffect(() => {
 
   return (
     <>
-      <Sidebar />
+        <div className="sidebar-wrapper group w-0  xl:w-[248px] xl:block hidden md:hidden sm:hidden"><Sidebar /></div>
       <div
         class="flex flex-col justify-between min-h-screen"
-        style={{ marginLeft: "248px" }}
+        // style={{ marginLeft: "248px" }}
       >
         <div>
           {/* <!-- BEGIN: Header --> */}
           {/* <!-- BEGIN: Header --> */}
           <div class="z-[9]" id="app_header">
-            <div class="app-header z-[999] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700">
+            <div class="app-header z-[999] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700 ml-0 ml-248px">
               <div class="flex justify-between items-center h-full">
-                <div class="flex items-center md:space-x-4 space-x-4 rtl:space-x-reverse vertical-box">
-                  <a
+              <div className="flex items-center md:space-x-4 space-x-4 rtl:space-x-reverse vertical-box">
+                <a
                     href="#"
-                    class="mobile-logo xl:hidden inline-block"
+                    className="mobile-logo xl:hidden inline-block"
                   >
-                    {/* <img
-                      src="assets/images/logo/logo-c.svg"
-                      class="black_logo"
-                      alt="logo"
-                    />
                     <img
-                      src="assets/images/logo/logo-c-white.svg"
-                      class="white_logo"
+                      src={logo}
+                      className="white_logo"
                       alt="logo"
-                    /> */}
+                      width={50}
+                      height={30}
+                    />
                   </a>
-                  <button class="smallDeviceMenuController open-sdiebar-controller hidden xl:hidden md:inline-block">
-                    {/* <iconify-icon
-                      class="leading-none bg-transparent relative text-xl top-[2px] text-slate-900 dark:text-white"
-                      icon="heroicons-outline:menu-alt-3"
-                    ></iconify-icon> */}
-                    {/* <MenuIcon /> */}
+                  <button className="smallDeviceMenuController open-sdiebar-controller hidden xl:hidden md:inline-block">
+                    <MenuIcon onClick={toggleSidebar} />
+                    {isSidebarVisible && (
+                   
+                        <Sidebar toggle={toggleSidebar} />
+                   
+                    )}
                   </button>
-                  <button class="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0 hidden rtl:rotate-180">
-                    <iconify-icon icon="ph:arrow-right-bold"></iconify-icon>
+                  <button className="sidebarOpenButton text-xl text-slate-900 dark:text-white !ml-0 rtl:rotate-180 md:hidden">
+                    <MenuIcon onClick={toggleSidebar} />
+                    {isSidebarVisible && (
+                    
+                        <Sidebar toggle={toggleSidebar} />
+                    
+                    )}
                   </button>
                   <button
                     class="flex items-center xl:text-sm text-lg xl:text-slate-400 text-slate-800 dark:text-slate-300 focus:outline-none focus:shadow-none px-1 space-x-3
@@ -183,9 +196,8 @@ useEffect(() => {
 
                 
               
-                <div className="nav-tools flex items-center lg:space-x-5 space-x-3 rtl:space-x-reverse leading-0">
-                  {/* <!-- BEGIN: Notification Dropdown --> */}
-                  {/* <!-- Notifications Dropdown area --> */}
+                {/* <div className="nav-tools flex items-center lg:space-x-5 space-x-3 rtl:space-x-reverse leading-0">
+               
                   <div className="relative md:block hidden">
                     <button
                       className="lg:h-[32px] lg:w-[32px] lg:bg-slate-50 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer
@@ -201,7 +213,7 @@ useEffect(() => {
                         4
                       </span>
                     </button>
-                    {/* <!-- Notifications Dropdown --> */}
+                 
                     {isNotification && (
                       <div
                         className="dropdown-menu z-10  bg-white divide-y divide-slate-100 dark:divide-slate-900 shadow w-[335px]
@@ -231,9 +243,9 @@ useEffect(() => {
                                   <div className="text-slate-600 text-xs leading-4">
                                     {notification.message}
                                   </div>
-                                  {/* <div className="text-slate-400 dark:text-slate-400 text-xs mt-1">
-                                    {notification.createdAt}
-                                  </div> */}
+                                  //<div className="text-slate-400 dark:text-slate-400 text-xs mt-1">
+                                    //{notification.createdAt}
+                                 // </div> 
                                 </div>
                               </div>
                             </div>
@@ -242,10 +254,9 @@ useEffect(() => {
                       </div>
                     )}
                   </div>
-                  {/* <!-- END: Notification Dropdown --> */}
+                
 
-                  {/* <!-- BEGIN: Profile Dropdown --> */}
-                  {/* <!-- Profile DropDown Area --> */}
+                
                   <div className="md:block hidden w-full">
                     <button
                       className="text-slate-800 dark:text-white focus:ring-0 focus:outline-none font-medium rounded-lg text-sm text-center
@@ -267,13 +278,11 @@ useEffect(() => {
                       <span className="flex-none text-slate-600 dark:text-white text-sm font-normal items-center lg:flex hidden overflow-hidden text-ellipsis whitespace-nowrap">
                         {name}
                       </span>
-                      {/* <svg className="w-[16px] h-[16px] dark:text-white  lg:inline-block text-base inline-block ml-[10px] rtl:mr-[10px]" aria-hidden="true" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg> */}
+                     
 
                       <KeyboardArrowDownIcon onClick={toggleDropdown} />
                     </button>
-                    {/* <!-- Dropdown menu --> */}
+                  
                     {isDropdownOpen && (
                       <div
                         className="dropdown-menu z-10  bg-white divide-slate-100 shadow w-44 dark:bg-slate-800 border dark:border-slate-700 top-[23px] rounded-md
@@ -287,10 +296,7 @@ useEffect(() => {
             dark:text-white font-normal"
                               onClick={handleLogout}
                             >
-                              {/* <iconify-icon
-                              icon="heroicons-outline:login"
-                              className="relative top-[2px] text-lg ltr:mr-1 rtl:ml-1"
-                            ></iconify-icon> */}
+                            
                               <LogoutIcon
                                 style={{ fontSize: "medium" }}
                                 onClick={handleLogout}
@@ -303,16 +309,18 @@ useEffect(() => {
                       </div>
                     )}
                   </div>
-                  {/* <!-- END: Header --> */}
+                
                   <button className="smallDeviceMenuController md:hidden block leading-0">
                     <iconify-icon
                       className="cursor-pointer text-slate-900 dark:text-white text-2xl"
                       icon="heroicons-outline:menu-alt-3"
                     ></iconify-icon>
                   </button>
-                  {/* <!-- end mobile menu --> */}
-                </div>
+             
+                </div> */}
+
                 {/* <!-- end nav tools --> */}
+                <DonarNotification />
               </div>
             </div>
           </div>
@@ -347,7 +355,7 @@ useEffect(() => {
           {/* <!-- END: Header --> */}
           {/* <!-- END: Header --> */}
           <div
-            class="content-wrapper transition-all duration-150 xl:ltr:ml-[248px] layout-container"
+            class="content-wrapper transition-all duration-150 xl:ltr:ml-[248px] ml-0 ml-248px"
             id="content_wrapper"
            
           >
