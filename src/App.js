@@ -55,6 +55,7 @@ import PostGraduationCourse from "./component/currentcourse/editcourse/PostGradu
 import EditProfile from "./component/profile/editprofile/EditProfile";
 import PrivacyPolicy from "./component/privacypolicy/PrivacyPolicy";
 import Term from "./component/term/Term";
+import Counselling from "./component/counselling/Counselling";
 // import DonarCourse from "./component/donarpages/course/Course";
 // import LearnMore from "./component/courselearnmore/LearnMore";
 
@@ -130,15 +131,23 @@ function App() {
             }
           />
             <Route
-            path="/policy"
+            path="/privacy-policy"
             element={
               <PublicElement>
                 <PrivacyPolicy />
               </PublicElement>
             }
           />
+           <Route
+            path="/neet-counselling"
+            element={
+              <PublicElement>
+                <Counselling />
+              </PublicElement>
+            }
+          />
              <Route
-            path="/term"
+            path="/terms"
             element={
               <PublicElement>
                 <Term />
