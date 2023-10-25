@@ -16,12 +16,11 @@ import {
   useGetProfileImageQuery,
   useGetProfileQuery,
   useGetQRCodeQuery,
-  useGetNotificationQuery,
   useUpdateStudentImageMutation,
   useUpdateProfileMutation,
   useGetCourseQuery,
   useAddverifyOTPForUpdateProfileMutation,
-  useGetOTPForUpdateProfileQuery,
+  useAddOTPForUpdateProfileMutation,
 } from "../../services/signUpApi";
 
 import StudentNotification from "../studentNotification/StudentNotification";
@@ -365,16 +364,17 @@ const Profile = () => {
     }
   };
 
-  const { data: request, isSuccess: requestIsSuccess } =
-    useGetOTPForUpdateProfileQuery();
+  const [addOTPForUpdateProfile] = useAddOTPForUpdateProfileMutation();
 
-  const handleRequest = () => {
-    if (requestIsSuccess) {
-      if (request.success) {
-        toast.success(request.message);
+  const handleRequest = async () => {
+    const { data } = await addOTPForUpdateProfile();
+
+    if (data) {
+      if (data.success) {
+        toast.success(data.message);
         setShowEditModal(false);
       } else {
-        toast.error(request.message);
+        toast.error(data.message);
       }
     } else {
       toast.error("Request already sent to Global Education Trust!");
@@ -496,7 +496,7 @@ const Profile = () => {
                           >
                             <img
                               src={`${localHost}/studentFile/${profileImage}`}
-                              alt="profile-image"
+                              alt="profile"
                               className="w-full h-full object-cover rounded-full"
                             />
                             <input
@@ -511,7 +511,6 @@ const Profile = () => {
                                     justify-center md:top-[140px] top-[100px]"
                               onClick={handleImageSubmit}
                             >
-                              {/* <iconify-icon icon="heroicons:pencil-square"></iconify-icon> */}
                               <CreateRoundedIcon />
                             </p>
                           </div>

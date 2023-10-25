@@ -2,91 +2,42 @@ import React, { useState, useEffect, useRef } from "react";
 import { Bell, ChevronDown, Power } from "react-feather";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import user from "../../assets/user.png";
+import user from "../../../assets/user.png";
 import { Link } from "react-router-dom";
-import {
-  useGetProfileQuery,
-  useGetNotificationQuery,
-  useGetUpdationResponseQuery,
-  useGetProfileImageQuery,
-} from "../../services/signUpApi";
 
-const StudentNotification = () => {
-  const [name, setName] = useState("");
-  const [notification, setNotification] = useState([]);
+
+const ResourceNotification = () => {
+//   const [name, setName] = useState("");
+//   const [notification, setNotification] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotification, setIsNotification] = useState(false);
-  const [id, setId] = useState("");
-  const [profileImage, setProfileImage] = useState(null);
+//   const [id, setId] = useState("");
+//   const [profileImage, setProfileImage] = useState(null);
   const notificationIconRef = useRef(null);
   const logoutIconRef = useRef(null);
 
   // const localHost = "http://localhost:5000";
-  const localHost="https://global-education-t.onrender.com"
+//   const localHost="https://global-education-t.onrender.com"
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem('currentUserType')
-    toast.success("Student logout successfully!");
+    toast.success("Resource logout successfully!");
   };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const { data: profileData, isSuccess: profileIsSuccess } =
-    useGetProfileImageQuery();
-  // console.log("image", profileData);
 
-  useEffect(() => {
-    if (profileData && profileIsSuccess && profileData) {
-      const firstProfileImage = profileData?.data.profileImage_FileName;
-      const id = profileData?.data.id;
-      if (firstProfileImage) {
-        setProfileImage(firstProfileImage);
-        setId(id);
-      }
-    }
-  }, [profileData, profileIsSuccess]);
-  const { data, isSuccess } = useGetProfileQuery();
 
-  const { data: studentNotification, isSuccess: studentIsSuccess } =
-    useGetNotificationQuery();
 
-  const { data: updateAccountNotification, isSuccess: updateAccountIsSuccess } =
-    useGetUpdationResponseQuery();
 
-  // console.log(updateAccountNotification);
-  // console.log("data", notification);
 
-  useEffect(() => {
-    if (studentNotification && studentIsSuccess && studentNotification.data) {
-      setNotification(studentNotification.data);
-    }
-    if (
-      updateAccountNotification &&
-      updateAccountIsSuccess &&
-      updateAccountNotification.data
-    ) {
-      setNotification((prevNotification) => [
-        ...prevNotification,
-        ...updateAccountNotification.data,
-      ]);
-    }
-  }, [
-    studentNotification,
-    studentIsSuccess,
-    updateAccountNotification,
-    updateAccountIsSuccess,
-  ]);
 
-  console.log(notification);
+ 
 
-  useEffect(() => {
-    if (data && isSuccess) {
-      setName(data.name);
-    }
-  }, [data, isSuccess]);
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -157,7 +108,7 @@ const StudentNotification = () => {
   }}
        
     >
-              {notification.map((notification) => (
+              {/* {notification.map((notification) => (
                 <div
                   className="divide-y divide-slate-100 dark:divide-slate-900"
                   role="none"
@@ -201,7 +152,7 @@ const StudentNotification = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))} */}
               </div>
             </div>
           )}
@@ -220,13 +171,14 @@ const StudentNotification = () => {
               style={{ marginRight: 10 }}
             >
               <img
-                src={`${localHost}/studentFile/${profileImage}`}
+                // src={`${localHost}/studentFile/${profileImage}`}
+                src={user}
                 alt="user"
                 className="block w-full h-full object-cover rounded-full"
               />
             </div>
             <span className="flex-none text-slate-600 dark:text-white text-sm font-normal items-center lg:flex hidden overflow-hidden text-ellipsis whitespace-nowrap">
-              {name}
+              {/* {name} */} Prakhar
             </span>
 
             <ChevronDown ref={logoutIconRef} onClick={toggleDropdown} size={22} />
@@ -264,4 +216,4 @@ const StudentNotification = () => {
   );
 };
 
-export default StudentNotification;
+export default ResourceNotification;

@@ -10,9 +10,10 @@ import logo from "../../assets/images/logo.png";
 import { Dialog, DialogContent } from "@mui/material";
 import {
   useAddAccountMutation,
+  useAddOTPForUpdateAccountMutation,
   useAddverifyOTPForUpdateAccountMutation,
   useGetAccountQuery,
-  useGetOTPForUpdateAccountQuery,
+
 } from "../../services/signUpApi";
 import StudentNotification from "../studentNotification/StudentNotification";
 
@@ -175,20 +176,22 @@ const Account = () => {
     }
   };
 
-  const { data: sendRequest, isSuccess: sendRequestIsSuccess } =
-    useGetOTPForUpdateAccountQuery(id);
+ 
 
-    const handleRequest = () => {
-      if (sendRequestIsSuccess) {
-        if (sendRequest.success) {
-          // Successful request
-          toast.success(sendRequest.message);
+    const [addOTPForUpdateAccount] =useAddOTPForUpdateAccountMutation();
+
+    const handleRequest = async (id) => {
+      const { data } = await addOTPForUpdateAccount({ accountDetailId: id }); 
+  
+      if (data) {
+        // Handle the response here
+        if (data.success) {
+          toast.success(data.message);
           setShowEditModal(false);
         } else {
-          // Failed request
-          toast.error(sendRequest.message);
+          toast.error(data.message);
         }
-      }else {
+      } else {
         toast.error("Request already sent to Global Education Trust!");
       }
     };
@@ -501,7 +504,7 @@ const Account = () => {
                                     {" "}
                                     Don't have OTP.{" "}
                                     <span
-                                      onClick={handleRequest}
+                                      onClick={()=>handleRequest(id)}
                                       style={{
                                         color: "blue",
                                         cursor: "pointer",

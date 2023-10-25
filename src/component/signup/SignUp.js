@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import backgroundImg from "../../assets/page-bg.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import {
   useRegisterDonarMutation,
+  useRegisterResourceMutation,
   useRegisterUserMutation,
 } from "../../services/signUpApi";
 import { Link, useNavigate } from "react-router-dom";
@@ -30,6 +31,7 @@ const SignUp = () => {
 
   const [registerUser] = useRegisterUserMutation();
   const [registerDonar] = useRegisterDonarMutation();
+  const [registerResource] =useRegisterResourceMutation();
 
   const clearTextInput = () => {
     setName("");
@@ -37,6 +39,7 @@ const SignUp = () => {
     setEmail("");
     setSelectedOption("default");
   };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const pattern = /^[a-zA-Z\s]+$/;
@@ -84,7 +87,9 @@ const SignUp = () => {
           clearTextInput();
           if (res && res.data && res.data.success) {
             setMessage("");
-            navigate("/student/getotp", { state: { mobileNumber, email } });
+            navigate("/student/getotp", { state: { 
+              // mobileNumber,
+               email } });
           } else if (res && res.error.data && res.error.data.message) {
             setMessage(res.error.data.message);
           } else {
@@ -94,14 +99,36 @@ const SignUp = () => {
           console.log(error);
           setMessage(error.message);
         }
-      } else if (selectedOption === "donar") {
+      }
+       else if (selectedOption === "donar") {
         try {
           const res = await registerDonar(formData);
           console.log(res);
           clearTextInput();
           if (res && res.data && res.data.success) {
             setMessage("");
-            navigate("/donar/getotp", { state: { mobileNumber, email } });
+            navigate("/donar/getotp", { state: { 
+              // mobileNumber,
+               email } });
+          } else if (res && res.error.data && res.error.data.message) {
+            setMessage(res.error.data.message);
+          } else {
+            setMessage("An error occurred");
+          }
+        } catch (error) {
+          console.log(error);
+          setMessage(error.message);
+        }
+      }  else if (selectedOption === "resources") {
+        try {
+          const res = await registerResource(formData);
+          console.log(res);
+          clearTextInput();
+          if (res && res.data && res.data.success) {
+            setMessage("");
+            navigate("/resource/getotp", { state: { 
+              mobileNumber,
+               email } });
           } else if (res && res.error.data && res.error.data.message) {
             setMessage(res.error.data.message);
           } else {
@@ -141,12 +168,7 @@ const SignUp = () => {
           {/* <div className="lg-inner-column"> */}
           <div className="lg:w-1/2 w-full flex flex-col items-center justify-center">
             <div className="auth-box-3">
-              {/* <div className="mobile-logo text-center mb-6 lg:hidden block">
-            <a heref="#">
-          
-              <img src={logo} alt="" className="mb-10 white_logo" />
-            </a>
-          </div> */}
+             
 
               <div className="text-center 2xl:mb-10 mb-5">
                 <h4 className="font-medium" style={{fontSize:'16px',fontWeight:600}}> Sign Up</h4>
@@ -157,7 +179,7 @@ const SignUp = () => {
               {/* <!-- BEGIN: Login Form --> */}
               <form
                 className="space-y-4"
-                // action="https://dashcode-html.codeshaper.tech/index.html"
+             
               >
                 <div className="fromGroup">
                   <div className="relative ">
@@ -183,6 +205,7 @@ const SignUp = () => {
                       </option>
                       <option value="donar">Donar</option>
                       <option value="student">Student</option>
+                      <option value="resources">Resources</option>
                     </select>
                   </div>
                 </div>

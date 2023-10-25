@@ -129,7 +129,12 @@ const DonarNotification = () => {
                         </div>
                         <div
       className="max-h-60 overflow-y-auto"
-      style={{ maxHeight: "300px" }} 
+      style={{
+    maxHeight: "300px",
+    scrollbarWidth: "thin", 
+    scrollbarColor: "#4A5568 #E2E8F0", 
+  }}
+       
     >
                         {notification.map((notification) => (
                           <div
@@ -140,7 +145,7 @@ const DonarNotification = () => {
                             <div className="bg-slate-100 dark:bg-slate-700 dark:text-white text-slate-800 block w-full px-4 py-2 text-sm relative">
                               <div className="flex ltr:text-left rtl:text-right">
                                 <div className="flex-1">
-                                  <div className="text-slate-600 text-xs leading-4">
+                                  <div className="text-slate-600 text-xs leading-4" style={{fontSize:'12px'}}>
                                     {notification.message}
                                   </div>
                                   <div className="text-xs font-Inter font-normal underline text-slate-500 dark:text-white">

@@ -12,11 +12,11 @@ import { Document, Page, pdfjs } from "react-pdf";
 import {
   useAddFeesReceiptMutation,
   useAddGapDocumentMutation,
+  useAddOTPForUpdateRaiseFundMutation,
   useAddRaiseFundCourseMutation,
   useAddverifyOTPForUpdateRaiseFundMutation,
   useDeleteRaiseFundDocumentMutation,
   useGetGapYearQuery,
-  useGetOTPForUpdateRaiseFundQuery,
   useGetProfileQuery,
 } from "../../services/signUpApi";
 import StudentNotification from "../studentNotification/StudentNotification";
@@ -63,7 +63,7 @@ const RaiseFund = () => {
   const [openFileType, setOpenFileType] = useState("");
 
   // const localHost = "http://localhost:5000";
-   const localHost="https://global-education-t.onrender.com"
+  const localHost = "https://global-education-t.onrender.com";
 
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
@@ -236,19 +236,21 @@ const RaiseFund = () => {
     setGapDocument(null);
   };
 
-  const { data: sendRequest, isSuccess: sendRequestIsSuccess } =
-    useGetOTPForUpdateRaiseFundQuery(id);
+  const [addOTPForUpdateRaiseFund] = useAddOTPForUpdateRaiseFundMutation();
 
-  const handleRequest = () => {
-    if (sendRequestIsSuccess) {
-      if (sendRequest.success) {
-        // Successful request
-        toast.success(sendRequest.message);
+  const handleRequest = async (id) => {
+    const { data } = await addOTPForUpdateRaiseFund({ raiseFundId: id });
+
+    if (data) {
+      // Handle the response here
+      if (data.success) {
+        toast.success(data.message);
         setShowEditModal(false);
       } else {
-        // Failed request
-        toast.error(sendRequest.message);
+        toast.error(data.message);
       }
+    } else {
+      toast.error("Request already sent to Global Education Trust!");
     }
   };
 
@@ -271,7 +273,7 @@ const RaiseFund = () => {
       if (res.data.success) {
         toast.success(res.data.message);
         setVerifyOtp("");
-         await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         navigate("/student/edit-raise-fund");
       }
     } catch (error) {
@@ -345,7 +347,7 @@ const RaiseFund = () => {
     }
   };
 
-  const [addMoreGapDocument]=useAddGapDocumentMutation();
+  const [addMoreGapDocument] = useAddGapDocumentMutation();
 
   const handleGapImage = async (event) => {
     event.preventDefault();
@@ -594,7 +596,7 @@ const RaiseFund = () => {
                                       {" "}
                                       Don't have OTP.{" "}
                                       <span
-                                        onClick={handleRequest}
+                                        onClick={() => handleRequest(id)}
                                         style={{
                                           color: "blue",
                                           cursor: "pointer",
@@ -1013,83 +1015,85 @@ const RaiseFund = () => {
                                 </div>
                                 &nbsp;&nbsp;
                                 <div className="flex">
-                                {data.data.document &&
-                                  data.data.document.map((doc, docIndex) => (
-                                    doc.document === "feeReceipt" && (
-                                    <>
-                                      <div className="flex">
-                                        <div
-                                          key={docIndex}
-                                          onClick={() =>
-                                            handleImageClick(
-                                              doc?.document_FileName
-                                            )
-                                          }
-                                          style={{ position: "relative" }}
-                                        >
-                                          <img
-                                            src={`${localHost}/studentFile/${doc?.document_FileName}`}
-                                            alt={doc?.document_Name}
-                                            style={{
-                                              width: "100px",
-                                              height: "100px",
-                                              cursor: "pointer",
-                                              border: "1px dotted gray",
-                                              borderRadius: "5px",
-                                            }}
-                                          />
-                                          <button
-                                            onClick={() =>
-                                              deleteDocument(doc.id)
-                                            }
-                                            style={{
-                                              position: "absolute",
-                                              top: 3,
-                                              right: 2,
-                                              color: "black",
-                                              border: "none",
-                                              cursor: "pointer",
-                                            }}
-                                          >
-                                            <img
-                                              src={close}
-                                              style={{
-                                                width: "20px",
-                                                height: "20px",
-                                                cursor: "pointer",
-                                              }}
-                                              alt="close"
-                                            />
-                                          </button>
-                                        </div>
-                                        &nbsp;
-                                      </div>
-                                    </>)
-                                  ))}
-                                <div
-                                  style={{
-                                    width: "100px",
-                                    height: "100px",
-                                    borderRadius: "5px",
-                                    border: "1px dotted gray",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  <label htmlFor="fileInput">
-                                    <Plus size={20} color="black" />
-                                  </label>
-                                  <input
-                                    id="fileInput"
-                                    type="file"
-                                    accept="image/*,.pdf"
-                                    style={{ display: "none" }}
-                                    onChange={handleUploadImage}
-                                    multiple
-                                  />
-                                </div>
+                                  {data.data.document &&
+                                    data.data.document.map(
+                                      (doc, docIndex) =>
+                                        doc.document === "feeReceipt" && (
+                                          <>
+                                            <div className="flex">
+                                              <div
+                                                key={docIndex}
+                                                onClick={() =>
+                                                  handleImageClick(
+                                                    doc?.document_FileName
+                                                  )
+                                                }
+                                                style={{ position: "relative" }}
+                                              >
+                                                <img
+                                                  src={`${localHost}/studentFile/${doc?.document_FileName}`}
+                                                  alt={doc?.document_Name}
+                                                  style={{
+                                                    width: "100px",
+                                                    height: "100px",
+                                                    cursor: "pointer",
+                                                    border: "1px dotted gray",
+                                                    borderRadius: "5px",
+                                                  }}
+                                                />
+                                                <button
+                                                  onClick={() =>
+                                                    deleteDocument(doc.id)
+                                                  }
+                                                  style={{
+                                                    position: "absolute",
+                                                    top: 3,
+                                                    right: 2,
+                                                    color: "black",
+                                                    border: "none",
+                                                    cursor: "pointer",
+                                                  }}
+                                                >
+                                                  <img
+                                                    src={close}
+                                                    style={{
+                                                      width: "20px",
+                                                      height: "20px",
+                                                      cursor: "pointer",
+                                                    }}
+                                                    alt="close"
+                                                  />
+                                                </button>
+                                              </div>
+                                              &nbsp;
+                                            </div>
+                                          </>
+                                        )
+                                    )}
+                                  <div
+                                    style={{
+                                      width: "100px",
+                                      height: "100px",
+                                      borderRadius: "5px",
+                                      border: "1px dotted gray",
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                      cursor: "pointer",
+                                    }}
+                                  >
+                                    <label htmlFor="fileInput">
+                                      <Plus size={20} color="black" />
+                                    </label>
+                                    <input
+                                      id="fileInput"
+                                      type="file"
+                                      accept="image/*,.pdf"
+                                      style={{ display: "none" }}
+                                      onChange={handleUploadImage}
+                                      multiple
+                                    />
+                                  </div>
                                 </div>
                               </div>
                               <Dialog
@@ -1125,96 +1129,100 @@ const RaiseFund = () => {
                                 </DialogContent>
                               </Dialog>
 
-                             {gapInEducation>0 && <div className="flex-1 mb-2">
-                                <div
-                                  className=" text-xs text-slate-500 dark:text-slate-300 "
-                                  style={{ fontSize: "18px", color: "#000" }}
-                                >
-                                  Gap Document :
+                              {gapInEducation > 0 && (
+                                <div className="flex-1 mb-2">
+                                  <div
+                                    className=" text-xs text-slate-500 dark:text-slate-300 "
+                                    style={{ fontSize: "18px", color: "#000" }}
+                                  >
+                                    Gap Document :
+                                  </div>
+                                  &nbsp;&nbsp;
+                                  <div className="flex">
+                                    {data.data.document &&
+                                      data.data.document.map(
+                                        (doc, docIndex) =>
+                                          doc.document === "gapDocument" && (
+                                            <>
+                                              <div className="flex">
+                                                <div
+                                                  key={docIndex}
+                                                  onClick={() =>
+                                                    handleImageClick(
+                                                      doc?.document_FileName
+                                                    )
+                                                  }
+                                                  style={{
+                                                    position: "relative",
+                                                  }}
+                                                >
+                                                  <img
+                                                    src={`${localHost}/studentFile/${doc?.document_FileName}`}
+                                                    alt={doc?.document_Name}
+                                                    style={{
+                                                      width: "100px",
+                                                      height: "100px",
+                                                      cursor: "pointer",
+                                                      border: "1px dotted gray",
+                                                      borderRadius: "5px",
+                                                    }}
+                                                  />
+                                                  <button
+                                                    onClick={() =>
+                                                      deleteDocument(doc.id)
+                                                    }
+                                                    style={{
+                                                      position: "absolute",
+                                                      top: 3,
+                                                      right: 2,
+                                                      color: "black",
+                                                      border: "none",
+                                                      cursor: "pointer",
+                                                    }}
+                                                  >
+                                                    <img
+                                                      src={close}
+                                                      style={{
+                                                        width: "20px",
+                                                        height: "20px",
+                                                        cursor: "pointer",
+                                                      }}
+                                                      alt="close"
+                                                    />
+                                                  </button>
+                                                </div>
+                                                &nbsp;
+                                              </div>
+                                            </>
+                                          )
+                                      )}
+                                    <div
+                                      style={{
+                                        width: "100px",
+                                        height: "100px",
+                                        borderRadius: "5px",
+                                        border: "1px dotted gray",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      <label htmlFor="fileInput">
+                                        <Plus size={20} color="black" />
+                                      </label>
+                                      <input
+                                        id="fileInput"
+                                        type="file"
+                                        accept="image/*,.pdf"
+                                        style={{ display: "none" }}
+                                        onClick={handleGapImage}
+                                        multiple
+                                      />
+                                    </div>
+                                  </div>
                                 </div>
-                                &nbsp;&nbsp;
-                                <div className="flex">
-                                {data.data.document &&
-                                  data.data.document.map((doc, docIndex) => (
-                                    doc.document === "gapDocument" && (
-                                    <>
-                                      <div className="flex">
-                                        <div
-                                          key={docIndex}
-                                          onClick={() =>
-                                            handleImageClick(
-                                              doc?.document_FileName
-                                            )
-                                          }
-                                          style={{ position: "relative" }}
-                                        >
-                                          <img
-                                            src={`${localHost}/studentFile/${doc?.document_FileName}`}
-                                            alt={doc?.document_Name}
-                                            style={{
-                                              width: "100px",
-                                              height: "100px",
-                                              cursor: "pointer",
-                                              border: "1px dotted gray",
-                                              borderRadius: "5px",
-                                            }}
-                                          />
-                                          <button
-                                            onClick={() =>
-                                              deleteDocument(doc.id)
-                                            }
-                                            style={{
-                                              position: "absolute",
-                                              top: 3,
-                                              right: 2,
-                                              color: "black",
-                                              border: "none",
-                                              cursor: "pointer",
-                                            }}
-                                          >
-                                            <img
-                                              src={close}
-                                              style={{
-                                                width: "20px",
-                                                height: "20px",
-                                                cursor: "pointer",
-                                              }}
-                                              alt="close"
-                                            />
-                                          </button>
-                                        </div>
-                                        &nbsp;
-                                      </div>
-                                    </>
-          )))}
-                                <div
-                                  style={{
-                                    width: "100px",
-                                    height: "100px",
-                                    borderRadius: "5px",
-                                    border: "1px dotted gray",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  <label htmlFor="fileInput">
-                                    <Plus size={20} color="black" />
-                                  </label>
-                                  <input
-                                    id="fileInput"
-                                    type="file"
-                                    accept="image/*,.pdf"
-                                    style={{ display: "none" }}
-                                    onClick={handleGapImage}
-                                    multiple
-                                  />
-                                </div>
-                                </div>
-                              </div>}
-                             
-
+                              )}
                             </div>
                           </div>
                         </div>
@@ -1327,6 +1335,7 @@ const RaiseFund = () => {
                                 style={{ fontSize: "13px" }}
                                 type="file"
                                 id="fileInput"
+                                // multiple
                                 className="form-control"
                                 accept="image/*,.pdf"
                                 onChange={handleFeeReceiptChange}

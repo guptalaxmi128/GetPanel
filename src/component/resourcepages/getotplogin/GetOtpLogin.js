@@ -3,7 +3,8 @@ import backgroundImg from "../../../assets/page-bg.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useVerifyDonarLoginOtpMutation } from "../../../services/signUpApi";
+import { useVerifyResourceOtpMutation } from "../../../services/signUpApi";
+
 
 const GetOtpLogin = () => {
   const location = useLocation();
@@ -11,13 +12,14 @@ const GetOtpLogin = () => {
 
   const navigate = useNavigate();
   console.log(email);
+
   const [otp, setOtp] = useState("");
 
   const [otpError, setOtpError] = useState("");
   const [isLoading,setIsLoading]=useState(false);
-  const [message,setMessage] =useState(false);
+  const [message,setMessage] = useState(false);
 
-  const [verifyDonarLoginOtp] = useVerifyDonarLoginOtpMutation();
+ const [verifyLoginResourceOtp] =useVerifyResourceOtpMutation();
 
   const clearTextInput = () => {
     setOtp("");
@@ -25,7 +27,6 @@ const GetOtpLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!otp) {
       setOtpError("Otp is required");
     } else if (otp.length !== 6) {
@@ -38,13 +39,13 @@ const GetOtpLogin = () => {
       console.log(formData);
       setIsLoading(true);
       try{
-      const res = await verifyDonarLoginOtp(formData);
+      const res = await verifyLoginResourceOtp(formData);
       console.log(res);
-      if (res && res.data && res.data.success) {
+      if ( res && res.data && res.data.success) {
         localStorage.setItem("authToken", res.data.authToken);
         console.log(localStorage);
         clearTextInput();
-        navigate("/donar/home"); // Navigate to home page
+        navigate("/resource/home"); // Navigate to home page
       }else if (res && res.error.data && res.error.data.message) {
         setMessage(res.error.data.message); 
       } else {
@@ -104,7 +105,7 @@ const GetOtpLogin = () => {
               <form className="space-y-4">
                 <div className="fromGroup">
                   <label className="block capitalize form-label">
-                    email OTP
+                    Email OTP
                   </label>
                   <div className="relative ">
                     <input

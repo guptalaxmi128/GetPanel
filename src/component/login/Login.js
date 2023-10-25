@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import { useDispatch } from "react-redux";
 import {
   useLoginDonarMutation,
+  useLoginResourceMutation,
   useLoginStudentMutation,
 } from "../../services/signUpApi";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,18 +14,19 @@ import { setCurrentUserType } from "../../features/userSlice";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [mobileNumber, setMobileNumber] = useState("");
+  const [email, setEmail] = useState("");
   const [selectedOption, setSelectedOption] = useState("default");
 
-  const [mobileNumberError, setMobileNumberError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [loginStudent] = useLoginStudentMutation();
   const [loginDonar] = useLoginDonarMutation();
+  const [loginResource] =useLoginResourceMutation();
 
   const clearTextInput = () => {
-    setMobileNumber("");
+    setEmail("");
   };
 
   const handleSelectChange = (e) => {
@@ -38,49 +40,18 @@ const Login = () => {
   //   };
   //  }, []);
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (!mobileNumber) {
-  //     setMobileNumberError("Please enter your mobile number");
-  //   } else if (mobileNumber.length !== 10) {
-  //     setMobileNumberError("Mobile number should have 10 digits");
-  //   } else {
-  //     setMobileNumberError("");
-  //   }
-
-  //   if (mobileNumber && mobileNumber.length === 10) {
-  //     const formData = { mobileNumber };
-  //     console.log(formData);
-  //     dispatch(setCurrentUserType(selectedOption));
-  //     if (selectedOption === 'student') {
-  //       // Make API call for student login
-  //       const res = await loginStudent(formData);
-  //       console.log(res);
-  //       clearTextInput();
-  //       navigate('/student/getotplogin',{ state: { mobileNumber } });   // Navigate to getOtp student login page
-  //     } else if (selectedOption === 'donar') {
-  //       // Make API call for donor login
-  //       const res = await loginDonar(formData);
-  //       console.log(res);
-  //       clearTextInput();
-  //       navigate('/donar/getotplogin',{ state: { mobileNumber } });
-
-  //       }
-  //     }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!mobileNumber) {
-      setMobileNumberError("Please enter your mobile number");
-    } else if (mobileNumber.length !== 10) {
-      setMobileNumberError("Mobile number should have 10 digits");
+    if (!email) {
+      setEmailError("Email is required");
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError("Invalid email address");
     } else {
-      setMobileNumberError("");
+      setEmailError("");
     }
 
-    if (mobileNumber && mobileNumber.length === 10) {
-      const formData = { mobileNumber };
+    if (email) {
+      const formData = { email };
       console.log(formData);
       dispatch(setCurrentUserType(selectedOption));
       setIsLoading(true);
@@ -91,7 +62,12 @@ const Login = () => {
           clearTextInput();
           if (res && res.data && res.data.success) {
             setMessage("");
-            navigate("/student/getotplogin", { state: { mobileNumber } });
+            // localStorage.setItem("authToken", res.data.authToken); //new Add
+            // console.log(localStorage);
+            // navigate("/student/home");
+              navigate("/student/getotplogin", { state: { email } });
+           
+          
           } else if (res && res.error.data && res.error.data.message) {
             setMessage(res.error.data.message);
           } else {
@@ -103,14 +79,41 @@ const Login = () => {
         } finally {
           setIsLoading(false);
         }
-      } else if (selectedOption === "donar") {
+      } 
+      else if (selectedOption === "donar") {
         try {
           const res = await loginDonar(formData);
           console.log(res);
           clearTextInput();
           if (res && res.data && res.data.success) {
             setMessage("");
-            navigate("/donar/getotplogin", { state: { mobileNumber } });
+            navigate("/donar/getotplogin", { state: { email } });
+            // localStorage.setItem("authToken", res.data.authToken);
+            // console.log(localStorage);
+            // navigate("/donar/home");
+          } else if (res && res.error.data && res.error.data.message) {
+            setMessage(res.error.data.message);
+          } else {
+            setMessage("An error occurred");
+          }
+        } catch (error) {
+          console.log(error);
+          setMessage(error.data.message);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+      else if (selectedOption === "resources") {
+        try {
+          const res = await loginResource(formData);
+          console.log(res);
+          clearTextInput();
+          if (res && res.data && res.data.success) {
+            setMessage("");
+            navigate("/donar/getotplogin", { state: { email } });
+            // localStorage.setItem("authToken", res.data.authToken);
+            // console.log(localStorage);
+            // navigate("/resource/home");
           } else if (res && res.error.data && res.error.data.message) {
             setMessage(res.error.data.message);
           } else {
@@ -148,7 +151,6 @@ const Login = () => {
             borderRadius: "10px",
           }}
         >
-          {/* <div className="lg-inner-column"> */}
           <div className="lg:w-1/2 w-full flex flex-col items-center justify-center">
             <div
               className="auth-box-3"
@@ -187,31 +189,31 @@ const Login = () => {
                     >
                       <option
                         value="default"
-                        // className="dark:bg-slate-700"
                         disabled
                       >
                         Select Option
                       </option>
                       <option value="donar">Donar</option>
                       <option value="student">Student</option>
+                      <option value="resources">Resources</option>
                     </select>
                   </div>
                 </div>
                 <div className="fromGroup">
                   <label className="block capitalize form-label">
-                    Mobile Number
+                    Email
                   </label>
                   <div className="relative ">
                     <input
                       style={{ fontSize: "13px" }}
-                      type="number"
-                      name="mobilenumber"
+                      type="email"
+                      name="email"
                       className="  form-control py-2"
-                      placeholder="Mobile Number"
-                      value={mobileNumber}
-                      onChange={(e) => setMobileNumber(e.target.value)}
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
-                    {mobileNumberError ? (
+                    {emailError ? (
                       <span
                         style={{
                           color: "red",
@@ -219,7 +221,7 @@ const Login = () => {
                           fontSize: "12px",
                         }}
                       >
-                        {mobileNumberError}
+                        {emailError}
                       </span>
                     ) : null}
                   </div>

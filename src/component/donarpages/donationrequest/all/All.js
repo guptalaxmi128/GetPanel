@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import close from "../../../../assets/close.png";
+import noRecord from "../../../../assets/no-record-found.png";
 import getepayPortal from "../../../../Getepay_pg_react/Getepay_pg_react/index";
 import { Config } from "../../../../Getepay_pg_react/Getepay_pg_react/config";
 import {
@@ -25,6 +26,7 @@ const All = () => {
   const [studentData, setStudentData] = useState([]);
   const [donarId, setDonarId] = useState("");
   const [donarEmail, setDonarEmail] = useState("");
+  const [donarName,setDonarName]=useState('');
   const [studentUID,setStudentUID]=useState('');
   const [raisedAmount,setRaisedAmount]=useState('');
   const [requiredAmount,setRequiredAmount]=useState('');
@@ -50,7 +52,7 @@ const All = () => {
     udf4: "",
     udf5: "",
     udf6: "",
-    udf7: "",
+    udf7: donarName,
     udf8: "",
     udf9: "",
     udf10: "",
@@ -76,6 +78,7 @@ const All = () => {
     if (donarDataIsSuccess && donarData && donarData.data) {
       setDonarId(donarData.data.id);
       setDonarEmail(donarData.data.email);
+      setDonarName(donarData.data.name);
     }
   }, [donarData, donarDataIsSuccess]);
 
@@ -182,6 +185,7 @@ const All = () => {
     const donationData = {
       amount,
       donarId,
+      donarName,
       studentName,
       studentUID,
       merchantTransactionId: transactionId,
@@ -211,6 +215,21 @@ const All = () => {
               <span className="  col-span-4 "></span>
               <div className="inline-block min-w-full align-middle">
                 <div className="overflow-hidden ">
+                {getCurrentPageEntries().length === 0 ? (
+                                    // If there's no data, don't render the table
+                                    <div className="text-center py-4">
+                                      <img
+                                        src={noRecord}
+                                        alt="No data available"
+                                        style={{
+                                          display: "block",
+                                          margin: "0 auto",
+                                        }}
+                                      />
+                                      <p>No data available.</p>
+                                    </div>
+                                  ) : (
+                                    <>
                   <div style={{ margin: "12px" }} className="flex">
                     {/* <div
                     className="flex"
@@ -303,7 +322,7 @@ const All = () => {
                         </th>
 
                         <th scope="col" className=" table-th ">
-                          Amount Required
+                          Amount Required For Donar
                         </th>
 
                         <th scope="col" className=" table-th ">
@@ -615,110 +634,7 @@ const All = () => {
                       ))}
                     </tbody>
                   </table>
-                  {/* <div
-                  className="card-body flex flex-col "
-                  style={{ backgroundColor: " rgba(236, 110, 70, 0.2)" }}
-                >
-                  <div className="card-text h-full flex flex-wrap items-center justify-between">
-                    <div className="flex items-center space-x-2 mb-2 sm:mb-0">
-                      <select
-                        className="dataNumber borde bg-transparent !border-slate-400 dark:!border-slate-600 !pr-5 rounded-md"
-                        id="dataNumber"
-                      >
-                        <option value="0" disabled="disabled" >
-                          Go
-                        </option>
-                        <option value="1" style={{fontSize:'12px'}}>1</option>
-                        <option value="5" style={{fontSize:'12px'}}>5</option>
-                        <option value="10" style={{fontSize:'12px'}}>10</option>
-                      </select>
-                      <span style={{fontSize:'12px'}}>of 10 entries</span>
-                    </div>
-                    <div>
-                      <ul className="list-none">
-                        <li className="inline-block">
-                          <a
-                            href="#"
-                            className="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 relative top-[2px] pl-2"
-                          >
-                            <iconify-icon icon="material-symbols:arrow-back-ios-rounded"></iconify-icon>
-                            <KeyboardArrowLeftIcon
-                              style={{
-                                fontSize: "medium",
-                                marginRight: "10px",
-                              }}
-                            />
-                          </a>
-                        </li>
-                        <li className="inline-block">
-                          <a
-                            href="#"
-                            className="flex items-center justify-center w-6 h-6 bg-slate-100 text-slate-800
-                                        dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 p-active"
-                          >
-                            1
-                          </a>
-                        </li>
-                        <li className="inline-block">
-                          <a
-                            href="#"
-                            className="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 "
-                          >
-                            2
-                          </a>
-                        </li>
-                        <li className="inline-block">
-                          <a
-                            href="#"
-                            className="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 "
-                          >
-                            3
-                          </a>
-                        </li>
-                        <li className="inline-block">
-                          <a
-                            href="#"
-                            className="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 "
-                          >
-                            4
-                          </a>
-                        </li>
-                        <li className="inline-block">
-                          <a
-                            href="#"
-                            className="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 "
-                          >
-                            5
-                          </a>
-                        </li>
-                        <li className="inline-block">
-                          <a
-                            href="#"
-                            className="flex items-center justify-center w-6 h-6 bg-slate-100 dark:bg-slate-700 dark:hover:bg-black-500 text-slate-800
-                                        dark:text-white rounded mx-[3px] sm:mx-1 hover:bg-black-500 hover:text-white text-sm font-Inter font-medium transition-all
-                                        duration-300 relative top-[2px]"
-                          >
-                            <iconify-icon icon="material-symbols:arrow-forward-ios-rounded"></iconify-icon>
-                            <KeyboardArrowRightIcon
-                              style={{ fontSize: "medium", marginLeft: "6px" }}
-                            />
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div> */}
+                
                   <div
                     className="flex flex-col p-6"
                     style={{ backgroundColor: "rgba(236, 110, 70, 0.2)" }}
@@ -786,6 +702,7 @@ const All = () => {
                       </div>
                     </div>
                   </div>
+                  </>)}
                 </div>
               </div>
             </div>

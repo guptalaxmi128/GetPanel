@@ -10,11 +10,12 @@ import { Dialog, DialogContent } from "@mui/material";
 import close from "../../assets/close.png";
 import {
   useAddCourseDocumentMutation,
+  useAddOTPForUpdateCourseMutation,
   useAddverifyOTPForUpdateCourseMutation,
   useDeleteCourseDocumentMutation,
   useGetCourseQuery,
-  useGetOTPForUpdateCourseQuery,
 } from "../../services/signUpApi";
+import noRecord from "../../assets/no-record-found.png";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -73,8 +74,8 @@ const YourQualification = () => {
   const [postGraduationId, setPostGraduationId] = useState("");
   const [postGraduationOtp, setPostGraduationOtp] = useState("");
 
-  const localHost = "http://localhost:5000";
-  // const localHost="https://global-education-t.onrender.com"
+  // const localHost = "http://localhost:5000";
+  const localHost="https://global-education-t.onrender.com"
   const { data, isSuccess } = useGetCourseQuery();
   useEffect(() => {
     if (data && isSuccess && data.data.length > 0) {
@@ -109,21 +110,27 @@ const YourQualification = () => {
   }, [highSchoolData]);
   // console.log(highId)
 
-  const { data: sendRequest, isSuccess: sendRequestIsSuccess } =
-    useGetOTPForUpdateCourseQuery(highId);
 
-  const handleRequest = () => {
-    if (sendRequestIsSuccess) {
-      if (sendRequest.success) {
-        toast.success(sendRequest.message);
+    const [addOTPForUpdateCourse]=useAddOTPForUpdateCourseMutation()
+
+ 
+
+  const handleRequest = async (highId) => {
+    const { data } = await addOTPForUpdateCourse({ courseId: highId }); 
+
+    if (data) {
+      // Handle the response here
+      if (data.success) {
+        toast.success(data.message);
         setShowHighModal(false);
       } else {
-        toast.error(sendRequest.message);
+        toast.error(data.message);
       }
     } else {
       toast.error("Request already sent to Global Education Trust!");
     }
   };
+
 
   const [addverifyOTPForUpdateCourse] =
     useAddverifyOTPForUpdateCourseMutation();
@@ -147,21 +154,25 @@ const YourQualification = () => {
     }
   };
 
-  const { data: interRequest, isSuccess: interRequestIsSuccess } =
-    useGetOTPForUpdateCourseQuery(interId);
+
 
   useEffect(() => {
     const ids = interData.map((item) => item.id).join(", ");
     setInterId(ids);
   }, [interData]);
 
-  const handleInterRequest = () => {
-    if (interRequestIsSuccess) {
-      if (interRequest.success) {
-        toast.success(interRequest.message);
+ 
+
+  const handleInterRequest  = async (interId) => {
+    const { data } = await addOTPForUpdateCourse({ courseId: interId }); 
+
+    if (data) {
+      // Handle the response here
+      if (data.success) {
+        toast.success(data.message);
         setShowInterModal(false);
       } else {
-        toast.error(interRequest.message);
+        toast.error(data.message);
       }
     } else {
       toast.error("Request already sent to Global Education Trust!");
@@ -187,21 +198,24 @@ const YourQualification = () => {
     }
   };
 
-  const { data: request, isSuccess: requestIsSuccess } =
-    useGetOTPForUpdateCourseQuery(id);
+   
 
   useEffect(() => {
     const ids = currentData.map((item) => item.id).join(", ");
     setId(ids);
   }, [currentData]);
 
-  const handleCurrentRequest = () => {
-    if (requestIsSuccess) {
-      if (request.success) {
-        toast.success(request.message);
+
+  const handleCurrentRequest   = async (id) => {
+    const { data } = await addOTPForUpdateCourse({ courseId: id }); 
+
+    if (data) {
+      // Handle the response here
+      if (data.success) {
+        toast.success(data.message);
         setShowEditModal(false);
       } else {
-        toast.error(request.message);
+        toast.error(data.message);
       }
     } else {
       toast.error("Request already sent to Global Education Trust!");
@@ -227,21 +241,24 @@ const YourQualification = () => {
     }
   };
 
-  const { data: graduation, isSuccess: graduationIsSuccess } =
-    useGetOTPForUpdateCourseQuery(graduationId);
 
   useEffect(() => {
     const ids = graduationData.map((item) => item.id).join(", ");
     setGraduationId(ids);
   }, [graduationData]);
 
-  const handleGraduationRequest = () => {
-    if (graduationIsSuccess) {
-      if (graduation.success) {
-        toast.success(graduation.message);
+
+
+  const handleGraduationRequest  = async (graduationId) => {
+    const { data } = await addOTPForUpdateCourse({ courseId: graduationId }); 
+
+    if (data) {
+      // Handle the response here
+      if (data.success) {
+        toast.success(data.message);
         setShowGraduationModal(false);
       } else {
-        toast.error(graduation.message);
+        toast.error(data.message);
       }
     } else {
       toast.error("Request already sent to Global Education Trust!");
@@ -267,21 +284,25 @@ const YourQualification = () => {
     }
   };
 
-  const { data: postRequest, isSuccess: postRequestIsSuccess } =
-    useGetOTPForUpdateCourseQuery(postGraduationId);
+
 
   useEffect(() => {
     const ids = postGraduationData.map((item) => item.id).join(", ");
     setPostGraduationId(ids);
   }, [postGraduationData]);
 
-  const handlePostRequest = () => {
-    if (postRequestIsSuccess) {
-      if (postRequest.success) {
-        toast.success(postRequest.message);
+
+
+  const handlePostRequest  = async (postGraduationId) => {
+    const { data } = await addOTPForUpdateCourse({ courseId: postGraduationId }); 
+
+    if (data) {
+      // Handle the response here
+      if (data.success) {
+        toast.success(data.message);
         setShowPostGraduationModal(false);
       } else {
-        toast.error(postRequest.message);
+        toast.error(data.message);
       }
     } else {
       toast.error("Request already sent to Global Education Trust!");
@@ -563,7 +584,7 @@ const YourQualification = () => {
     <>
       <div className=" space-y-5">
         <div className="card">
-          {data &&
+          {data  && currentData && currentData.length >0 ? (
             currentData?.map((item, index) => (
               <>
                 <header className=" card-header noborder">
@@ -659,7 +680,7 @@ const YourQualification = () => {
                               {" "}
                               Don't have OTP.{" "}
                               <span
-                                onClick={handleCurrentRequest}
+                                onClick={()=>handleCurrentRequest(id)}
                                 style={{
                                   color: "blue",
                                   cursor: "pointer",
@@ -810,7 +831,20 @@ const YourQualification = () => {
                   </div>
                 </div>
               </>
-            ))}
+            )
+            ))   : (
+            <div className="text-center py-4">
+              <img
+                src={noRecord}
+                alt="No data available"
+                style={{
+                  display: "block",
+                  margin: "0 auto",
+                }}
+              />
+              <p>No data available.</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -933,7 +967,7 @@ const YourQualification = () => {
                                 {" "}
                                 Don't have OTP.{" "}
                                 <span
-                                  onClick={handleRequest}
+                                  onClick={()=>handleRequest(highId)}
                                   style={{
                                     color: "blue",
                                     cursor: "pointer",
@@ -1218,7 +1252,7 @@ const YourQualification = () => {
                                 {" "}
                                 Don't have OTP.{" "}
                                 <span
-                                  onClick={handleInterRequest}
+                                  onClick={()=>handleInterRequest(interId)}
                                   style={{
                                     color: "blue",
                                     cursor: "pointer",
@@ -1504,7 +1538,7 @@ const YourQualification = () => {
                                 {" "}
                                 Don't have OTP.{" "}
                                 <span
-                                  onClick={handleGraduationRequest}
+                                  onClick={()=>handleGraduationRequest(graduationId)}
                                   style={{
                                     color: "blue",
                                     cursor: "pointer",
@@ -1792,7 +1826,7 @@ const YourQualification = () => {
                                 {" "}
                                 Don't have OTP.{" "}
                                 <span
-                                  onClick={handlePostRequest}
+                                  onClick={()=>handlePostRequest(postGraduationId )}
                                   style={{
                                     color: "blue",
                                     cursor: "pointer",

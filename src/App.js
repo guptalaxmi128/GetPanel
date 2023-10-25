@@ -26,7 +26,7 @@ import AboutUs from "./component/aboutus/AboutUs";
 import Contact from "./component/contact/Contact";
 import Team from "./component/team/Team";
 import StudentProfile from "./component/donarpages/studentprofile/StudentProfile";
-import DonateForm from "./component/donateformnew/DonateForm";
+// import DonateForm from "./component/donateformnew/DonateForm";
 import Receipt from "./component/receipt/Receipt";
 import SuccessPage from "./component/successpage/SuccessPage";
 import FailedPage from "./component/failedpage/FailedPage";
@@ -56,6 +56,12 @@ import EditProfile from "./component/profile/editprofile/EditProfile";
 import PrivacyPolicy from "./component/privacypolicy/PrivacyPolicy";
 import Term from "./component/term/Term";
 import Counselling from "./component/counselling/Counselling";
+import ResourceLayout from "./component/resourcepages/dashboard/Layout";
+import ResourceGetOtp from "./component/resourcepages/getOtp/GetOtp";
+import ResourceResendOtp from "./component/resourcepages/resendOtp/ResendOtp";
+import ResourceGetOtpLogin from "./component/resourcepages/getotplogin/GetOtpLogin";
+import DonarSuccess from "./component/donarpages/paymentPages/Success";
+import DonarFailed from "./component/donarpages/paymentPages/Failed";
 // import DonarCourse from "./component/donarpages/course/Course";
 // import LearnMore from "./component/courselearnmore/LearnMore";
 
@@ -78,6 +84,13 @@ function App() {
       return <>{children}</>;
     } else <div>You donot have access</div>;
   };
+
+  const ResourceElement = ({ children }) => {
+    if (currentUserType === "resources") {
+      return <>{children}</>;
+    } else <div>You donot have access</div>;
+  };
+
   return (
     <HelmetProvider>
       <Helmet>
@@ -86,7 +99,6 @@ function App() {
           rel="stylesheet"
         />
       </Helmet>
-      {/* <Provider store={store}> */}
       <BrowserRouter>
         <Routes>
           <Route
@@ -130,7 +142,7 @@ function App() {
               </PublicElement>
             }
           />
-            <Route
+          <Route
             path="/privacy-policy"
             element={
               <PublicElement>
@@ -138,7 +150,7 @@ function App() {
               </PublicElement>
             }
           />
-           <Route
+          <Route
             path="/neet-counselling"
             element={
               <PublicElement>
@@ -146,7 +158,7 @@ function App() {
               </PublicElement>
             }
           />
-             <Route
+          <Route
             path="/terms"
             element={
               <PublicElement>
@@ -407,7 +419,7 @@ function App() {
               </UserElement>
             }
           />
-           <Route
+          <Route
             path="/student/edit-graduation"
             element={
               <UserElement>
@@ -415,7 +427,7 @@ function App() {
               </UserElement>
             }
           />
-           <Route
+          <Route
             path="/student/edit-post-graduation"
             element={
               <UserElement>
@@ -423,7 +435,7 @@ function App() {
               </UserElement>
             }
           />
-            <Route
+          <Route
             path="/student/edit-profile"
             element={
               <UserElement>
@@ -461,6 +473,24 @@ function App() {
             element={
               <DonarElement>
                 <DonarGetOtp />
+              </DonarElement>
+            }
+          />
+
+          <Route
+            path="/registerDonar/success"
+            element={
+              <DonarElement>
+                <DonarSuccess />
+              </DonarElement>
+            }
+          />
+
+          <Route
+            path="/registerDonar/failed"
+            element={
+              <DonarElement>
+                <DonarFailed />
               </DonarElement>
             }
           />
@@ -530,17 +560,49 @@ function App() {
             }
           />
           <Route
-            path="donar/donated/student/profile/:studentUID" //add for donated not checks
+            path="donar/donated/student/profile/:studentUID"
             element={
               <DonarElement>
                 <StudentProfile />
               </DonarElement>
             }
           />
+          <Route
+            path="/resource/home"
+            element={
+              <ResourceElement>
+                <ResourceLayout />
+              </ResourceElement>
+            }
+          />
+
+          <Route
+            path="/resource/getotp"
+            element={
+              <ResourceElement>
+                <ResourceGetOtp />
+              </ResourceElement>
+            }
+          />
+          <Route
+            path="/resource/resend-register-otp"
+            element={
+              <ResourceElement>
+                <ResourceResendOtp />
+              </ResourceElement>
+            }
+          />
+
+          <Route
+            path="/resource/getotplogin"
+            element={
+              <ResourceElement>
+                <ResourceGetOtpLogin />
+              </ResourceElement>
+            }
+          />
         </Routes>
-   
       </BrowserRouter>
-      {/* </Provider> */}
     </HelmetProvider>
   );
 }

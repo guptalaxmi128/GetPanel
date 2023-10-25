@@ -3,15 +3,14 @@ import backgroundImg from "../../../assets/page-bg.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { useLocation, useNavigate ,Link } from "react-router-dom";
-import { useVerifyDonarRegisterOtpMutation } from "../../../services/signUpApi";
-
+import { useVerifyResourceOtpMutation } from "../../../services/signUpApi";
 
 const GetOtp = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { 
-    // mobileNumber,
-     email } = location.state || {};
+    mobileNumber, 
+    email } = location.state || {};
   console.log("Get Otp Page", email);
   // console.log("Get Otp mobileNumber", mobileNumber);
   const [emailOtp, setEmailOtp] = useState("");
@@ -22,7 +21,7 @@ const GetOtp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg,setErrorMsg]=useState(false);
 
-const [verifyDonarRegisterOtp]=useVerifyDonarRegisterOtpMutation();
+ const [verifyResourceOtp] =useVerifyResourceOtpMutation();
 
   const clearTextInput = () => {
     setEmailOtp("");
@@ -49,24 +48,24 @@ const [verifyDonarRegisterOtp]=useVerifyDonarRegisterOtpMutation();
       setEmailOtpError("");
     }
     if ( 
-      // mobileNumberOtp && mobileNumberOtp.length === 6 && 
-      emailOtp && emailOtp.length === 6) {
+        // mobileNumberOtp && mobileNumberOtp.length === 6 && 
+        emailOtp && emailOtp.length === 6) {
       const formData = {
         email,
-        // mobileNumber,
+        mobileNumber,
         emailOTP: emailOtp,
         // mobileOTP: mobileNumberOtp,
       };
       console.log(formData);
       setIsLoading(true);
       try {
-        const res = await verifyDonarRegisterOtp(formData);
+        const res = await verifyResourceOtp(formData);
         console.log(res);
         if (res && res.data && res.data.success) {
           localStorage.setItem("authToken", res.data.authToken);
           console.log(localStorage);
           clearTextInput();
-          navigate("/donar/home"); // Navigate to home page
+          navigate("/resource/home"); // Navigate to home page
         } else if (res && res.error.data && res.error.data.message) {
           setErrorMsg(res.error.data.message);
         }
@@ -111,8 +110,7 @@ const [verifyDonarRegisterOtp]=useVerifyDonarRegisterOtpMutation();
               style={{ paddingTop: "2.5rem", paddingBottom: "2.5rem" }}
             >
               <div className="text-center 2xl:mb-10 mb-5">
-                <h4 className="font-medium"
-                  style={{ fontSize: "16px", fontWeight: 600 }}>Sign Up</h4>
+                <h4 className="font-medium" style={{fontSize:'16px',fontWeight:600}}>Sign Up</h4>
                 <div className="text-slate-500 dark:text-slate-400 text-base" style={{fontSize:'14px'}}>
                   Sign up to your account to start using GET
                 </div>
@@ -128,8 +126,8 @@ const [verifyDonarRegisterOtp]=useVerifyDonarRegisterOtpMutation();
                   </label>
                   <div className="relative ">
                     <input
-                    style={{fontSize:'13px'}}
-                      type="number"
+                      style={{ fontSize: '13px' }}
+                      type="email"
                       name="emailotp"
                       className="form-control py-2"
                       placeholder="Enter Email OTP"
@@ -155,7 +153,7 @@ const [verifyDonarRegisterOtp]=useVerifyDonarRegisterOtpMutation();
                   </label>
                   <div className="relative ">
                     <input
-                      style={{fontSize:'13px'}}
+                      style={{ fontSize: '13px' }}
                       type="number"
                       name="mobilenumberotp"
                       className="  form-control py-2"
@@ -205,9 +203,9 @@ const [verifyDonarRegisterOtp]=useVerifyDonarRegisterOtpMutation();
                         {errorMsg}
                       </span>
                     )}
-                  {errorMsg ?  <br/> :''} 
-                <Link to={"/donar/resend-register-otp"}>
-                  <span style={{fontSize:'12px'}}>
+                    {errorMsg ?  <br/> :''} 
+                <Link to={"/resource/resend-register-otp"}>
+                  <span className="text-slate-500" style={{fontSize:'12px'}}>
                     Resend Otp
                   </span>
                 </Link>

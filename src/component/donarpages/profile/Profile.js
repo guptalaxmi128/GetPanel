@@ -237,82 +237,8 @@ const Profile = () => {
                         </div>
                       </div>
                     </div>
-                    {/* <img src={qrCode} alt="qrCode-image" style={{width:'100px' ,height:'100px',marginTop:'auto'}} /> */}
-                    {/* <!-- profile info-500 --> */}
                   </div>
-                  {/* <div className="grid grid-cols-12 gap-6">
-                    <div className="lg:col-span-4 col-span-12">
-                      <div className="card h-full">
-                        <header className="card-header">
-                          <h4 className="card-title">Info</h4>
-                        </header>
-                        <div className="card-body p-6">
-                          <ul className="list space-y-8">
-                            <li className="flex space-x-3 rtl:space-x-reverse">
-                              <div className="flex-none text-2xl text-slate-600 dark:text-slate-300">
-                                <iconify-icon icon="heroicons:envelope"></iconify-icon>
-                              </div>
-                              <div className="flex-1">
-                                <div className="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
-                                  EMAIL
-                                </div>
-                                <a
-                                  href="mailto:someone@example.com"
-                                  className="text-base text-slate-600 dark:text-slate-50"
-                                >
-                                  info-example@email.com
-                                </a>
-                              </div>
-                            </li>
-                            <!-- end single list -->
-                            <li className="flex space-x-3 rtl:space-x-reverse">
-                              <div className="flex-none text-2xl text-slate-600 dark:text-slate-300">
-                                <iconify-icon icon="heroicons:phone-arrow-up-right"></iconify-icon>
-                              </div>
-                              <div className="flex-1">
-                                <div className="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
-                                  PHONE
-                                </div>
-                                <a
-                                  href="#"
-                                  className="text-base text-slate-600 dark:text-slate-50"
-                                >
-                                  +919540478632
-                                </a>
-                              </div>
-                            </li>
-                            <!-- end single list -->
-                            <li className="flex space-x-3 rtl:space-x-reverse">
-                              <div className="flex-none text-2xl text-slate-600 dark:text-slate-300">
-                                <iconify-icon icon="heroicons:map"></iconify-icon>
-                              </div>
-                              <div className="flex-1">
-                                <div className="uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
-                                  LOCATION
-                                </div>
-                                <div className="text-base text-slate-600 dark:text-slate-50">
-                                  #K-60, GF, RHS, JUNGPURA EXT.,
-                                  <br />
-                                  NEW DELHI - 110014
-                                </div>
-                              </div>
-                            </li>
-                            <!-- end single list -->
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    {/* <div className="lg:col-span-8 col-span-12">
-                    <div className="card ">
-                      <header className="card-header">
-                        <h4 className="card-title">User Overview
-                        </h4>
-                      </header>
-                      <div className="card-body">
-                        <div id="areaChart"></div>
-                      </div>
-                    </div>
-                  </div> */}
+                
                 </div>
 
                 <div className="card xl:col-span-2 mt-5">

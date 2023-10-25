@@ -242,11 +242,12 @@ export const signUpApi = createApi({
         };
       },
     }),
-    getOTPForUpdateAccount: builder.query({
-      query: (accountDetailId) => {
+    addOTPForUpdateAccount: builder.mutation({
+      query: (user) => {
+        const {accountDetailId} =user;
         return {
           url: `student/getOTPForUpdateAccount/${accountDetailId}`,
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-type": "application/json",
           },
@@ -331,11 +332,12 @@ export const signUpApi = createApi({
         };
       },
     }),
-    getOTPForUpdateRaiseFund: builder.query({
-      query: (raiseFundId) => {
+    addOTPForUpdateRaiseFund: builder.mutation({
+      query: (user) => {
+        const {raiseFundId}=user;
         return {
           url: `student/getOTPForUpdateRaiseFund/${raiseFundId}`,
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-type": "application/json",
           },
@@ -358,11 +360,12 @@ export const signUpApi = createApi({
       },
     }),
 
-    getOTPForUpdateCourse: builder.query({
-      query: (courseId) => {
+    addOTPForUpdateCourse: builder.mutation({
+      query: (user) => {
+        const {courseId}=user;
         return {
           url: `student/getOTPForUpdateCourse/${courseId}`,
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-type": "application/json",
           },
@@ -429,11 +432,11 @@ export const signUpApi = createApi({
       },
     }),
 
-    getOTPForUpdateProfile: builder.query({
+    addOTPForUpdateProfile: builder.mutation({
       query: () => {
         return {
           url: `student/getOTPForUpdateProfile`,
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-type": "application/json",
           },
@@ -798,6 +801,69 @@ export const signUpApi = createApi({
       }),
     }),
 
+    registerResource: builder.mutation({
+      query: (user) => {
+        return {
+          url: "resource/register",
+          method: "POST",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    verifyResourceOtp: builder.mutation({
+      query: (user) => {
+        return {
+          url: "resource/verifyRegisterOtp",
+          method: "POST",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    loginResource: builder.mutation({
+      query: (user) => {
+        return {
+          url: "resource/login",
+          method: "POST",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+    
+    resendResourceRegisterOtp: builder.mutation({
+      query: (user) => {
+        return {
+          url: "resource/resendOTPForRegister",
+          method: "POST",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+
+    verifyLoginResourceOtp: builder.mutation({
+      query: (user) => {
+        return {
+          url: "resource/verifyLoginOtp",
+          method: "POST",
+          body: user,
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+      },
+    }),
+
     publicUserReceipt: builder.mutation({
       query: (user) => {
         return {
@@ -863,18 +929,18 @@ export const {
   useGetWalletHistoryQuery,
   useGetNotificationQuery,
   useGetUpdationResponseQuery,
-  useGetOTPForUpdateAccountQuery,
+  useAddOTPForUpdateAccountMutation,
   useAddverifyOTPForUpdateAccountMutation,
   useAddverifyOTPForUpdateRaiseFundMutation,
-  useGetOTPForUpdateRaiseFundQuery,
+  useAddOTPForUpdateRaiseFundMutation,
   useUpdateRaiseFundMutation,
   useGetFundRaisedQuery,
   useGetFundRequiredQuery,
   useAddverifyOTPForUpdateCourseMutation,
-  useGetOTPForUpdateCourseQuery,
+  useAddOTPForUpdateCourseMutation,
   useDeleteCourseDocumentMutation,
   useAddverifyOTPForUpdateProfileMutation,
-  useGetOTPForUpdateProfileQuery,
+  useAddOTPForUpdateProfileMutation,
   useDeleteRaiseFundDocumentMutation,
   useRegisterDonarMutation,
   useVerifyDonarRegisterOtpMutation,
@@ -907,6 +973,11 @@ export const {
  useGetDashboardPendingQuery,
   usePublicUserReceiptMutation,
   usePublicUserReceiptOtpMutation,
-  usePublicDonationDetailsMutation
+  usePublicDonationDetailsMutation,
+  useRegisterResourceMutation,
+  useVerifyResourceOtpMutation,
+  useLoginResourceMutation,
+  useResendResourceRegisterOtpMutation,
+ useVerifyLoginResourceOtpMutation
 
 } = signUpApi;

@@ -7,6 +7,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {Search} from 'react-feather';
 import icon from "../../../../assets/images/ck-white.svg";
 import download from "../../../../assets/import.png";
+import noRecord from "../../../../assets/no-record-found.png";
 import {
   useGetDonationDonatedTodayQuery,
   useGetDownloadReceiptQuery,
@@ -106,6 +107,21 @@ const handleDownload = async (id) => {
             <span className="  col-span-4 "></span>
             <div className="inline-block min-w-full align-middle">
               <div className="overflow-hidden ">
+              {getCurrentPageEntries().length === 0 ? (
+                                   
+                                    <div className="text-center py-4">
+                                      <img
+                                        src={noRecord}
+                                        alt="No data available"
+                                        style={{
+                                          display: "block",
+                                          margin: "0 auto",
+                                        }}
+                                      />
+                                      <p>No data available.</p>
+                                    </div>
+                                  ) : (
+                                    <>
                 <div style={{ margin: "12px" }} className="flex">
                   {/* <div
                     className="flex"
@@ -363,6 +379,7 @@ const handleDownload = async (id) => {
                     </div>
                   </div>
                 </div>
+                </>)}
               </div>
             </div>
           </div>

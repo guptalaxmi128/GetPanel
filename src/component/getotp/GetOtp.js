@@ -8,13 +8,15 @@ import { useVerifyRegisterOtpMutation } from "../../services/signUpApi";
 const GetOtp = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { mobileNumber, email } = location.state || {};
+  const { 
+    // mobileNumber,
+     email } = location.state || {};
   console.log("Get Otp Page", email);
-  console.log("Get Otp mobileNumber", mobileNumber);
+ 
   const [emailOtp, setEmailOtp] = useState("");
-  const [mobileNumberOtp, setMobileNumberOtp] = useState("");
+  // const [mobileNumberOtp, setMobileNumberOtp] = useState("");
 
-  const [otpError, setOtpError] = useState("");
+  // const [otpError, setOtpError] = useState("");
   const [emailOtpError, setEmailOtpError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg,setErrorMsg]=useState(false);
@@ -23,61 +25,20 @@ const GetOtp = () => {
 
   const clearTextInput = () => {
     setEmailOtp("");
-    setMobileNumberOtp("");
+    // setMobileNumberOtp("");
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!mobileNumberOtp) {
-  //     setOtpError("Please enter mobile number otp");
-  //   } else if (mobileNumberOtp.length !== 6) {
-  //     setOtpError("Mobile number otp should have 6 digits");
-  //   } else {
-  //     setOtpError("");
-  //   }
-  //   if (!emailOtp) {
-  //     setEmailOtpError("Email otp is required");
-  //   } else if (emailOtp.length !== 6) {
-  //     setEmailOtpError("Email otp should have 6 digits");
-  //   } else {
-  //     setEmailOtpError("");
-  //   }
-  //   if (
-  //     mobileNumberOtp &&
-  //     mobileNumberOtp.length === 6 &&
-  //     emailOtp &&
-  //     emailOtp.length === 6
-  //   ) {
-  //     const formData = {
-  //       email,
-  //       mobileNumber,
-  //       emailOTP: emailOtp,
-  //       mobileOTP: mobileNumberOtp,
-  //     };
-  //     console.log(formData);
-  //     setIsLoading(true);
-  //     const res = await verifyRegisterOtp(formData);
-  //     console.log(res);
-  //     if (res.data.success) {
-  //       localStorage.setItem("authToken", res.data.authToken);
-  //       console.log(localStorage);
-  //       clearTextInput();
-  //       navigate("/student/home"); // Navigate to home page
-  //     }
-  //   }
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    if (!mobileNumberOtp) {
-      setOtpError("Please enter mobile number otp");
-    } else if (mobileNumberOtp.length !== 6) {
-      setOtpError("Mobile number otp should have 6 digits");
-    } else {
-      setOtpError("");
-    }
+    // if (!mobileNumberOtp) {
+    //   setOtpError("Please enter mobile number otp");
+    // } else if (mobileNumberOtp.length !== 6) {
+    //   setOtpError("Mobile number otp should have 6 digits");
+    // } else {
+    //   setOtpError("");
+    // }
     if (!emailOtp) {
       setEmailOtpError("Email otp is required");
     } else if (emailOtp.length !== 6) {
@@ -85,12 +46,14 @@ const GetOtp = () => {
     } else {
       setEmailOtpError("");
     }
-    if (mobileNumberOtp && mobileNumberOtp.length === 6 && emailOtp && emailOtp.length === 6) {
+    if (
+      // mobileNumberOtp && mobileNumberOtp.length === 6 && 
+      emailOtp && emailOtp.length === 6) {
       const formData = {
         email,
-        mobileNumber,
+        // mobileNumber,
         emailOTP: emailOtp,
-        mobileOTP: mobileNumberOtp,
+        // mobileOTP: mobileNumberOtp,
       };
       console.log(formData);
       setIsLoading(true);
@@ -183,7 +146,7 @@ const GetOtp = () => {
                     ) : null}
                   </div>
                 </div>
-                <div className="fromGroup">
+                {/* <div className="fromGroup">
                   <label className="block capitalize form-label">
                     mobile number OTP
                   </label>
@@ -197,7 +160,7 @@ const GetOtp = () => {
                       value={mobileNumberOtp}
                       onChange={(e) => setMobileNumberOtp(e.target.value)}
                     />
-                    {otpError ? (
+                    {/* {otpError ? (
                       <span
                         style={{
                           color: "red",
@@ -207,9 +170,9 @@ const GetOtp = () => {
                       >
                         {otpError}
                       </span>
-                    ) : null}
+                    ) : null} 
                   </div>
-                </div>
+                </div> */}
                 {isLoading && (
                   <Box
                     sx={{

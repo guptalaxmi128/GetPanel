@@ -7,10 +7,10 @@ import { useVerifyLoginOtpMutation } from "../services/signUpApi";
 
 const GetOtpLogin = () => {
   const location = useLocation();
-  const { mobileNumber } = location.state || {};
+  const { email } = location.state || {};
 
   const navigate = useNavigate();
-  console.log(mobileNumber);
+  console.log(email);
 
   const [otp, setOtp] = useState("");
 
@@ -33,8 +33,8 @@ const GetOtpLogin = () => {
     } else {
       setOtpError("");
     }
-    if (mobileNumber && mobileNumber.length === 10 && otp && otp.length === 6) {
-      const formData = { mobileNumber, mobileOTP: otp };
+    if (otp && otp.length === 6) {
+      const formData = { email, emailOTP: otp };
       console.log(formData);
       setIsLoading(true);
       try{
@@ -104,15 +104,15 @@ const GetOtpLogin = () => {
               <form className="space-y-4">
                 <div className="fromGroup">
                   <label className="block capitalize form-label">
-                    mobile number OTP
+                    Email OTP
                   </label>
                   <div className="relative ">
                     <input
                       style={{ fontSize: "13px" }}
-                      type="number"
-                      name="mobilenumberotp"
+                      type="email"
+                      name="emailOTP"
                       className="  form-control py-2"
-                      placeholder="Mobile Number OTP"
+                      placeholder="Email OTP"
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
                     />

@@ -21,7 +21,7 @@ function LandingPage() {
 
     
     </div>
-    {showPopup && <PopUp onClose={closePopup} />}
+    {/* {showPopup && <PopUp onClose={closePopup} />} */}
     </>
   );
 }

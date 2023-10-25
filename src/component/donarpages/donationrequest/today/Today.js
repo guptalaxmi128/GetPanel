@@ -3,11 +3,12 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import SearchIcon from "@mui/icons-material/Search";
 import icon from "../../../../assets/images/ck-white.svg";
-import filter from "../../../../assets/images/filter.png";
+// import filter from "../../../../assets/images/filter.png";
 import close from "../../../../assets/close.png";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import noRecord from "../../../../assets/no-record-found.png";
 import getepayPortal from "../../../../Getepay_pg_react/Getepay_pg_react/index";
 import { Config } from "../../../../Getepay_pg_react/Getepay_pg_react/config";
 import {
@@ -24,6 +25,7 @@ const Today = () => {
   const [studentData, setStudentData] = useState([]);
   const [donarId, setDonarId] = useState("");
   const [donarEmail, setDonarEmail] = useState("");
+  const [donarName,setDonarName]=useState('');
   const [studentUID,setStudentUID]=useState('');
   const [raisedAmount,setRaisedAmount]=useState('');
   const [requiredAmount,setRequiredAmount]=useState('');
@@ -49,7 +51,7 @@ const Today = () => {
     udf4: "",
     udf5: "",
     udf6: "",
-    udf7: "",
+    udf7: donarName,
     udf8: "",
     udf9: "",
     udf10: "",
@@ -72,6 +74,7 @@ const Today = () => {
     if (donarDataIsSuccess && donarData && donarData.data) {
       setDonarId(donarData.data.id);
       setDonarEmail(donarData.data.email);
+      setDonarName(donarData.data.name)
     }
   }, [donarData, donarDataIsSuccess]);
 
@@ -106,9 +109,9 @@ const Today = () => {
 
   const { data: raiseFund, isSuccess: raiseFundIsSuccess } =
   useGetRaiseFundForDonarQuery(studentUID);
-  console.log("data", raiseFund);
+  // console.log("data", raiseFund);
 
-  console.log(studentData)
+  // console.log(studentData)
   
   useEffect(() => {
     if (raiseFund && raiseFundIsSuccess && raiseFund.data) {
@@ -188,6 +191,7 @@ const Today = () => {
     const donationData = {
       amount,
       donarId,
+      donarName,
       studentName,
       studentUID,
       merchantTransactionId: transactionId,
@@ -218,6 +222,21 @@ const Today = () => {
             <span className="  col-span-4 "></span>
             <div className="inline-block min-w-full align-middle">
               <div className="overflow-hidden ">
+              {getCurrentPageEntries().length === 0 ? (
+                                    // If there's no data, don't render the table
+                                    <div className="text-center py-4">
+                                      <img
+                                        src={noRecord}
+                                        alt="No data available"
+                                        style={{
+                                          display: "block",
+                                          margin: "0 auto",
+                                        }}
+                                      />
+                                      <p>No data available.</p>
+                                    </div>
+                                  ) : (
+                                    <>
                 <div style={{ margin: "12px" }} className="flex">
                   {/* <div
                     className="flex"
@@ -615,6 +634,7 @@ const Today = () => {
                     </div>
                   </div>
                 </div>
+                </>)}
               </div>
             </div>
           </div>

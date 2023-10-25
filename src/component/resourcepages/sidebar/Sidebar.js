@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { NavLink} from "react-router-dom";
-import { Home, Award,User,CreditCard,Users,Power,BookOpen, X } from 'react-feather';
-import CloseIcon from "@mui/icons-material/Close";
-import logo from "../../assets/images/logo.png";
+import { Gift,Home,CheckCircle,User,Power,X } from 'react-feather';
+import logo from "../../../assets/images/logo.png";
 
-
-const Sidebar = ({ toggle }) => {
+const Sidebar = ({toggle}) => {
   const [activeItem, setActiveItem] = useState(0);
 
   const handleItemClick = (index) => {
@@ -16,28 +16,28 @@ const Sidebar = ({ toggle }) => {
     localStorage.removeItem("authToken");
     // alert("Student logout successfully!");
   };
-
   return (
+    <>
     <div className="sidebar-wrapper group w-0  xl:w-[248px] xl:block">
       <div
         id="bodyOverlay"
         className="w-screen h-screen fixed top-0 bg-slate-900 bg-opacity-50 backdrop-blur-sm z-10 hidden"
       ></div>
       <div className="logo-segment">
-        <NavLink className="flex items-center" to="/">
+        <NavLink 
+        className="flex items-center"
+         to="/">
           <img
             src={logo}
             className="white_logo"
             alt="logo"
-            width={50}
-            height={50}
           />
           <span className="ltr:ml-3 rtl:mr-3 text-xl font-Inter font-bold text-slate-900 dark:text-white">
             GET
           </span>
         </NavLink>
         {/* <!-- Sidebar Type Button --> */}
-        {/* <div
+        <div
           id="sidebar_type"
           className="cursor-pointer text-slate-900 dark:text-white text-lg"
         >
@@ -49,12 +49,9 @@ const Sidebar = ({ toggle }) => {
             className="sidebarDotIcon collapsed-icon text-slate-900 dark:text-slate-200"
             icon="material-symbols:circle-outline"
           ></iconify-icon>
-        </div> */}
-        <button
-          className="sidebarCloseIcon text-2xl inline-block xl:hidden"
-          onClick={toggle}
-        >
-          <X size={22} />
+        </div>
+        <button className="sidebarCloseIcon text-2xl inline-block xl:hidden" onClick={toggle}>
+         <X size={22} />
         </button>
       </div>
       <div
@@ -71,10 +68,13 @@ const Sidebar = ({ toggle }) => {
             className={activeItem === 0 ? "active" : ""}
             onClick={() => handleItemClick(0)}
           >
-            <NavLink to="/student/home" className="navItem">
+            <NavLink
+              to="/donar/home"
+              className="navItem"
+              style={{ textDecoration: "none" }}
+            >
               <span className="flex items-center">
-               <Home size={22} />
-                &nbsp; &nbsp;
+                <Home size={22} /> &nbsp; &nbsp;
                 <span style={{ fontSize: "15px" }}>Dashboard</span>
               </span>
             </NavLink>
@@ -84,66 +84,12 @@ const Sidebar = ({ toggle }) => {
             className={activeItem === 1 ? "active" : ""}
             onClick={() => handleItemClick(1)}
           >
-            <NavLink to="/student/course" className="navItem">
-              <span className="flex items-center">
-                <Award size={22} />
-                &nbsp; &nbsp;
-                <span style={{ fontSize: "15px" }}>Qualification</span>
-              </span>
-            </NavLink>
-          </li>
-          <li
-            className={activeItem === 2 ? "active" : ""}
-            onClick={() => handleItemClick(2)}
-          >
-            <NavLink to="/student/account" className="navItem">
-              <span className="flex items-center">
-                <Users size={22} /> &nbsp; &nbsp;
-                <span style={{ fontSize: "15px" }}>Account Details</span>
-              </span>
-            </NavLink>
-          </li>
-          <li
-            className={activeItem === 3 ? "active" : ""}
-            onClick={() => handleItemClick(3)}
-          >
-            <NavLink to="/student/wallet" className="navItem">
-              <span className="flex items-center">
-                <CreditCard size={22} />
-                &nbsp; &nbsp;
-                <span style={{ fontSize: "15px" }}>Wallet</span>
-              </span>
-            </NavLink>
-          </li>
-          <li
-            className={activeItem === 4 ? "active" : ""}
-            onClick={() => handleItemClick(4)}
-          >
-            <NavLink to="/student/profile" className="navItem">
-              <span className="flex items-center">
-                <User szie={22} />{" "}
-                &nbsp;&nbsp;&nbsp;
-                <span style={{ fontSize: "15px" }}>Profile</span>
-              </span>
-            </NavLink>
-          </li>
-          <li
-            className={activeItem === 5 ? "active" : ""}
-            onClick={() => handleItemClick(5)}
-          >
-            <NavLink to="/student/courses" className="navItem">
-              <span className="flex items-center">
-                <BookOpen size={22} />
-                &nbsp;&nbsp;&nbsp;
-                <span style={{ fontSize: "15px" }}>Course Offered</span>
-              </span>
-            </NavLink>
-          </li>
-          <li
-            className={activeItem === 6 ? "active" : ""}
-            onClick={() => handleItemClick(6)}
-          >
-            <NavLink to="/login" className="navItem" onClick={handleLogout}>
+            <NavLink
+              to="/login"
+              className="navItem"
+              onClick={handleLogout}
+              style={{ textDecoration: "none" }}
+            >
               <span className="flex items-center">
                 <Power size={22} style={{color:'red'}} />
                 &nbsp;&nbsp;&nbsp;
@@ -151,10 +97,76 @@ const Sidebar = ({ toggle }) => {
               </span>
             </NavLink>
           </li>
+          {/* <li
+            className={activeItem === 1 ? "active" : ""}
+            onClick={() => handleItemClick(1)}
+          >
+            <NavLink
+              to="/donar/donation-request"
+              className="navItem"
+              style={{ textDecoration: "none" }}
+            >
+              <span className="flex items-center">
+                <Gift size={22} />
+                &nbsp; &nbsp;
+                <span style={{ fontSize: "15px" }}>Donation Request</span>
+              </span>
+            </NavLink>
+          </li>
+          <li
+            className={activeItem === 2 ? "active" : ""}
+            onClick={() => handleItemClick(2)}
+          >
+            <NavLink
+              to="/donar/donated"
+              className="navItem"
+              style={{ textDecoration: "none" }}
+            >
+              <span className="flex items-center">
+                <CheckCircle size={22} /> &nbsp; &nbsp;
+                <span style={{ fontSize: "15px" }}>Donated</span>
+              </span>
+            </NavLink>
+          </li>
+          <li
+            className={activeItem === 3 ? "active" : ""}
+            onClick={() => handleItemClick(3)}
+          >
+            <NavLink
+              to="/donar/profile"
+              className="navItem"
+              style={{ textDecoration: "none" }}
+            >
+              <span className="flex items-center">
+                <User size={22} />{" "}
+                &nbsp;&nbsp;&nbsp;
+                <span style={{ fontSize: "15px" }}>Profile</span>
+              </span>
+            </NavLink>
+          </li>
+
+          <li
+            className={activeItem === 4 ? "active" : ""}
+            onClick={() => handleItemClick(4)}
+          >
+            <NavLink
+              to="/login"
+              className="navItem"
+              onClick={handleLogout}
+              style={{ textDecoration: "none" }}
+            >
+              <span className="flex items-center">
+                <Power size={22} style={{color:'red'}} />
+                &nbsp;&nbsp;&nbsp;
+                <span style={{ fontSize: "15px",color:'red' }}>Logout</span>
+              </span>
+            </NavLink>
+          </li> */}
         </ul>
       </div>
     </div>
-    // {/* <!-- End: Sidebar --> */}
+    <ToastContainer />
+  </>
   );
 };
 

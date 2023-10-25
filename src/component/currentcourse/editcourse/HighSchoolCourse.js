@@ -70,15 +70,22 @@ const HighSchoolCourse = () => {
   const handleHighSubmit = async (e) => {
     e.preventDefault();
     try {
-      const highData ={courseId:highId,fullName:highFullName,courseName:highCourseName,schoolOrCollageName:highSchoolOrCollageName,boardOrUniversityName:highBoardOrUniversityName,durationType:highDurationType,
-     courseType:highCourseType }
+      const highData = {
+        courseId: highId,
+        fullName: highFullName,
+        courseName: highCourseName,
+        schoolOrCollageName: highSchoolOrCollageName,
+        boardOrUniversityName: highBoardOrUniversityName,
+        durationType: highDurationType,
+        courseType: highCourseType,
+      };
       console.log(highData);
       const res = await updateCourse(highData);
       console.log(res);
       if (res.data.success) {
         toast.success(res.data.message);
         clearHighTextInput();
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         navigate("/student/course");
       }
     } catch (error) {

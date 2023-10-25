@@ -28,6 +28,7 @@ const StudentProfile = () => {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [donarId, setDonarId] = useState("");
   const [donarEmail, setDonarEmail] = useState("");
+  const [donarName,setDonarName]=useState('');
   const [studentName, setStudentName] = useState("");
   const [id, setId] = useState("");
   const [currentCourse, setCurrentCourse] = useState("");
@@ -49,6 +50,7 @@ const StudentProfile = () => {
     if (donarDataIsSuccess && donarData && donarData.data) {
       setDonarId(donarData.data.id);
       setDonarEmail(donarData.data.email);
+      setDonarName(donarData.data.name)
     }
   }, [donarData, donarDataIsSuccess]);
 
@@ -147,7 +149,7 @@ const StudentProfile = () => {
     udf4: "",
     udf5: "",
     udf6: "",
-    udf7: "",
+    udf7: donarName,
     udf8: "",
     udf9: "",
     udf10: "",
@@ -174,6 +176,7 @@ const StudentProfile = () => {
     const donationData = {
       amount,
       donarId,
+      donarName,
       studentName,
       studentUID,
       merchantTransactionId: transactionId,

@@ -933,7 +933,7 @@ const Layout = () => {
        
         </div>
 
-        <div
+        {/* <div
           className="bg-white bg-no-repeat custom-dropshadow footer-bg dark:bg-slate-700 flex justify-around items-center
     backdrop-filter backdrop-blur-[40px] fixed left-0 bottom-0 w-full z-[9999] bothrefm-0 py-[12px] px-4 md:hidden"
         >
@@ -988,7 +988,7 @@ const Layout = () => {
               </span>
             </div>
           </a>
-        </div>
+        </div> */}
       </div>
       <ToastContainer />
     
