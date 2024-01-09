@@ -6,32 +6,32 @@ import { useResendResourceRegisterOtpMutation } from "../../../services/signUpAp
 const ResendOtp = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
+  // const [mobileNumber, setMobileNumber] = useState("");
  
 
 
   const [emailError, setEmailError] = useState("");
-  const [mobileNumberError, setMobileNumberError] = useState("");
+  // const [mobileNumberError, setMobileNumberError] = useState("");
 
  
 
 const [resendResourceRegisterOtp] =useResendResourceRegisterOtpMutation();
 
   const clearTextInput = () => {
-    setMobileNumber("");
+    // setMobileNumber("");
     setEmail("");
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
  
 
-    if (!mobileNumber) {
-      setMobileNumberError("Please enter your mobile number");
-    } else if (mobileNumber.length !== 10) {
-      setMobileNumberError("Mobile number should have 10 digits");
-    } else {
-      setMobileNumberError("");
-    }
+    // if (!mobileNumber) {
+    //   setMobileNumberError("Please enter your mobile number");
+    // } else if (mobileNumber.length !== 10) {
+    //   setMobileNumberError("Mobile number should have 10 digits");
+    // } else {
+    //   setMobileNumberError("");
+    // }
     if (!email) {
       setEmailError("Email is required");
     } else if (!/\S+@\S+\.\S+/.test(email)) {
@@ -39,21 +39,21 @@ const [resendResourceRegisterOtp] =useResendResourceRegisterOtpMutation();
     } else {
       setEmailError("");
     }
-    if (
+    // if (
      
-      mobileNumber &&
-      mobileNumber.length === 10
-    ) {
-      const formData = {  mobileNumber, email };
+    //   mobileNumber &&
+    //   mobileNumber.length === 10
+    // ) {
+      const formData = {   email };
       console.log(formData)
       const res = await resendResourceRegisterOtp(formData);
       console.log(res);
       if (res.data.success) {
         // localStorage.setItem('authToken', res.data.authToken);
         clearTextInput();
-        navigate('/resource/getotp',{ state: { mobileNumber, email } }); // Navigate to OTP page
+        navigate('/resource/getotp',{ state: { email } }); // Navigate to OTP page
       }
-    }
+    // }
   };
 
   return (
@@ -123,7 +123,7 @@ const [resendResourceRegisterOtp] =useResendResourceRegisterOtpMutation();
                     ) : null}
                   </div>
                 </div>
-                <div className="fromGroup">
+                {/* <div className="fromGroup">
                   <label className="block capitalize form-label">
                     mobile number
                   </label>
@@ -148,7 +148,7 @@ const [resendResourceRegisterOtp] =useResendResourceRegisterOtpMutation();
                       </span>
                     ) : null}
                   </div>
-                </div>
+                </div> */}
                 <button
                   className="btn btn-dark block w-full text-center"
                   type="button"

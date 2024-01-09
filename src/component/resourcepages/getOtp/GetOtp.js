@@ -9,7 +9,7 @@ const GetOtp = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { 
-    mobileNumber, 
+    // mobileNumber, 
     email } = location.state || {};
   console.log("Get Otp Page", email);
   // console.log("Get Otp mobileNumber", mobileNumber);
@@ -52,7 +52,7 @@ const GetOtp = () => {
         emailOtp && emailOtp.length === 6) {
       const formData = {
         email,
-        mobileNumber,
+        // mobileNumber,
         emailOTP: emailOtp,
         // mobileOTP: mobileNumberOtp,
       };

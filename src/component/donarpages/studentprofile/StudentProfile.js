@@ -91,7 +91,7 @@ const StudentProfile = () => {
     if (dataProfile && dataProfileIsSuccess) {
       setStudentName(dataProfile.data.name);
       const firstProfileImage =
-        dataProfile?.data.studentProfileImage.profileImage_FileName;
+        dataProfile?.data?.studentProfileImage?.profileImage_FileName;
       if (firstProfileImage) {
         setProfileImage(firstProfileImage);
       }

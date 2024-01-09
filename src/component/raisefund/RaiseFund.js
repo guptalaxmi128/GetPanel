@@ -93,20 +93,58 @@ const RaiseFund = () => {
   //   setShowAlert(true);
   // };
 
-  const handleFeeReceiptChange = (event) => {
-    const file = event.target.files[0];
-    const fileType = file.type;
+  // const handleFeeReceiptChange = (event) => {
+  //   const file = event.target.files[0];
+  //   const fileType = file.type;
 
-    // Check if the selected file is either an image or a PDF
-    if (fileType.startsWith("image/") || fileType === "application/pdf") {
-      setFeeReceipt(file);
+  //   // Check if the selected file is either an image or a PDF
+  //   if (fileType.startsWith("image/") || fileType === "application/pdf") {
+  //     setFeeReceipt(file);
+  //     setErrorMessage("");
+  //   } else {
+  //     // Reset the selected file if it's not an image or PDF
+  //     setFeeReceipt(null);
+  //     setErrorMessage("Please select a valid image or PDF file.");
+  //   }
+  // };
+
+  const handleFeeReceiptChange = (event) => {
+    const files = event.target.files;
+  
+    // Check if there are any selected files
+    if (files.length === 0) {
+      setFeeReceipt([]);
+      setErrorMessage("Please select one or more valid image or PDF files.");
+      return;
+    }
+  
+    const validFiles = [];
+    const invalidFiles = [];
+  
+    for (const file of files) {
+      const fileType = file.type;
+  
+      if (fileType.startsWith("image/") || fileType === "application/pdf") {
+        validFiles.push(file);
+      } else {
+        invalidFiles.push(file.name);
+      }
+    }
+  
+    if (invalidFiles.length > 0) {
+      // Handle invalid files here, if needed
+      console.log("Invalid files: ", invalidFiles);
+    }
+  
+    if (validFiles.length > 0) {
+      setFeeReceipt(validFiles);
       setErrorMessage("");
     } else {
-      // Reset the selected file if it's not an image or PDF
-      setFeeReceipt(null);
-      setErrorMessage("Please select a valid image or PDF file.");
+      setFeeReceipt([]);
+      setErrorMessage("Please select one or more valid image or PDF files.");
     }
   };
+  
 
   const handleGapJustificationChange = (event) => {
     const text = event.target.value;
@@ -197,7 +235,12 @@ const RaiseFund = () => {
       formData.append("yourRequirements", requiredAmount);
       formData.append("qualification", qualification);
       formData.append("currentCourseId", currentCourseId);
-      formData.append("feeReceipt", feeReceipt);
+      // formData.append("feeReceipt", feeReceipt);
+      if (feeReceipt && feeReceipt.length > 0) {
+        feeReceipt.forEach((file) => {
+          formData.append("feeReceipt", file);
+        });
+      }
       if (gapJustification) {
         formData.append("gapJustification", gapJustification);
       }
@@ -1335,7 +1378,7 @@ const RaiseFund = () => {
                                 style={{ fontSize: "13px" }}
                                 type="file"
                                 id="fileInput"
-                                // multiple
+                                multiple
                                 className="form-control"
                                 accept="image/*,.pdf"
                                 onChange={handleFeeReceiptChange}

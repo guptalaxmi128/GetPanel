@@ -230,7 +230,7 @@ const Profile = () => {
       setUID(data.UID);
     }
   }, [data, isSuccess]);
-  // console.log(data);
+  console.log(userData);
 
   // To change date format
   function formatDate(dateString) {

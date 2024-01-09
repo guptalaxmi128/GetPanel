@@ -12,11 +12,9 @@ import { usePublicUserReceiptOtpMutation } from "../../services/signUpApi";
 const DownloadReceipt = (props) => {
   const { toggle } = props;
   const navigate = useNavigate();
-  const [mobileNumber, setMobileNumber] = useState("");
   const [email, setEmail] = useState("");
   const [selectedOption, setSelectedOption] = useState("default");
 
-  const [mobileNumberError, setMobileNumberError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -28,21 +26,15 @@ const DownloadReceipt = (props) => {
   const [publicUserReceiptOtp] = usePublicUserReceiptOtpMutation();
 
   const clearTextInput = () => {
-    setMobileNumber("");
-    setEmail("");
+    setEmail('');
     setSelectedOption("default");
   };
+  
+ 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!mobileNumber) {
-      setMobileNumberError("Please enter your mobile number");
-    } else if (mobileNumber.length !== 10) {
-      setMobileNumberError("Mobile number should have 10 digits");
-    } else {
-      setMobileNumberError("");
-    }
-
+  
     if (!email) {
       setEmailError("Email is required");
     } else if (!/\S+@\S+\.\S+/.test(email)) {
@@ -50,35 +42,10 @@ const DownloadReceipt = (props) => {
     } else {
       setEmailError("");
     }
-
-    if (
-      mobileNumber &&
-      mobileNumber.length === 10 &&
-      selectedOption === "number"
-    ) {
-      // Submit mobileNumber to the backend for mobile number option
-      setIsLoading(true);
-      try {
-        const res = await publicUserReceiptOtp({ mobileNumber });
-        console.log(res);
-        clearTextInput();
-        if (res && res.data && res.data.success) {
-          setMessage("");
-          navigate("/get-public-user", { state: { mobileNumber } });
-        } else if (res && res.error.data && res.error.data.message) {
-          setMessage(res.error.data.message);
-        } else {
-          setMessage("An error occurred");
-        }
-      } catch (error) {
-        console.log(error);
-        setMessage(error.message);
-      }finally {
-        setIsLoading(false);
-      }
-
-    } else if (email && selectedOption === "email") {
+  
+    if (email && selectedOption === "email") {
       // Submit email to the backend for email option
+      setIsLoading(true);
       try {
         const res = await publicUserReceiptOtp({ email });
         console.log(res);
@@ -94,12 +61,12 @@ const DownloadReceipt = (props) => {
       } catch (error) {
         console.log(error);
         setMessage(error.message);
-      }finally {
+      } finally {
         setIsLoading(false);
       }
-
     }
   };
+  
 
   return (
     <>
@@ -148,7 +115,7 @@ const DownloadReceipt = (props) => {
                       Select Option
                     </option>
                     <option value="email">Email</option>
-                    <option value="number">Mobile Number</option>
+                    {/* <option value="number">Mobile Number</option> */}
                   </select>
                 </div>
               </div>
@@ -180,7 +147,7 @@ const DownloadReceipt = (props) => {
                 </div>
               )}
 
-              {selectedOption === "number" && (
+              {/* {selectedOption === "number" && (
                 <div className="fromGroup">
                   <label className="block capitalize form-label">
                     Mobile Number
@@ -208,7 +175,7 @@ const DownloadReceipt = (props) => {
                     ) : null}
                   </div>
                 </div>
-              )}
+              )} */}
               {isLoading && (
                 <Box
                   sx={{

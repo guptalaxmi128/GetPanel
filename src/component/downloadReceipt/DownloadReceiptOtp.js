@@ -18,13 +18,13 @@ const DownloadReceiptOtp = () => {
   console.log("Get Otp Page", email);
   console.log("Get Otp mobileNumber", mobileNumber);
   const [emailOtp, setEmailOtp] = useState("");
-  const [mobileNumberOtp, setMobileNumberOtp] = useState("");
+  // const [mobileNumberOtp, setMobileNumberOtp] = useState("");
   const [isClicked, setIsClicked] = useState("");
   const [showComponent, setShowComponent] = useState("");
   const [data, setData] = useState("");
   const [selectedData, setSelectedData] = useState([]);
 
-  const [otpError, setOtpError] = useState("");
+  // const [otpError, setOtpError] = useState("");
   const [emailOtpError, setEmailOtpError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(false);
@@ -32,7 +32,7 @@ const DownloadReceiptOtp = () => {
   const [publicUserReceipt] = usePublicUserReceiptMutation();
   const clearTextInput = () => {
     setEmailOtp("");
-    setMobileNumberOtp("");
+    // setMobileNumberOtp("");
   };
 
   const handleDownloadPDF = () => {
@@ -47,10 +47,6 @@ const DownloadReceiptOtp = () => {
       .from(element)
       .save();
   };
-
-
- 
-
 
   function formatDate(createdAt) {
     const date = new Date(createdAt);
@@ -68,13 +64,13 @@ const DownloadReceiptOtp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!mobileNumberOtp) {
-      setOtpError("Please enter mobile number otp");
-    } else if (mobileNumberOtp.length !== 6) {
-      setOtpError("Mobile number otp should have 6 digits");
-    } else {
-      setOtpError("");
-    }
+    // if (!mobileNumberOtp) {
+    //   setOtpError("Please enter mobile number otp");
+    // } else if (mobileNumberOtp.length !== 6) {
+    //   setOtpError("Mobile number otp should have 6 digits");
+    // } else {
+    //   setOtpError("");
+    // }
 
     if (!emailOtp) {
       setEmailOtpError("Email otp is required");
@@ -86,12 +82,13 @@ const DownloadReceiptOtp = () => {
 
     let formData = {};
 
-    if (mobileNumber) {
-      formData = {
-        mobileNumber,
-        mobileOTP: mobileNumberOtp,
-      };
-    } else if (email) {
+    // if (mobileNumber) {
+    //   formData = {
+    //     mobileNumber,
+    //     mobileOTP: mobileNumberOtp,
+    //   };
+    // } else
+    if (email) {
       formData = {
         email,
         emailOTP: emailOtp,
@@ -106,7 +103,7 @@ const DownloadReceiptOtp = () => {
         console.log(res);
         if (res && res.data && res.data.success && res.data.data) {
           setIsClicked(true);
-          toast.success(res.data.message)
+          toast.success(res.data.message);
           let result = res.data.data.filter((e) => e.status === "SUCCESS");
           console.log(result);
           setData(result);
@@ -162,7 +159,7 @@ const DownloadReceiptOtp = () => {
                 paddingTop: "1rem",
                 paddingBottom: "1rem",
                 width: "380px",
-                height: "180px",
+                height: "190px",
               }}
             >
               <div className="text-center 2xl:mb-10 ">
@@ -212,7 +209,7 @@ const DownloadReceiptOtp = () => {
                   </div>
                 )}
 
-                {mobileNumber && (
+                {/* {mobileNumber && (
                   <div className="fromGroup">
                     <label className="block capitalize form-label">
                       mobile number OTP
@@ -240,7 +237,7 @@ const DownloadReceiptOtp = () => {
                       ) : null}
                     </div>
                   </div>
-                )}
+                )} */}
 
                 {isLoading && (
                   <Box
@@ -288,7 +285,6 @@ const DownloadReceiptOtp = () => {
         <>
           <div className="modal-overlay">
             <div className="modal-content">
-            
               <div className=" space-y-5">
                 <div className="card">
                   <header className=" card-header noborder">
@@ -565,7 +561,6 @@ const DownloadReceiptOtp = () => {
                                   alignItems: "center",
                                   justifyContent: "center",
                                   display: "flex",
-
                                 }}
                               >
                                 Date : {formatDate(item.createdAt)}
@@ -687,7 +682,7 @@ const DownloadReceiptOtp = () => {
                                 alignItems: "center",
                                 justifyContent: "center",
                                 textAlign: "center",
-                                padding:"3px"
+                                padding: "3px",
                               }}
                             >
                               Any Banking Details:
@@ -700,8 +695,12 @@ const DownloadReceiptOtp = () => {
                                 marginBottom: "1rem",
                               }}
                             >
-                              <p style ={{paddingLeft:'8px',color:'#000'}}>Transaction Id</p>
-                              <p style={{paddingLeft:'8px'}} >{item.getepayTxnId }</p>
+                              <p style={{ paddingLeft: "8px", color: "#000" }}>
+                                Transaction Id
+                              </p>
+                              <p style={{ paddingLeft: "8px" }}>
+                                {item.getepayTxnId}
+                              </p>
                             </div>
                           </div>
                           <div
@@ -754,7 +753,7 @@ const DownloadReceiptOtp = () => {
                                 borderRightWidth: 0,
                               }}
                             >
-                               Signature
+                              Signature
                             </div>
                           </div>
                           <h6
@@ -801,6 +800,7 @@ const DownloadReceiptOtp = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  margin:'10px'
                 }}
               >
                 <button

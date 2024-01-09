@@ -1,37 +1,22 @@
 import React, { useState } from "react";
 import backgroundImg from "../../assets/page-bg.png";
-import {  useResendRegisterOtpMutation } from "../../services/signUpApi";
+import { useResendRegisterOtpMutation } from "../../services/signUpApi";
 import { Link, useNavigate } from "react-router-dom";
 
 const ResendOtp = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
- 
-
 
   const [emailError, setEmailError] = useState("");
-  const [mobileNumberError, setMobileNumberError] = useState("");
 
- 
-
- const [resendOtp]=useResendRegisterOtpMutation();
+  const [resendOtp] = useResendRegisterOtpMutation();
 
   const clearTextInput = () => {
-    setMobileNumber("");
     setEmail("");
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
- 
 
-    if (!mobileNumber) {
-      setMobileNumberError("Please enter your mobile number");
-    } else if (mobileNumber.length !== 10) {
-      setMobileNumberError("Mobile number should have 10 digits");
-    } else {
-      setMobileNumberError("");
-    }
     if (!email) {
       setEmailError("Email is required");
     } else if (!/\S+@\S+\.\S+/.test(email)) {
@@ -39,20 +24,21 @@ const ResendOtp = () => {
     } else {
       setEmailError("");
     }
-    if (
-     
-      mobileNumber &&
-      mobileNumber.length === 10
-    ) {
-      const formData = {  mobileNumber, email };
-      console.log(formData)
-      const res = await resendOtp(formData);
-      console.log(res);
-      if (res.data.success) {
-        // localStorage.setItem('authToken', res.data.authToken);
-        clearTextInput();
-        navigate('/student/getotp',{ state: { mobileNumber, email } }); // Navigate to OTP page
-      }
+
+    const formData = {
+      email,
+    };
+    console.log(formData);
+    const res = await resendOtp(formData);
+    console.log(res);
+    if (res.data.success) {
+      // localStorage.setItem('authToken', res.data.authToken);
+      clearTextInput();
+      navigate("/student/getotp", {
+        state: {
+          email,
+        },
+      }); // Navigate to OTP page
     }
   };
 
@@ -123,7 +109,7 @@ const ResendOtp = () => {
                     ) : null}
                   </div>
                 </div>
-                <div className="fromGroup">
+                {/* <div className="fromGroup">
                   <label className="block capitalize form-label">
                     mobile number
                   </label>
@@ -148,11 +134,11 @@ const ResendOtp = () => {
                       </span>
                     ) : null}
                   </div>
-                </div>
+                </div> */}
                 <button
                   className="btn btn-dark block w-full text-center"
                   type="button"
-                  onClick={(e)=>handleSubmit(e)}
+                  onClick={(e) => handleSubmit(e)}
                 >
                   Create An Account
                 </button>

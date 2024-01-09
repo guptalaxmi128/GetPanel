@@ -80,7 +80,7 @@ const Footer = () => {
                     <a href="#"  target="_blank">Donation Policy</a>
                   </li>
                   <li>
-                    <a href="/term"  target="_blank">Terms & Conditions</a>
+                    <a href="#"  target="_blank">Terms & Conditions</a>
                   </li>
                   <li>
                     <a href="#"  target="_blank">Our Initiatives</a>

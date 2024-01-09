@@ -6,32 +6,17 @@ import { useResendDonarRegisterOtpMutation } from "../../../services/signUpApi";
 const ResendOtp = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
- 
-
 
   const [emailError, setEmailError] = useState("");
-  const [mobileNumberError, setMobileNumberError] = useState("");
 
- 
-
- const [resendDonarRegisterOtp]=useResendDonarRegisterOtpMutation();
+  const [resendDonarRegisterOtp] = useResendDonarRegisterOtpMutation();
 
   const clearTextInput = () => {
-    setMobileNumber("");
     setEmail("");
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
- 
 
-    if (!mobileNumber) {
-      setMobileNumberError("Please enter your mobile number");
-    } else if (mobileNumber.length !== 10) {
-      setMobileNumberError("Mobile number should have 10 digits");
-    } else {
-      setMobileNumberError("");
-    }
     if (!email) {
       setEmailError("Email is required");
     } else if (!/\S+@\S+\.\S+/.test(email)) {
@@ -39,20 +24,15 @@ const ResendOtp = () => {
     } else {
       setEmailError("");
     }
-    if (
-     
-      mobileNumber &&
-      mobileNumber.length === 10
-    ) {
-      const formData = {  mobileNumber, email };
-      console.log(formData)
-      const res = await resendDonarRegisterOtp(formData);
-      console.log(res);
-      if (res.data.success) {
-        // localStorage.setItem('authToken', res.data.authToken);
-        clearTextInput();
-        navigate('/donar/getotp',{ state: { mobileNumber, email } }); // Navigate to OTP page
-      }
+
+    const formData = { email };
+    console.log(formData);
+    const res = await resendDonarRegisterOtp(formData);
+    console.log(res);
+    if (res.data.success) {
+      // localStorage.setItem('authToken', res.data.authToken);
+      clearTextInput();
+      navigate("/donar/getotp", { state: { email } }); // Navigate to OTP page
     }
   };
 
@@ -78,27 +58,16 @@ const ResendOtp = () => {
             borderRadius: "10px",
           }}
         >
-          {/* <div className="lg-inner-column"> */}
           <div className="lg:w-1/2 w-full flex flex-col items-center justify-center">
             <div className="auth-box-3">
-              {/* <div className="mobile-logo text-center mb-6 lg:hidden block">
-            <a heref="#">
-          
-              <img src={logo} alt="" className="mb-10 white_logo" />
-            </a>
-          </div> */}
-
               <div className="text-center 2xl:mb-10 mb-5">
                 <h4 className="font-medium">Sign Up</h4>
                 <div className="text-slate-500 dark:text-slate-400 text-base">
                   Sign up to your account to start using GET
                 </div>
               </div>
-              {/* <!-- BEGIN: Login Form --> */}
-              <form
-                className="space-y-4"
-                // action="https://dashcode-html.codeshaper.tech/index.html"
-              >
+
+              <form className="space-y-4">
                 <div className="fromGroup">
                   <label className="block capitalize form-label">email</label>
                   <div className="relative ">
@@ -123,41 +92,16 @@ const ResendOtp = () => {
                     ) : null}
                   </div>
                 </div>
-                <div className="fromGroup">
-                  <label className="block capitalize form-label">
-                    mobile number
-                  </label>
-                  <div className="relative ">
-                    <input
-                      type="number"
-                      name="mobilenumber"
-                      className="  form-control py-2"
-                      placeholder="Mobile Number"
-                      value={mobileNumber}
-                      onChange={(e) => setMobileNumber(e.target.value)}
-                    />
-                    {mobileNumberError ? (
-                      <span
-                        style={{
-                          color: "red",
-                          marginLeft: 8,
-                          fontSize: "14px",
-                        }}
-                      >
-                        {mobileNumberError}
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
+
                 <button
                   className="btn btn-dark block w-full text-center"
                   type="button"
-                  onClick={(e)=>handleSubmit(e)}
+                  onClick={(e) => handleSubmit(e)}
                 >
                   Create An Account
                 </button>
               </form>
-              {/* <!-- END: Login Form --> */}
+
               <div className="max-w-[242px] mx-auto mt-8 w-full"></div>
               <div className="mx-auto font-normal text-slate-500 dark:text-slate-400 2xl:mt-12 mt-6 uppercase text-sm text-center">
                 Already registered? &nbsp;
@@ -170,7 +114,6 @@ const ResendOtp = () => {
               </div>
             </div>
           </div>
-          {/* </div> */}
         </div>
       </div>
     </>
